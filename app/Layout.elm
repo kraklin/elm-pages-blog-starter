@@ -76,12 +76,12 @@ background =
             [ Html.node "picture"
                 []
                 [ Html.source
-                    [ Attrs.attribute "srcset" "/public/media/docs@30.8b9a76a2.avif"
+                    [ Attrs.attribute "srcset" "/media/docs@30.8b9a76a2.avif"
                     , Attrs.type_ "image/avif"
                     ]
                     []
                 , Html.img
-                    [ Attrs.src "/public/media/docs@tinypng.d9e4dcdc.png"
+                    [ Attrs.src "/media/docs@tinypng.d9e4dcdc.png"
                     , Attrs.alt ""
                     , Attrs.class "w-[71.75rem] flex-none max-w-none dark:hidden"
                     , Attrs.attribute "decoding" "async"
@@ -91,12 +91,12 @@ background =
             , Html.node "picture"
                 []
                 [ Html.source
-                    [ Attrs.attribute "srcset" "/public/media/docs-dark@30.1a9f8cbf.avif"
+                    [ Attrs.attribute "srcset" "/media/docs-dark@30.1a9f8cbf.avif"
                     , Attrs.type_ "image/avif"
                     ]
                     []
                 , Html.img
-                    [ Attrs.src "/public/media/docs-dark@tinypng.1bbe175e.png"
+                    [ Attrs.src "/media/docs-dark@tinypng.1bbe175e.png"
                     , Attrs.alt ""
                     , Attrs.class "w-[90rem] flex-none max-w-none hidden dark:block"
                     , Attrs.attribute "decoding" "async"
