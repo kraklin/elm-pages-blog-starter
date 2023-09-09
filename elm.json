@@ -28,6 +28,7 @@
             "elm/url": "1.0.0",
             "elm/virtual-dom": "1.0.3",
             "elm-community/dict-extra": "2.4.0",
+            "elm-community/json-extra": "4.3.0",
             "elm-community/list-extra": "8.7.0",
             "elm-community/result-extra": "2.4.0",
             "jluckyiv/elm-utc-date-strings": "1.0.0",

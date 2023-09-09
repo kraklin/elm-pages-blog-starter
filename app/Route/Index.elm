@@ -1,10 +1,17 @@
 module Route.Index exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
+import BackendTask.File as File
+import BackendTask.Glob as Glob
+import Blogpost
+import Date
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
 import Html
+import Html.Attributes as Attrs
+import Json.Decode as Decode
+import Layout
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import Route
@@ -27,7 +34,7 @@ type alias RouteParams =
 
 
 type alias Data =
-    { message : String
+    { blogpostMetadata : List Blogpost.Metadata
     }
 
 
@@ -44,11 +51,40 @@ route =
         |> RouteBuilder.buildNoState { view = view }
 
 
+blogpostDecoder slug =
+    Decode.map5 Blogpost.Metadata
+        (Decode.field "title" Decode.string)
+        (Decode.field "published" (Decode.map (Result.withDefault (Date.fromRataDie 1) << Date.fromIsoString) Decode.string))
+        (Decode.succeed slug)
+        (Decode.field "description" Decode.string)
+        (Decode.field "tags" <| Decode.list Decode.string)
+
+
+blogpostFiles =
+    Glob.succeed (\slug -> slug)
+        |> Glob.match (Glob.literal "content/blog/")
+        |> Glob.capture Glob.wildcard
+        |> Glob.match (Glob.literal ".md")
+        |> Glob.toBackendTask
+
+
+allMetadata : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } (List Blogpost.Metadata)
+allMetadata =
+    blogpostFiles
+        |> BackendTask.map
+            (List.map
+                (\slug -> File.onlyFrontmatter (blogpostDecoder slug) <| "content/blog/" ++ slug ++ ".md")
+            )
+        |> BackendTask.resolve
+
+
 data : BackendTask FatalError Data
 data =
-    BackendTask.succeed Data
-        |> BackendTask.andMap
-            (BackendTask.succeed "Hello!")
+    allMetadata
+        |> BackendTask.map
+            (List.sortBy (.publishedDate >> Date.toRataDie) >> List.reverse)
+        |> BackendTask.map (\allBlogposts -> { blogpostMetadata = allBlogposts })
+        |> BackendTask.allowFatal
 
 
 head :
@@ -78,11 +114,10 @@ view :
 view app shared =
     { title = "elm-pages is running"
     , body =
-        [ Html.h1 [] [ Html.text "elm-pages is up and running!" ]
-        , Html.p []
-            [ Html.text <| "The message is: " ++ app.data.message
+        [ Html.div [ Attrs.class "space-y-2 pb-8 pt-6 md:space-y-5" ]
+            [ Html.h1 [ Attrs.class "text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14" ] [ Html.text "Latest" ]
+            , Html.p [ Attrs.class "text-lg leading-7 text-gray-500 dark:text-gray-400" ] [ Html.text Layout.subtitle ]
             ]
-        , Route.Blog__Slug_ { slug = "hello" }
-            |> Route.link [] [ Html.text "My blog post" ]
+        , Html.div [] <| List.map Blogpost.viewListItem app.data.blogpostMetadata
         ]
     }

@@ -1,4 +1,4 @@
-module Layout exposing (view)
+module Layout exposing (subtitle, title, view)
 
 import Html exposing (Html)
 import Html.Attributes as Attrs
@@ -9,7 +9,12 @@ import Svg.Attributes as SvgAttrs
 
 title : String
 title =
-    "elm-pages blog template"
+    "ElmBlog Template"
+
+
+subtitle : String
+subtitle =
+    "A blog created with elm-pages and TailwindCSS"
 
 
 menu : List { label : String, href : String }
@@ -23,7 +28,7 @@ menu =
 logo : Html msg
 logo =
     Html.div
-        [ Attrs.class "mr-1 text-blue-400"
+        [ Attrs.class "mr-1 text-primary-400"
         ]
         [ Svg.svg
             [ SvgAttrs.width "80"
@@ -43,10 +48,15 @@ logo =
         ]
 
 
+author : String
+author =
+    "Tomas Latal"
+
+
 viewMainMenuItem : { label : String, href : String } -> Html msg
 viewMainMenuItem { label, href } =
     Html.a
-        [ Attrs.class "hidden sm:block font-medium text-gray-900 dark:text-gray-100"
+        [ Attrs.class "hidden sm:block font-medium text-gray-900 dark:text-gray-100 hover:underline decoration-primary-500"
         , Attrs.href href
         ]
         [ Html.text label ]
@@ -203,6 +213,36 @@ view showMenu onMenuToggle body =
                 ]
             , viewMenu showMenu onMenuToggle
             ]
-        , Html.main_ [ Attrs.class "prose prose-slate dark:prose-invert" ] body
+        , Html.main_ [ Attrs.class "w-full" ] body
+        , Html.footer [ Attrs.class "mt-16 flex flex-col items-center" ]
+            [ Html.div
+                [ Attrs.class "mb-2 flex space-x-2 text-sm text-gray-500 dark:text-gray-400"
+                ]
+                [ Html.div []
+                    [ Html.text author ]
+                , Html.div []
+                    [ Html.text "•" ]
+                , Html.div []
+                    [ Html.text "© 2023" ]
+                , Html.div []
+                    [ Html.text "•" ]
+                , Html.a
+                    [ Attrs.href "/"
+                    , Attrs.class "hover:underline"
+                    ]
+                    [ Html.text title ]
+                ]
+            , Html.div
+                [ Attrs.class "mb-8 text-sm text-gray-500 dark:text-gray-400"
+                ]
+                [ Html.a
+                    [ Attrs.target "_blank"
+                    , Attrs.rel "noopener noreferrer"
+                    , Attrs.href "https://github.com/kraklin/elm-pages-blog-template"
+                    , Attrs.class "hover:underline"
+                    ]
+                    [ Html.text "elm-pages blog template" ]
+                ]
+            ]
         ]
     ]
