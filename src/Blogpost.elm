@@ -1,13 +1,24 @@
-module Blogpost exposing (Blogpost, Metadata, allMetadata, blogpostFiles, viewListItem)
+module Blogpost exposing
+    ( Blogpost
+    , Metadata
+    , allMetadata
+    , blogpostFiles
+    , blogpostFromSlug
+    , viewBlogpost
+    , viewListItem
+    )
 
 import BackendTask exposing (BackendTask)
 import BackendTask.File as File
 import BackendTask.Glob as Glob
 import Date exposing (Date)
 import FatalError exposing (FatalError)
-import Html
+import Html exposing (Html)
 import Html.Attributes as Attrs
 import Json.Decode as Decode exposing (Decoder)
+import Json.Decode.Extra as Decode
+import Markdown.Parser
+import Markdown.Renderer
 import Route
 
 
@@ -55,7 +66,48 @@ blogpostFiles =
         |> Glob.toBackendTask
 
 
-viewTag : String -> Html.Html msg
+blogpostFromSlug slug =
+    ("content/blog/" ++ slug ++ ".md")
+        |> File.bodyWithFrontmatter
+            (\markdownString ->
+                Decode.map2 Blogpost
+                    (metadataDecoder slug)
+                    (Decode.succeed markdownString)
+            )
+        |> BackendTask.allowFatal
+
+
+markdownToView :
+    String
+    -> List (Html msg)
+markdownToView markdownString =
+    markdownString
+        |> Markdown.Parser.parse
+        |> Result.mapError (\_ -> "Markdown error.")
+        |> Result.andThen
+            (\blocks ->
+                Markdown.Renderer.render
+                    Markdown.Renderer.defaultHtmlRenderer
+                    blocks
+            )
+        |> Result.withDefault [ Html.text "failed to read markdown" ]
+
+
+
+-- VIEW
+
+
+viewBlogpost : Blogpost -> Html msg
+viewBlogpost { metadata, body } =
+    Html.div []
+        [ Html.h1 [ Attrs.class "my-16 font-bold text-4xl text-gray-900 dark:text-gray-100" ] [ Html.text metadata.title ]
+        , Html.div
+            [ Attrs.class "prose  lg:prose-xl dark:prose-invert" ]
+            (markdownToView body)
+        ]
+
+
+viewTag : String -> Html msg
 viewTag tag =
     Html.a
         [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"

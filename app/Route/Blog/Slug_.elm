@@ -3,7 +3,7 @@ module Route.Blog.Slug_ exposing (ActionData, Data, Model, Msg, route)
 import BackendTask exposing (BackendTask)
 import BackendTask.File as File
 import BackendTask.Glob as Glob
-import Blogpost
+import Blogpost exposing (Blogpost)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -15,6 +15,7 @@ import Markdown.Renderer
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
+import Settings
 import Shared
 import View exposing (View)
 
@@ -51,12 +52,7 @@ pages =
 
 
 type alias Data =
-    { title : String
-
-    --, tags : List String
-    --, description : String
-    , body : String
-    }
+    Blogpost
 
 
 type alias ActionData =
@@ -65,37 +61,7 @@ type alias ActionData =
 
 data : RouteParams -> BackendTask FatalError Data
 data routeParams =
-    ("content/blog/" ++ routeParams.slug ++ ".md")
-        |> File.bodyWithFrontmatter
-            (\markdownString ->
-                Decode.map2
-                    (\title renderedMarkdown ->
-                        { title = title
-                        , body = markdownString
-                        }
-                    )
-                    (Decode.field "title" Decode.string)
-                    (markdownString
-                        |> markdownToView
-                        |> Decode.fromResult
-                    )
-            )
-        |> BackendTask.allowFatal
-
-
-markdownToView :
-    String
-    -> Result String (List (Html msg))
-markdownToView markdownString =
-    markdownString
-        |> Markdown.Parser.parse
-        |> Result.mapError (\_ -> "Markdown error.")
-        |> Result.andThen
-            (\blocks ->
-                Markdown.Renderer.render
-                    Markdown.Renderer.defaultHtmlRenderer
-                    blocks
-            )
+    Blogpost.blogpostFromSlug routeParams.slug
 
 
 head :
@@ -104,16 +70,16 @@ head :
 head app =
     Seo.summary
         { canonicalUrlOverride = Nothing
-        , siteName = "elm-pages"
+        , siteName = Settings.title
         , image =
             { url = Pages.Url.external "TODO"
             , alt = "elm-pages logo"
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = "TODO"
+        , description = app.data.metadata.description
         , locale = Nothing
-        , title = "TODO title" -- metadata.title -- TODO
+        , title = app.data.metadata.title
         }
         |> Seo.website
 
@@ -123,6 +89,6 @@ view :
     -> Shared.Model
     -> View (PagesMsg Msg)
 view app sharedModel =
-    { title = "Placeholder - Blog.Slug_"
-    , body = Result.withDefault [ Html.text "unable to parse to markdown" ] <| markdownToView app.data.body
+    { title = app.data.metadata.title
+    , body = [ Blogpost.viewBlogpost app.data ]
     }
