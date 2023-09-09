@@ -6,6 +6,7 @@ import FatalError exposing (FatalError)
 import Html exposing (Html)
 import Pages.Manifest as Manifest
 import Route exposing (Route)
+import Settings
 
 
 routes :
@@ -19,8 +20,8 @@ routes getStaticRoutes htmlToString =
 manifest : Manifest.Config
 manifest =
     Manifest.init
-        { name = "Site Name"
-        , description = "Description"
+        { name = Settings.title
+        , description = Settings.subtitle
         , startUrl = Route.Index |> Route.toPath
         , icons = []
         }

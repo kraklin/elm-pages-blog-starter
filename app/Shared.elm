@@ -4,15 +4,11 @@ import BackendTask exposing (BackendTask)
 import Effect exposing (Effect)
 import FatalError exposing (FatalError)
 import Html exposing (Html)
-import Html.Attributes as Attrs
-import Html.Events as Events
 import Layout
 import Pages.Flags
 import Pages.PageUrl exposing (PageUrl)
 import Route exposing (Route)
 import SharedTemplate exposing (SharedTemplate)
-import Svg
-import Svg.Attributes as SvgAttrs
 import UrlPath exposing (UrlPath)
 import View exposing (View)
 
@@ -83,11 +79,6 @@ subscriptions _ _ =
 data : BackendTask FatalError Data
 data =
     BackendTask.succeed ()
-
-
-title : String
-title =
-    "elm-pages blog template"
 
 
 view :

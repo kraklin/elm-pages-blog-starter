@@ -1,8 +1,13 @@
-module Blogpost exposing (Blogpost, Metadata, viewListItem)
+module Blogpost exposing (Blogpost, Metadata, allMetadata, blogpostFiles, viewListItem)
 
+import BackendTask exposing (BackendTask)
+import BackendTask.File as File
+import BackendTask.Glob as Glob
 import Date exposing (Date)
+import FatalError exposing (FatalError)
 import Html
 import Html.Attributes as Attrs
+import Json.Decode as Decode exposing (Decoder)
 import Route
 
 
@@ -21,6 +26,36 @@ type alias Metadata =
     }
 
 
+metadataDecoder : String -> Decoder Metadata
+metadataDecoder slug =
+    Decode.map5 Metadata
+        (Decode.field "title" Decode.string)
+        (Decode.field "published" (Decode.map (Result.withDefault (Date.fromRataDie 1) << Date.fromIsoString) Decode.string))
+        (Decode.succeed slug)
+        (Decode.field "description" Decode.string)
+        (Decode.field "tags" <| Decode.list Decode.string)
+
+
+allMetadata : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } (List Metadata)
+allMetadata =
+    blogpostFiles
+        |> BackendTask.map
+            (List.map
+                (\slug -> File.onlyFrontmatter (metadataDecoder slug) <| "content/blog/" ++ slug ++ ".md")
+            )
+        |> BackendTask.resolve
+
+
+blogpostFiles : BackendTask error (List String)
+blogpostFiles =
+    Glob.succeed (\slug -> slug)
+        |> Glob.match (Glob.literal "content/blog/")
+        |> Glob.capture Glob.wildcard
+        |> Glob.match (Glob.literal ".md")
+        |> Glob.toBackendTask
+
+
+viewTag : String -> Html.Html msg
 viewTag tag =
     Html.a
         [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
@@ -29,6 +64,7 @@ viewTag tag =
         [ Html.text tag ]
 
 
+viewListItem : Metadata -> Html.Html msg
 viewListItem metadata =
     Html.article [ Attrs.class "my-12" ]
         [ Html.div

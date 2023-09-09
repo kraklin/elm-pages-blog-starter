@@ -1,20 +1,11 @@
-module Layout exposing (subtitle, title, view)
+module Layout exposing (view)
 
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Events as Events
+import Settings
 import Svg
 import Svg.Attributes as SvgAttrs
-
-
-title : String
-title =
-    "ElmBlog Template"
-
-
-subtitle : String
-subtitle =
-    "A blog created with elm-pages and TailwindCSS"
 
 
 menu : List { label : String, href : String }
@@ -46,11 +37,6 @@ logo =
                 ]
             ]
         ]
-
-
-author : String
-author =
-    "Tomas Latal"
 
 
 viewMainMenuItem : { label : String, href : String } -> Html msg
@@ -197,7 +183,7 @@ view showMenu onMenuToggle body =
             ]
             [ Html.div []
                 [ Html.a
-                    [ Attrs.attribute "aria-label" title
+                    [ Attrs.attribute "aria-label" Settings.title
                     , Attrs.href "/"
                     ]
                     [ Html.div
@@ -207,7 +193,7 @@ view showMenu onMenuToggle body =
                         , Html.div
                             [ Attrs.class "hidden h-6 text-2xl font-semibold sm:block dark:text-white"
                             ]
-                            [ Html.text title ]
+                            [ Html.text Settings.title ]
                         ]
                     ]
                 ]
@@ -219,7 +205,7 @@ view showMenu onMenuToggle body =
                 [ Attrs.class "mb-2 flex space-x-2 text-sm text-gray-500 dark:text-gray-400"
                 ]
                 [ Html.div []
-                    [ Html.text author ]
+                    [ Html.text Settings.author ]
                 , Html.div []
                     [ Html.text "•" ]
                 , Html.div []
@@ -230,7 +216,7 @@ view showMenu onMenuToggle body =
                     [ Attrs.href "/"
                     , Attrs.class "hover:underline"
                     ]
-                    [ Html.text title ]
+                    [ Html.text Settings.title ]
                 ]
             , Html.div
                 [ Attrs.class "mb-8 text-sm text-gray-500 dark:text-gray-400"

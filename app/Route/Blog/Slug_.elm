@@ -3,6 +3,7 @@ module Route.Blog.Slug_ exposing (ActionData, Data, Model, Msg, route)
 import BackendTask exposing (BackendTask)
 import BackendTask.File as File
 import BackendTask.Glob as Glob
+import Blogpost
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -40,17 +41,9 @@ route =
         |> RouteBuilder.buildNoState { view = view }
 
 
-blogpostFiles =
-    Glob.succeed (\slug -> slug)
-        |> Glob.match (Glob.literal "content/blog/")
-        |> Glob.capture Glob.wildcard
-        |> Glob.match (Glob.literal ".md")
-        |> Glob.toBackendTask
-
-
 pages : BackendTask FatalError (List RouteParams)
 pages =
-    blogpostFiles
+    Blogpost.blogpostFiles
         |> BackendTask.map
             (\slugs ->
                 List.map (\slug -> { slug = slug }) slugs

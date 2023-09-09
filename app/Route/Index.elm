@@ -10,12 +10,12 @@ import Head
 import Head.Seo as Seo
 import Html
 import Html.Attributes as Attrs
-import Json.Decode as Decode
-import Layout
+import Json.Decode as Decode exposing (Decoder)
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import Route
 import RouteBuilder exposing (App, StatelessRoute)
+import Settings
 import Shared
 import UrlPath
 import View exposing (View)
@@ -51,36 +51,9 @@ route =
         |> RouteBuilder.buildNoState { view = view }
 
 
-blogpostDecoder slug =
-    Decode.map5 Blogpost.Metadata
-        (Decode.field "title" Decode.string)
-        (Decode.field "published" (Decode.map (Result.withDefault (Date.fromRataDie 1) << Date.fromIsoString) Decode.string))
-        (Decode.succeed slug)
-        (Decode.field "description" Decode.string)
-        (Decode.field "tags" <| Decode.list Decode.string)
-
-
-blogpostFiles =
-    Glob.succeed (\slug -> slug)
-        |> Glob.match (Glob.literal "content/blog/")
-        |> Glob.capture Glob.wildcard
-        |> Glob.match (Glob.literal ".md")
-        |> Glob.toBackendTask
-
-
-allMetadata : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } (List Blogpost.Metadata)
-allMetadata =
-    blogpostFiles
-        |> BackendTask.map
-            (List.map
-                (\slug -> File.onlyFrontmatter (blogpostDecoder slug) <| "content/blog/" ++ slug ++ ".md")
-            )
-        |> BackendTask.resolve
-
-
 data : BackendTask FatalError Data
 data =
-    allMetadata
+    Blogpost.allMetadata
         |> BackendTask.map
             (List.sortBy (.publishedDate >> Date.toRataDie) >> List.reverse)
         |> BackendTask.map (\allBlogposts -> { blogpostMetadata = allBlogposts })
@@ -116,7 +89,7 @@ view app shared =
     , body =
         [ Html.div [ Attrs.class "space-y-2 pb-8 pt-6 md:space-y-5" ]
             [ Html.h1 [ Attrs.class "text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14" ] [ Html.text "Latest" ]
-            , Html.p [ Attrs.class "text-lg leading-7 text-gray-500 dark:text-gray-400" ] [ Html.text Layout.subtitle ]
+            , Html.p [ Attrs.class "text-lg leading-7 text-gray-500 dark:text-gray-400" ] [ Html.text Settings.subtitle ]
             ]
         , Html.div [] <| List.map Blogpost.viewListItem app.data.blogpostMetadata
         ]
