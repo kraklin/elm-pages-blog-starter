@@ -12,7 +12,7 @@ import Svg.Attributes as SvgAttrs
 
 canonicalUrl : String
 canonicalUrl =
-    "https://github.com"
+    "https://elm-pages-blog-template.netlify.com"
 
 
 title : String
