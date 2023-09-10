@@ -178,56 +178,58 @@ view : Bool -> msg -> List (Html msg) -> List (Html msg)
 view showMenu onMenuToggle body =
     [ background
     , Html.section [ Attrs.class "mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0" ]
-        [ Html.header
-            [ Attrs.class "flex items-center justify-between py-10"
-            ]
-            [ Html.div []
-                [ Html.a
-                    [ Attrs.attribute "aria-label" Settings.title
-                    , Attrs.href "/"
-                    ]
-                    [ Html.div
-                        [ Attrs.class "flex items-center justify-between"
-                        ]
-                        [ logo
-                        , Html.div
-                            [ Attrs.class "hidden h-6 text-2xl font-semibold sm:block dark:text-white"
-                            ]
-                            [ Html.text Settings.title ]
-                        ]
-                    ]
-                ]
-            , viewMenu showMenu onMenuToggle
-            ]
-        , Html.main_ [ Attrs.class "w-full" ] body
-        , Html.footer [ Attrs.class "mt-16 flex flex-col items-center" ]
-            [ Html.div
-                [ Attrs.class "mb-2 flex space-x-2 text-sm text-gray-500 dark:text-gray-400"
+        [ Html.div [ Attrs.class "flex h-screen flex-col justify-between font-sans" ]
+            [ Html.header
+                [ Attrs.class "flex items-center justify-between py-10"
                 ]
                 [ Html.div []
-                    [ Html.text Settings.author ]
-                , Html.div []
-                    [ Html.text "•" ]
-                , Html.div []
-                    [ Html.text "© 2023" ]
-                , Html.div []
-                    [ Html.text "•" ]
-                , Html.a
-                    [ Attrs.href "/"
-                    , Attrs.class "hover:underline"
+                    [ Html.a
+                        [ Attrs.attribute "aria-label" Settings.title
+                        , Attrs.href "/"
+                        ]
+                        [ Html.div
+                            [ Attrs.class "flex items-center justify-between"
+                            ]
+                            [ logo
+                            , Html.div
+                                [ Attrs.class "hidden h-6 text-2xl font-semibold sm:block dark:text-white"
+                                ]
+                                [ Html.text Settings.title ]
+                            ]
+                        ]
                     ]
-                    [ Html.text Settings.title ]
+                , viewMenu showMenu onMenuToggle
                 ]
-            , Html.div
-                [ Attrs.class "mb-8 text-sm text-gray-500 dark:text-gray-400"
-                ]
-                [ Html.a
-                    [ Attrs.target "_blank"
-                    , Attrs.rel "noopener noreferrer"
-                    , Attrs.href "https://github.com/kraklin/elm-pages-blog-template"
-                    , Attrs.class "hover:underline"
+            , Html.main_ [ Attrs.class "w-full" ] body
+            , Html.footer [ Attrs.class "mt-16 flex flex-col items-center" ]
+                [ Html.div
+                    [ Attrs.class "mb-2 flex space-x-2 text-sm text-gray-500 dark:text-gray-400"
                     ]
-                    [ Html.text "elm-pages blog template" ]
+                    [ Html.div []
+                        [ Html.text Settings.author ]
+                    , Html.div []
+                        [ Html.text "•" ]
+                    , Html.div []
+                        [ Html.text "© 2023" ]
+                    , Html.div []
+                        [ Html.text "•" ]
+                    , Html.a
+                        [ Attrs.href "/"
+                        , Attrs.class "hover:underline"
+                        ]
+                        [ Html.text Settings.title ]
+                    ]
+                , Html.div
+                    [ Attrs.class "mb-8 text-sm text-gray-500 dark:text-gray-400"
+                    ]
+                    [ Html.a
+                        [ Attrs.target "_blank"
+                        , Attrs.rel "noopener noreferrer"
+                        , Attrs.href "https://github.com/kraklin/elm-pages-blog-template"
+                        , Attrs.class "hover:underline"
+                        ]
+                        [ Html.text "elm-pages blog template" ]
+                    ]
                 ]
             ]
         ]
