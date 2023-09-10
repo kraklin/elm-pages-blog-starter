@@ -7,7 +7,7 @@ export default {
   headTagsTemplate(context) {
     return `
 <link rel="stylesheet" href="/style.css" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="/logo.svg">
 <meta name="generator" content="elm-pages v${context.cliVersion}" />
 `;
   },
