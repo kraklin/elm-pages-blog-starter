@@ -100,7 +100,7 @@ markdownToView markdownString =
 viewBlogpost : Blogpost -> Html msg
 viewBlogpost { metadata, body } =
     Html.div []
-        [ Html.h1 [ Attrs.class "my-16 font-bold text-4xl text-gray-900 dark:text-gray-100" ] [ Html.text metadata.title ]
+        [ Html.h1 [ Attrs.class "my-16 font-bold text-5xl text-gray-900 dark:text-gray-100" ] [ Html.text metadata.title ]
         , Html.div
             [ Attrs.class "prose  lg:prose-xl dark:prose-invert" ]
             (markdownToView body)
