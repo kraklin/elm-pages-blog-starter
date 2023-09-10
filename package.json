@@ -11,7 +11,7 @@
     "autoprefixer": "^10.4.15",
     "elm-codegen": "^0.3.0",
     "elm-optimize-level-2": "^0.3.5",
-    "elm-pages": "^3.0.3",
+    "elm-pages": "^3.0.8",
     "elm-review": "^2.10.2",
     "elm-tooling": "^1.14.0",
     "postcss": "^8.4.29",
