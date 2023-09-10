@@ -33,6 +33,7 @@
             "elm-community/result-extra": "2.4.0",
             "jluckyiv/elm-utc-date-strings": "1.0.0",
             "justinmimbs/date": "4.0.1",
+            "kuon/elm-string-normalize": "1.0.5",
             "mdgriffith/elm-codegen": "3.0.1",
             "miniBill/elm-codec": "2.1.0",
             "noahzgordon/elm-color-extra": "1.0.2",

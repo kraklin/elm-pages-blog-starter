@@ -3,6 +3,7 @@ module Layout exposing (view)
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Events as Events
+import Route
 import Settings
 import Svg
 import Svg.Attributes as SvgAttrs
@@ -11,7 +12,7 @@ import Svg.Attributes as SvgAttrs
 menu : List { label : String, href : String }
 menu =
     [ { label = "Blog", href = "/blog" }
-    , { label = "Tags", href = "/tags" }
+    , { label = "Tags", href = Route.toString Route.Tags }
     , { label = "About", href = "/about" }
     ]
 

@@ -35,7 +35,7 @@ type alias RouteParams =
 
 
 type alias Data =
-    { blogpostMetadata : List Blogpost.Metadata
+    { tags : List Tags.Tag
     }
 
 
@@ -54,11 +54,8 @@ route =
 
 data : BackendTask FatalError Data
 data =
-    Blogpost.allMetadata
-        |> BackendTask.map
-            (List.sortBy (.publishedDate >> Date.toRataDie) >> List.reverse)
-        |> BackendTask.map (\allBlogposts -> { blogpostMetadata = allBlogposts })
-        |> BackendTask.allowFatal
+    Tags.allTags
+        |> BackendTask.map (\allTags -> { tags = allTags })
 
 
 head :
@@ -88,5 +85,5 @@ view :
 view app shared =
     { title = "Tags"
     , body =
-        [ Tags.view ]
+        [ Tags.view app.data.tags ]
     }
