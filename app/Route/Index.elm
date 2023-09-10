@@ -66,16 +66,16 @@ head :
 head app =
     Seo.summary
         { canonicalUrlOverride = Nothing
-        , siteName = "elm-pages"
+        , siteName = Settings.title
         , image =
-            { url = [ "images", "icon-png.png" ] |> UrlPath.join |> Pages.Url.fromPath
-            , alt = "elm-pages logo"
+            { url = [ "logo.svg" ] |> UrlPath.join |> Pages.Url.fromPath
+            , alt = "logo"
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = "Welcome to elm-pages!"
+        , description = Settings.subtitle
         , locale = Nothing
-        , title = "elm-pages is running"
+        , title = Settings.title
         }
         |> Seo.website
 
@@ -85,7 +85,7 @@ view :
     -> Shared.Model
     -> View (PagesMsg Msg)
 view app shared =
-    { title = "elm-pages is running"
+    { title = Settings.title
     , body =
         [ Html.div [ Attrs.class "space-y-2 pb-8 pt-6 md:space-y-5" ]
             [ Html.h1 [ Attrs.class "text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14" ] [ Html.text "Latest" ]
