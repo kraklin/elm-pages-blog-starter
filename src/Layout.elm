@@ -15,7 +15,8 @@ menu : List { label : String, href : String }
 menu =
     [ { label = "Blog", href = "/blog" }
     , { label = "Tags", href = Route.toString Route.Tags }
-    , { label = "About", href = "/about" }
+
+    --, { label = "About", href = "/about" }
     ]
 
 
