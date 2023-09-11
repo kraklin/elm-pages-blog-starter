@@ -41,7 +41,7 @@ metadataDecoder : String -> Decoder Metadata
 metadataDecoder slug =
     Decode.map5 Metadata
         (Decode.field "title" Decode.string)
-        (Decode.field "published" (Decode.map (Result.withDefault (Date.fromRataDie 1) << Date.fromIsoString) Decode.string))
+        (Decode.field "published" (Decode.map (Result.withDefault (Date.fromRataDie 1) << Date.fromIsoString << Debug.log "date") Decode.string))
         (Decode.succeed slug)
         (Decode.field "description" Decode.string)
         (Decode.field "tags" <| Decode.list Decode.string)
@@ -55,6 +55,8 @@ allMetadata =
                 (\slug -> File.onlyFrontmatter (metadataDecoder slug) <| "content/blog/" ++ slug ++ ".md")
             )
         |> BackendTask.resolve
+        |> BackendTask.map
+            (List.sortBy (.publishedDate >> Date.toRataDie) >> List.reverse)
 
 
 blogpostFiles : BackendTask error (List String)
@@ -66,6 +68,7 @@ blogpostFiles =
         |> Glob.toBackendTask
 
 
+blogpostFromSlug : String -> BackendTask FatalError Blogpost
 blogpostFromSlug slug =
     ("content/blog/" ++ slug ++ ".md")
         |> File.bodyWithFrontmatter
@@ -101,19 +104,37 @@ viewBlogpost : Blogpost -> Html msg
 viewBlogpost { metadata, body } =
     Html.div []
         [ Html.h1 [ Attrs.class "my-16 font-bold text-5xl text-gray-900 dark:text-gray-100" ] [ Html.text metadata.title ]
+        , Html.p [ Attrs.class "my-4 font-bold text-xl text-gray-900 dark:text-gray-100" ] [ Html.text metadata.description ]
         , Html.div
             [ Attrs.class "prose  lg:prose-xl dark:prose-invert" ]
             (markdownToView body)
         ]
 
 
+viewPublishedDate date =
+    Html.dl []
+        [ Html.dt
+            [ Attrs.class "sr-only"
+            ]
+            [ Html.text "Published on" ]
+        , Html.dd
+            [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
+            ]
+            [ Html.time
+                [ Attrs.datetime <| Date.toIsoString date
+                ]
+                [ Html.text <| Date.format "d. MMM YYYY" date ]
+            ]
+        ]
+
+
 viewTag : String -> Html msg
-viewTag tag =
+viewTag slug =
     Html.a
         [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
         , Attrs.href ""
         ]
-        [ Html.text tag ]
+        [ Html.text slug ]
 
 
 viewListItem : Metadata -> Html.Html msg
@@ -122,20 +143,7 @@ viewListItem metadata =
         [ Html.div
             [ Attrs.class "space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0"
             ]
-            [ Html.dl []
-                [ Html.dt
-                    [ Attrs.class "sr-only"
-                    ]
-                    [ Html.text "Published on" ]
-                , Html.dd
-                    [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
-                    ]
-                    [ Html.time
-                        [ Attrs.datetime <| Date.toIsoString metadata.publishedDate
-                        ]
-                        [ Html.text <| Date.format "d MMMM YYYY" metadata.publishedDate ]
-                    ]
-                ]
+            [ viewPublishedDate metadata.publishedDate
             , Html.div
                 [ Attrs.class "space-y-5 xl:col-span-3"
                 ]

@@ -1,5 +1,6 @@
 module Layout exposing (view)
 
+import Blogpost
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Events as Events
@@ -7,6 +8,7 @@ import Route
 import Settings
 import Svg
 import Svg.Attributes as SvgAttrs
+import Tags
 
 
 menu : List { label : String, href : String }

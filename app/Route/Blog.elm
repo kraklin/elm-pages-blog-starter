@@ -1,8 +1,9 @@
-module Route.Tags exposing (ActionData, Data, Model, Msg, route)
+module Route.Blog exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
 import BackendTask.File as File
 import BackendTask.Glob as Glob
+import BlogList
 import Blogpost
 import Date
 import FatalError exposing (FatalError)
@@ -17,7 +18,7 @@ import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Settings
 import Shared
-import Tags
+import Tags exposing (Tag)
 import UrlPath
 import View exposing (View)
 
@@ -35,7 +36,9 @@ type alias RouteParams =
 
 
 type alias Data =
-    { tags : List Tags.Tag
+    { blogposts :
+        List Blogpost.Metadata
+    , tags : List Tag
     }
 
 
@@ -54,8 +57,9 @@ route =
 
 data : BackendTask FatalError Data
 data =
-    Tags.allTags
-        |> BackendTask.map (\allTags -> { tags = allTags })
+    BackendTask.map2 Data
+        Blogpost.allMetadata
+        Tags.allTags
         |> BackendTask.allowFatal
 
 
@@ -84,7 +88,7 @@ view :
     -> Shared.Model
     -> View (PagesMsg Msg)
 view app shared =
-    { title = "Tags"
+    { title = "Blog"
     , body =
-        [ Tags.view app.data.tags ]
+        BlogList.view app.data.tags app.data.blogposts
     }

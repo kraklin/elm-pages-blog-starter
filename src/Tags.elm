@@ -1,13 +1,14 @@
-module Tags exposing (Tag, allTags, view)
+module Tags exposing (Tag, allTags, view, viewTag)
 
-import BackendTask
+import BackendTask exposing (BackendTask)
 import BackendTask.File exposing (FileReadError)
-import Blogpost exposing (allMetadata)
+import Blogpost
 import Browser.Dom exposing (Error)
 import Dict
 import FatalError exposing (FatalError)
 import Html exposing (Html)
 import Html.Attributes as Attrs
+import Json.Decode as Decode
 import List.Extra
 import String.Normalize
 
@@ -16,10 +17,9 @@ type alias Tag =
     { slug : String, title : String, count : Int }
 
 
-allTags : BackendTask.BackendTask FatalError (List Tag)
+allTags : BackendTask { fatal : FatalError, recoverable : FileReadError Decode.Error } (List Tag)
 allTags =
     Blogpost.allMetadata
-        |> BackendTask.allowFatal
         |> BackendTask.map
             (\metadata ->
                 metadata
@@ -46,8 +46,8 @@ allTags =
             )
 
 
-viewTag : Tag -> Html msg
-viewTag { slug, title, count } =
+viewTagWithCount : Tag -> Html msg
+viewTagWithCount { slug, title, count } =
     Html.div
         [ Attrs.class "mb-2 mr-5 mt-2"
         ]
@@ -63,6 +63,15 @@ viewTag { slug, title, count } =
             ]
             [ Html.text <| "(" ++ String.fromInt count ++ ")" ]
         ]
+
+
+viewTag : String -> Html msg
+viewTag slug =
+    Html.a
+        [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+        , Attrs.href ""
+        ]
+        [ Html.text slug ]
 
 
 view : List Tag -> Html msg
@@ -85,6 +94,6 @@ view tags =
                 [ Attrs.class "flex max-w-lg flex-wrap"
                 ]
               <|
-                List.map viewTag tags
+                List.map viewTagWithCount tags
             ]
         ]
