@@ -203,7 +203,7 @@ view showMenu onMenuToggle body =
                     ]
                 , viewMenu showMenu onMenuToggle
                 ]
-            , Html.main_ [ Attrs.class "w-full" ] body
+            , Html.main_ [ Attrs.class "w-full mb-auto" ] body
             , Html.footer [ Attrs.class "mt-16 flex flex-col items-center" ]
                 [ Html.div
                     [ Attrs.class "mb-2 flex space-x-2 text-sm text-gray-500 dark:text-gray-400"

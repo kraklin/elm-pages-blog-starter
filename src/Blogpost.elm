@@ -20,6 +20,7 @@ import Json.Decode.Extra as Decode
 import Markdown.Parser
 import Markdown.Renderer
 import Route
+import String.Normalize
 
 
 type alias Blogpost =
@@ -132,7 +133,7 @@ viewTag : String -> Html msg
 viewTag slug =
     Html.a
         [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-        , Attrs.href ""
+        , Attrs.href <| "/tags/" ++ String.Normalize.slug slug
         ]
         [ Html.text slug ]
 

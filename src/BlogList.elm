@@ -64,25 +64,46 @@ viewBlogpostMetadata metadata =
         ]
 
 
-view : List Tags.Tag -> List Blogpost.Metadata -> List (Html msg)
-view tags metadata =
-    [ Html.div
-        [ Attrs.class "pb-6 pt-6"
-        ]
-        [ Html.h1
-            [ Attrs.class "sm:hidden text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14"
-            ]
-            [ Html.text "All Posts" ]
-        ]
+view : List Tags.Tag -> List Blogpost.Metadata -> Maybe Tags.Tag -> List (Html msg)
+view tags metadata selectedTag =
+    let
+        header =
+            case selectedTag of
+                Just tag ->
+                    Html.h1
+                        [ Attrs.class "sm:hidden text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14"
+                        ]
+                        [ Html.text <| tag.title ]
+
+                Nothing ->
+                    Html.h1
+                        [ Attrs.class "sm:hidden text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14"
+                        ]
+                        [ Html.text "All Posts" ]
+
+        allPostsLink =
+            case selectedTag of
+                Just _ ->
+                    Html.a [ Attrs.href "/blog" ]
+                        [ Html.h3
+                            [ Attrs.class "text-gray-900 dark:text-gray-100 hover:text-primary-500 font-bold uppercase"
+                            ]
+                            [ Html.text "All Posts" ]
+                        ]
+
+                Nothing ->
+                    Html.h3
+                        [ Attrs.class "text-primary-500 font-bold uppercase"
+                        ]
+                        [ Html.text "All Posts" ]
+    in
+    [ Html.div [ Attrs.class "pb-6 pt-6" ] [ header ]
     , Html.div [ Attrs.class "flex sm:space-x-24" ]
         [ Html.div [ Attrs.class "hidden max-h-screen h-full sm:flex flex-wrap bg-gray-50 dark:bg-gray-900/70 shadow-md pt-5 dark:shadow-gray-800/40 rounded min-w-[280px] max-w-[280px] overflow-auto" ]
             [ Html.div
                 [ Attrs.class "py-4 px-6"
                 ]
-                [ Html.h3
-                    [ Attrs.class "text-primary-500 font-bold uppercase"
-                    ]
-                    [ Html.text "All Posts" ]
+                [ allPostsLink
                 , Html.ul [] <|
                     List.map
                         (\tag ->
@@ -91,8 +112,9 @@ view tags metadata =
                                 ]
                                 [ Html.a
                                     [ Attrs.class "py-2 px-3 uppercase text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-500"
+                                    , Attrs.classList [ ( "text-primary-500 dark:text-primary-500", Just tag.slug == Maybe.map .slug selectedTag ) ]
                                     , Attrs.attribute "aria-label" <| "View posts tagged " ++ tag.title
-                                    , Attrs.href ""
+                                    , Attrs.href <| "/tags/" ++ tag.slug
                                     ]
                                     [ Html.text <| tag.title ++ " (" ++ String.fromInt tag.count ++ ")" ]
                                 ]

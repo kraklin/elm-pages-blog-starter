@@ -53,13 +53,13 @@ viewTagWithCount { slug, title, count } =
         ]
         [ Html.a
             [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-            , Attrs.href slug
+            , Attrs.href <| "/tags/" ++ slug
             ]
             [ Html.text title ]
         , Html.a
             [ Attrs.class "-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300"
             , Attrs.attribute "aria-label" ("View posts tagged " ++ title)
-            , Attrs.href slug
+            , Attrs.href <| "/tags/" ++ slug
             ]
             [ Html.text <| "(" ++ String.fromInt count ++ ")" ]
         ]
@@ -69,7 +69,7 @@ viewTag : String -> Html msg
 viewTag slug =
     Html.a
         [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-        , Attrs.href ""
+        , Attrs.href <| "/tags/" ++ String.Normalize.slug slug
         ]
         [ Html.text slug ]
 

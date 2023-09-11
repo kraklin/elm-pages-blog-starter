@@ -90,5 +90,5 @@ view :
 view app shared =
     { title = "Blog"
     , body =
-        BlogList.view app.data.tags app.data.blogposts
+        BlogList.view app.data.tags app.data.blogposts Nothing
     }
