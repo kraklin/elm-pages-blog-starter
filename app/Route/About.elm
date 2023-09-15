@@ -1,22 +1,26 @@
-module Route.Blog.Slug_ exposing (ActionData, Data, Model, Msg, route)
+module Route.About exposing (ActionData, Data, Model, Msg, route)
 
+import About exposing (Author)
 import BackendTask exposing (BackendTask)
 import BackendTask.File as File
 import BackendTask.Glob as Glob
-import Blogpost exposing (Blogpost)
+import Blogpost
+import Date
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
-import Html exposing (Html)
-import Json.Decode as Decode
-import Json.Decode.Extra as Decode
-import Markdown.Parser
-import Markdown.Renderer
+import Html
+import Html.Attributes as Attrs
+import Json.Decode as Decode exposing (Decoder)
+import Layout
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
+import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Settings
 import Shared
+import Tags
+import UrlPath
 import View exposing (View)
 
 
@@ -29,39 +33,30 @@ type alias Msg =
 
 
 type alias RouteParams =
-    { slug : String }
-
-
-route : StatelessRoute RouteParams Data ActionData
-route =
-    RouteBuilder.preRender
-        { head = head
-        , pages = pages
-        , data = data
-        }
-        |> RouteBuilder.buildNoState { view = view }
-
-
-pages : BackendTask FatalError (List RouteParams)
-pages =
-    Blogpost.blogpostFiles
-        |> BackendTask.map
-            (\slugs ->
-                List.map (\{ slug } -> { slug = slug }) slugs
-            )
+    {}
 
 
 type alias Data =
-    Blogpost
+    { author : Author }
 
 
 type alias ActionData =
     {}
 
 
-data : RouteParams -> BackendTask FatalError Data
-data routeParams =
-    Blogpost.blogpostFromSlug routeParams.slug
+route : StatelessRoute RouteParams Data ActionData
+route =
+    RouteBuilder.single
+        { head = head
+        , data = data
+        }
+        |> RouteBuilder.buildNoState { view = view }
+
+
+data =
+    About.defaultAuthor
+        |> BackendTask.allowFatal
+        |> BackendTask.map Data
 
 
 head :
@@ -70,16 +65,16 @@ head :
 head app =
     Seo.summary
         { canonicalUrlOverride = Nothing
-        , siteName = Settings.title
+        , siteName = "elm-pages"
         , image =
-            { url = Pages.Url.external "TODO"
+            { url = [ "images", "icon-png.png" ] |> UrlPath.join |> Pages.Url.fromPath
             , alt = "elm-pages logo"
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = app.data.metadata.description
+        , description = "Welcome to elm-pages!"
         , locale = Nothing
-        , title = app.data.metadata.title
+        , title = "elm-pages is running"
         }
         |> Seo.website
 
@@ -88,7 +83,8 @@ view :
     App Data ActionData RouteParams
     -> Shared.Model
     -> View (PagesMsg Msg)
-view app sharedModel =
-    { title = app.data.metadata.title
-    , body = [ Blogpost.viewBlogpost app.data ]
+view app shared =
+    { title = "About"
+    , body =
+        [ About.view app.data.author ]
     }
