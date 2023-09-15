@@ -8,6 +8,7 @@ socials:
   twitter: https://twitter.com/Twitter
   facebook: https://www.facebook.com
   linkedin: https://www.linkedin.com
+  youtube: https://youtube.com
   github: https://github.com
 ---
 

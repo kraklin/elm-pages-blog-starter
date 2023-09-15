@@ -2,9 +2,7 @@ module About exposing (Author, defaultAuthor, view)
 
 import BackendTask exposing (BackendTask)
 import BackendTask.File as File
-import Dict exposing (Dict)
 import FatalError exposing (FatalError)
-import FontAwesome
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Extra
@@ -12,8 +10,6 @@ import Json.Decode as Decode
 import Markdown.Parser
 import Markdown.Renderer
 import Phosphor
-import Svg
-import Svg.Attributes as SvgAttrs
 
 
 type alias Author =
@@ -60,45 +56,56 @@ socialsView socials =
         icon socialName =
             case socialName of
                 "email" ->
-                    Phosphor.envelopeSimple Phosphor.Fill
+                    Phosphor.envelopeSimple
 
                 "facebook" ->
-                    Phosphor.facebookLogo Phosphor.Fill
+                    Phosphor.facebookLogo
 
                 "github" ->
-                    Phosphor.githubLogo Phosphor.Fill
+                    Phosphor.githubLogo
 
                 "twitter" ->
-                    Phosphor.twitterLogo Phosphor.Fill
+                    Phosphor.twitterLogo
 
                 "linkedin" ->
-                    Phosphor.linkedinLogo Phosphor.Fill
+                    Phosphor.linkedinLogo
+
+                "youtube" ->
+                    Phosphor.youtubeLogo
+
+                "tiktok" ->
+                    Phosphor.tiktokLogo
 
                 _ ->
-                    Phosphor.link Phosphor.Fill
+                    Phosphor.link
+
+        socialLink name link =
+            if name == "email" then
+                "mailto:" ++ link
+
+            else
+                link
 
         socialView ( name, link ) =
             Html.a
                 [ Attrs.class "text-sm text-gray-500 transition hover:text-gray-600"
                 , Attrs.target "_blank"
                 , Attrs.rel "noopener noreferrer"
-                , Attrs.href link
+                , Attrs.href <| socialLink name link
                 ]
                 [ Html.span
                     [ Attrs.class "sr-only"
                     ]
                     [ Html.text name ]
-                , icon name
+                , icon name Phosphor.Duotone
                     |> Phosphor.withClass "fill-current text-gray-700 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400 h-8 w-8"
                     |> Phosphor.toHtml []
                 ]
     in
-    Html.div
-        [ Attrs.class "flex space-x-3 pt-6"
-        ]
-    <|
-        List.map socialView <|
-            Debug.log "soc" socials
+    List.map socialView socials
+        |> Html.div
+            [ Attrs.class "flex space-x-3 pt-6"
+            ]
 
 
 view author =
