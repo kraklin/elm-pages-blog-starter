@@ -53,17 +53,26 @@ allMetadata =
     blogpostFiles
         |> BackendTask.map
             (List.map
-                (\slug -> File.onlyFrontmatter (metadataDecoder slug) <| "content/blog/" ++ slug ++ ".md")
+                (\file -> File.onlyFrontmatter (metadataDecoder file.slug) <| file.filePath)
             )
         |> BackendTask.resolve
         |> BackendTask.map
             (List.sortBy (.publishedDate >> Date.toRataDie) >> List.reverse)
 
 
-blogpostFiles : BackendTask error (List String)
+blogpostFiles : BackendTask error (List { filePath : String, path : List String, slug : String })
 blogpostFiles =
-    Glob.succeed (\slug -> slug)
+    Glob.succeed
+        (\filePath path fileName ->
+            { filePath = filePath
+            , path = path
+            , slug = fileName
+            }
+        )
+        |> Glob.captureFilePath
         |> Glob.match (Glob.literal "content/blog/")
+        |> Glob.capture Glob.recursiveWildcard
+        |> Glob.match (Glob.literal "/")
         |> Glob.capture Glob.wildcard
         |> Glob.match (Glob.literal ".md")
         |> Glob.toBackendTask
@@ -131,11 +140,11 @@ viewPublishedDate date =
 
 viewTag : String -> Html msg
 viewTag slug =
-    Html.a
-        [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-        , Attrs.href <| "/tags/" ++ String.Normalize.slug slug
-        ]
-        [ Html.text slug ]
+    Route.Tags__Slug_ { slug = String.Normalize.slug slug }
+        |> Route.link
+            [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            ]
+            [ Html.text slug ]
 
 
 viewListItem : Metadata -> Html.Html msg

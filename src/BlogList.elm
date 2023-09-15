@@ -84,12 +84,14 @@ view tags metadata selectedTag =
         allPostsLink =
             case selectedTag of
                 Just _ ->
-                    Html.a [ Attrs.href "/blog" ]
-                        [ Html.h3
-                            [ Attrs.class "text-gray-900 dark:text-gray-100 hover:text-primary-500 font-bold uppercase"
+                    Route.Blog
+                        |> Route.link
+                            []
+                            [ Html.h3
+                                [ Attrs.class "text-gray-900 dark:text-gray-100 hover:text-primary-500 font-bold uppercase"
+                                ]
+                                [ Html.text "All Posts" ]
                             ]
-                            [ Html.text "All Posts" ]
-                        ]
 
                 Nothing ->
                     Html.h3
@@ -110,13 +112,13 @@ view tags metadata selectedTag =
                             Html.li
                                 [ Attrs.class "my-3"
                                 ]
-                                [ Html.a
-                                    [ Attrs.class "py-2 px-3 uppercase text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-500"
-                                    , Attrs.classList [ ( "text-primary-500 dark:text-primary-500", Just tag.slug == Maybe.map .slug selectedTag ) ]
-                                    , Attrs.attribute "aria-label" <| "View posts tagged " ++ tag.title
-                                    , Attrs.href <| "/tags/" ++ tag.slug
-                                    ]
-                                    [ Html.text <| tag.title ++ " (" ++ String.fromInt tag.count ++ ")" ]
+                                [ Route.Tags__Slug_ { slug = tag.slug }
+                                    |> Route.link
+                                        [ Attrs.class "py-2 px-3 uppercase text-sm font-medium text-gray-500 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-500"
+                                        , Attrs.classList [ ( "text-primary-500 dark:text-primary-500", Just tag.slug == Maybe.map .slug selectedTag ) ]
+                                        , Attrs.attribute "aria-label" <| "View posts tagged " ++ tag.title
+                                        ]
+                                        [ Html.text <| tag.title ++ " (" ++ String.fromInt tag.count ++ ")" ]
                                 ]
                         )
                         tags

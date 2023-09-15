@@ -1,22 +1,20 @@
 module Layout exposing (view)
 
-import Blogpost
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Events as Events
-import Route
+import Route exposing (Route(..))
 import Settings
 import Svg
 import Svg.Attributes as SvgAttrs
 import Tags
 
 
-menu : List { label : String, href : String }
+menu : List { label : String, route : Route }
 menu =
-    [ { label = "Blog", href = "/blog" }
-    , { label = "Tags", href = Route.toString Route.Tags }
-
-    --, { label = "About", href = "/about" }
+    [ { label = "Blog", route = Route.Blog }
+    , { label = "Tags", route = Route.Tags }
+    , { label = "About", route = Route.About }
     ]
 
 
@@ -43,23 +41,23 @@ logo =
         ]
 
 
-viewMainMenuItem : { label : String, href : String } -> Html msg
-viewMainMenuItem { label, href } =
+viewMainMenuItem : { label : String, route : Route } -> Html msg
+viewMainMenuItem { label, route } =
     Html.a
         [ Attrs.class "hidden sm:block font-medium text-gray-900 dark:text-gray-100 hover:underline decoration-primary-500"
-        , Attrs.href href
+        , Attrs.href <| Route.toString route
         ]
         [ Html.text label ]
 
 
-viewSideMainMenuItem : { label : String, href : String } -> Html msg
-viewSideMainMenuItem { label, href } =
+viewSideMainMenuItem : { label : String, route : Route } -> Html msg
+viewSideMainMenuItem { label, route } =
     Html.div
         [ Attrs.class "px-12 py-4"
         ]
         [ Html.a
             [ Attrs.class "text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
-            , Attrs.href href
+            , Attrs.href <| Route.toString route
             ]
             [ Html.text label ]
         ]
@@ -114,7 +112,7 @@ viewMenu showMenu onMenuToggle =
             List.map viewMainMenuItem menu
 
         sideMenuItems =
-            { label = "Home", href = "/" }
+            { label = "Home", route = Route.Index }
                 :: menu
                 |> List.map viewSideMainMenuItem
     in
