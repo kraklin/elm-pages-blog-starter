@@ -1,25 +1,15 @@
 module Route.About exposing (ActionData, Data, Model, Msg, route)
 
 import About exposing (Author)
-import BackendTask exposing (BackendTask)
-import BackendTask.File as File
-import BackendTask.Glob as Glob
-import Blogpost
-import Date
-import FatalError exposing (FatalError)
+import BackendTask
 import Head
 import Head.Seo as Seo
-import Html
-import Html.Attributes as Attrs
-import Json.Decode as Decode exposing (Decoder)
-import Layout
+import Layout.About
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import Route
 import RouteBuilder exposing (App, StatelessRoute)
-import Settings
 import Shared
-import Tags
 import UrlPath
 import View exposing (View)
 
@@ -86,5 +76,5 @@ view :
 view app shared =
     { title = "About"
     , body =
-        [ About.view app.data.author ]
+        [ Layout.About.view app.data.author ]
     }

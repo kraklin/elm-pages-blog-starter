@@ -1,24 +1,16 @@
 module Route.Blog exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
-import BackendTask.File as File
-import BackendTask.Glob as Glob
 import BlogList
-import Blogpost
-import Date
+import Blogpost exposing (TagWithCount)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
-import Html
-import Html.Attributes as Attrs
-import Json.Decode as Decode exposing (Decoder)
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import Route
 import RouteBuilder exposing (App, StatelessRoute)
-import Settings
 import Shared
-import Tags exposing (Tag)
 import UrlPath
 import View exposing (View)
 
@@ -38,7 +30,7 @@ type alias RouteParams =
 type alias Data =
     { blogposts :
         List Blogpost.Metadata
-    , tags : List Tag
+    , tags : List TagWithCount
     }
 
 
@@ -59,7 +51,7 @@ data : BackendTask FatalError Data
 data =
     BackendTask.map2 Data
         Blogpost.allMetadata
-        Tags.allTags
+        Blogpost.allTags
         |> BackendTask.allowFatal
 
 

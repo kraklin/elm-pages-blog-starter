@@ -1,8 +1,6 @@
 module Route.Index exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
-import BackendTask.File as File
-import BackendTask.Glob as Glob
 import Blogpost
 import Date
 import FatalError exposing (FatalError)
@@ -10,7 +8,7 @@ import Head
 import Head.Seo as Seo
 import Html
 import Html.Attributes as Attrs
-import Json.Decode as Decode exposing (Decoder)
+import Layout.Blogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import Route
@@ -91,6 +89,6 @@ view app shared =
             [ Html.h1 [ Attrs.class "text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14" ] [ Html.text "Latest" ]
             , Html.p [ Attrs.class "text-lg leading-7 text-gray-500 dark:text-gray-400" ] [ Html.text Settings.subtitle ]
             ]
-        , Html.div [] <| List.map Blogpost.viewListItem app.data.blogpostMetadata
+        , Html.div [] <| List.map Layout.Blogpost.viewListItem app.data.blogpostMetadata
         ]
     }

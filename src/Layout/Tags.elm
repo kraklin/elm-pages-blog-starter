@@ -1,52 +1,12 @@
-module Tags exposing (Tag, allTags, view, viewTag)
+module Layout.Tags exposing (view, viewTag)
 
-import BackendTask exposing (BackendTask)
-import BackendTask.File exposing (FileReadError)
-import Blogpost
-import Browser.Dom exposing (Error)
-import Dict
-import FatalError exposing (FatalError)
+import Blogpost exposing (TagWithCount)
 import Html exposing (Html)
 import Html.Attributes as Attrs
-import Json.Decode as Decode
-import List.Extra
 import String.Normalize
 
 
-type alias Tag =
-    { slug : String, title : String, count : Int }
-
-
-allTags : BackendTask { fatal : FatalError, recoverable : FileReadError Decode.Error } (List Tag)
-allTags =
-    Blogpost.allMetadata
-        |> BackendTask.map
-            (\metadata ->
-                metadata
-                    |> List.concatMap .tags
-                    |> List.map (\tag -> ( String.Normalize.slug tag, tag ))
-                    |> (\tags ->
-                            ( Dict.fromList tags
-                            , tags
-                                |> List.map Tuple.first
-                                |> List.Extra.frequencies
-                                |> List.map (\( slug, frequency ) -> { slug = slug, count = frequency })
-                            )
-                       )
-                    |> (\( names, slugCount ) ->
-                            List.map
-                                (\{ slug, count } ->
-                                    { slug = slug
-                                    , count = count
-                                    , title = Dict.get slug names |> Maybe.withDefault slug
-                                    }
-                                )
-                                slugCount
-                       )
-            )
-
-
-viewTagWithCount : Tag -> Html msg
+viewTagWithCount : TagWithCount -> Html msg
 viewTagWithCount { slug, title, count } =
     Html.div
         [ Attrs.class "mb-2 mr-5 mt-2"
@@ -74,7 +34,7 @@ viewTag slug =
         [ Html.text slug ]
 
 
-view : List Tag -> Html msg
+view : List TagWithCount -> Html msg
 view tags =
     Html.main_
         [ Attrs.class "mb-auto"

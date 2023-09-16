@@ -1,22 +1,24 @@
 module Blogpost exposing
     ( Blogpost
     , Metadata
+    , TagWithCount
     , allMetadata
+    , allTags
     , blogpostFiles
     , blogpostFromSlug
-    , viewBlogpost
-    , viewListItem
     )
 
 import BackendTask exposing (BackendTask)
-import BackendTask.File as File
+import BackendTask.File as File exposing (FileReadError)
 import BackendTask.Glob as Glob
 import Date exposing (Date)
+import Dict
 import FatalError exposing (FatalError)
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Extra as Decode
+import List.Extra
 import Markdown.Parser
 import Markdown.Renderer
 import Route
@@ -36,6 +38,39 @@ type alias Metadata =
     , description : String
     , tags : List String
     }
+
+
+type alias TagWithCount =
+    { slug : String, title : String, count : Int }
+
+
+allTags : BackendTask { fatal : FatalError, recoverable : FileReadError Decode.Error } (List TagWithCount)
+allTags =
+    allMetadata
+        |> BackendTask.map
+            (\metadata ->
+                metadata
+                    |> List.concatMap .tags
+                    |> List.map (\tag -> ( String.Normalize.slug tag, tag ))
+                    |> (\tags ->
+                            ( Dict.fromList tags
+                            , tags
+                                |> List.map Tuple.first
+                                |> List.Extra.frequencies
+                                |> List.map (\( slug, frequency ) -> { slug = slug, count = frequency })
+                            )
+                       )
+                    |> (\( names, slugCount ) ->
+                            List.map
+                                (\{ slug, count } ->
+                                    { slug = slug
+                                    , count = count
+                                    , title = Dict.get slug names |> Maybe.withDefault slug
+                                    }
+                                )
+                                slugCount
+                       )
+            )
 
 
 metadataDecoder : String -> Decoder Metadata
@@ -104,93 +139,3 @@ markdownToView markdownString =
                     blocks
             )
         |> Result.withDefault [ Html.text "failed to read markdown" ]
-
-
-
--- VIEW
-
-
-viewBlogpost : Blogpost -> Html msg
-viewBlogpost { metadata, body } =
-    Html.div []
-        [ Html.h1 [ Attrs.class "my-16 font-bold text-5xl text-gray-900 dark:text-gray-100" ] [ Html.text metadata.title ]
-        , Html.p [ Attrs.class "my-4 font-bold text-xl text-gray-900 dark:text-gray-100" ] [ Html.text metadata.description ]
-        , Html.div
-            [ Attrs.class "prose  lg:prose-xl dark:prose-invert" ]
-            (markdownToView body)
-        ]
-
-
-viewPublishedDate date =
-    Html.dl []
-        [ Html.dt
-            [ Attrs.class "sr-only"
-            ]
-            [ Html.text "Published on" ]
-        , Html.dd
-            [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
-            ]
-            [ Html.time
-                [ Attrs.datetime <| Date.toIsoString date
-                ]
-                [ Html.text <| Date.format "d. MMM YYYY" date ]
-            ]
-        ]
-
-
-viewTag : String -> Html msg
-viewTag slug =
-    Route.Tags__Slug_ { slug = String.Normalize.slug slug }
-        |> Route.link
-            [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-            ]
-            [ Html.text slug ]
-
-
-viewListItem : Metadata -> Html.Html msg
-viewListItem metadata =
-    Html.article [ Attrs.class "my-12" ]
-        [ Html.div
-            [ Attrs.class "space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0"
-            ]
-            [ viewPublishedDate metadata.publishedDate
-            , Html.div
-                [ Attrs.class "space-y-5 xl:col-span-3"
-                ]
-                [ Html.div
-                    [ Attrs.class "space-y-6"
-                    ]
-                    [ Html.div []
-                        [ Html.h2
-                            [ Attrs.class "text-2xl font-bold leading-8 tracking-tight"
-                            ]
-                            [ Route.Blog__Slug_ { slug = metadata.slug }
-                                |> Route.link
-                                    [ Attrs.class "text-gray-900 hover:underline decoration-primary-600 dark:text-gray-100"
-                                    ]
-                                    [ Html.text metadata.title ]
-                            ]
-                        , Html.div
-                            [ Attrs.class "flex flex-wrap"
-                            ]
-                          <|
-                            List.map viewTag metadata.tags
-                        ]
-                    , Html.div
-                        [ Attrs.class "prose max-w-none text-gray-500 dark:text-gray-400"
-                        ]
-                        [ Html.text metadata.description ]
-                    ]
-                , Html.div
-                    [ Attrs.class "text-base font-medium leading-6"
-                    ]
-                    [ Route.Blog__Slug_ { slug = metadata.slug }
-                        |> Route.link
-                            [ Attrs.class "text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                            , Attrs.attribute "aria-label" ("Read \"" ++ metadata.title ++ "\"")
-                            ]
-                            [ Html.text "Read more ->" ]
-                    ]
-                ]
-            ]
-        ]

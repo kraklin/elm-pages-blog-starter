@@ -1,17 +1,11 @@
 module Route.Blog.Slug_ exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
-import BackendTask.File as File
-import BackendTask.Glob as Glob
 import Blogpost exposing (Blogpost)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
-import Html exposing (Html)
-import Json.Decode as Decode
-import Json.Decode.Extra as Decode
-import Markdown.Parser
-import Markdown.Renderer
+import Layout.Blogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
@@ -90,5 +84,5 @@ view :
     -> View (PagesMsg Msg)
 view app sharedModel =
     { title = app.data.metadata.title
-    , body = [ Blogpost.viewBlogpost app.data ]
+    , body = [ Layout.Blogpost.viewBlogpost app.data ]
     }

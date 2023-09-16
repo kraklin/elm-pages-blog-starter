@@ -1,14 +1,36 @@
-module BlogList exposing (view)
+module Layout.Blogpost exposing
+    ( viewBlogpost
+    , viewListItem
+    , viewPublishedDate
+    , viewTag
+    )
 
-import Blogpost exposing (Metadata, TagWithCount)
-import Date exposing (Date)
+import Blogpost exposing (Blogpost, Metadata, TagWithCount)
+import Date
 import Html exposing (Html)
 import Html.Attributes as Attrs
+import Layout.Markdown as Markdown
 import Layout.Tags
-import Route
+import Route exposing (Route(..))
+import String.Normalize
 
 
-viewPublishedDate : Date -> Html msg
+
+-- VIEW
+
+
+viewBlogpost : Blogpost -> Html msg
+viewBlogpost { metadata, body } =
+    Html.div []
+        [ Html.h1 [ Attrs.class "my-16 font-bold text-5xl text-gray-900 dark:text-gray-100" ] [ Html.text metadata.title ]
+        , Html.p [ Attrs.class "my-4 font-bold text-xl text-gray-900 dark:text-gray-100" ] [ Html.text metadata.description ]
+        , Html.div
+            [ Attrs.class "prose  lg:prose-xl dark:prose-invert" ]
+            (Markdown.toHtml body)
+        ]
+
+
+viewPublishedDate : Date.Date -> Html msg
 viewPublishedDate date =
     Html.dl []
         [ Html.dt
@@ -22,6 +44,64 @@ viewPublishedDate date =
                 [ Attrs.datetime <| Date.toIsoString date
                 ]
                 [ Html.text <| Date.format "d. MMM YYYY" date ]
+            ]
+        ]
+
+
+viewTag : String -> Html msg
+viewTag slug =
+    Route.Tags__Slug_ { slug = String.Normalize.slug slug }
+        |> Route.link
+            [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            ]
+            [ Html.text slug ]
+
+
+viewListItem : Metadata -> Html.Html msg
+viewListItem metadata =
+    Html.article [ Attrs.class "my-12" ]
+        [ Html.div
+            [ Attrs.class "space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0"
+            ]
+            [ viewPublishedDate metadata.publishedDate
+            , Html.div
+                [ Attrs.class "space-y-5 xl:col-span-3"
+                ]
+                [ Html.div
+                    [ Attrs.class "space-y-6"
+                    ]
+                    [ Html.div []
+                        [ Html.h2
+                            [ Attrs.class "text-2xl font-bold leading-8 tracking-tight"
+                            ]
+                            [ Route.Blog__Slug_ { slug = metadata.slug }
+                                |> Route.link
+                                    [ Attrs.class "text-gray-900 hover:underline decoration-primary-600 dark:text-gray-100"
+                                    ]
+                                    [ Html.text metadata.title ]
+                            ]
+                        , Html.div
+                            [ Attrs.class "flex flex-wrap"
+                            ]
+                          <|
+                            List.map viewTag metadata.tags
+                        ]
+                    , Html.div
+                        [ Attrs.class "prose max-w-none text-gray-500 dark:text-gray-400"
+                        ]
+                        [ Html.text metadata.description ]
+                    ]
+                , Html.div
+                    [ Attrs.class "text-base font-medium leading-6"
+                    ]
+                    [ Route.Blog__Slug_ { slug = metadata.slug }
+                        |> Route.link
+                            [ Attrs.class "text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                            , Attrs.attribute "aria-label" ("Read \"" ++ metadata.title ++ "\"")
+                            ]
+                            [ Html.text "Read more ->" ]
+                    ]
+                ]
             ]
         ]
 
@@ -59,8 +139,8 @@ viewBlogpostMetadata metadata =
         ]
 
 
-view : List TagWithCount -> List Blogpost.Metadata -> Maybe TagWithCount -> List (Html msg)
-view tags metadata selectedTag =
+viewList : List TagWithCount -> List Blogpost.Metadata -> Maybe TagWithCount -> List (Html msg)
+viewList tags metadata selectedTag =
     let
         header =
             case selectedTag of

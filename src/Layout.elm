@@ -7,7 +7,6 @@ import Route exposing (Route(..))
 import Settings
 import Svg
 import Svg.Attributes as SvgAttrs
-import Tags
 
 
 menu : List { label : String, route : Route }
