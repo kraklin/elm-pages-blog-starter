@@ -1,5 +1,5 @@
 ---
-title: "Simple and nice blogging template for elm-pages"
+title: "Simple and nice blogging template for elm‑pages"
 description: "Lets try to build some nice small template for elm-pages blogging"
 published: "2023-09-06"
 tags: ["elm", "elm-pages", "blog"]
