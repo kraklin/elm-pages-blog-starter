@@ -2,7 +2,7 @@ module Blogpost exposing
     ( Blogpost
     , Metadata
     , TagWithCount
-    , allMetadata
+    , allBlogposts
     , allTags
     , blogpostFiles
     , blogpostFromSlug
@@ -14,14 +14,9 @@ import BackendTask.Glob as Glob
 import Date exposing (Date)
 import Dict
 import FatalError exposing (FatalError)
-import Html exposing (Html)
-import Html.Attributes as Attrs
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Extra as Decode
 import List.Extra
-import Markdown.Parser
-import Markdown.Renderer
-import Route
 import String.Normalize
 
 
@@ -46,30 +41,31 @@ type alias TagWithCount =
 
 allTags : BackendTask { fatal : FatalError, recoverable : FileReadError Decode.Error } (List TagWithCount)
 allTags =
-    allMetadata
+    allBlogposts
         |> BackendTask.map
-            (\metadata ->
-                metadata
-                    |> List.concatMap .tags
-                    |> List.map (\tag -> ( String.Normalize.slug tag, tag ))
-                    |> (\tags ->
-                            ( Dict.fromList tags
-                            , tags
-                                |> List.map Tuple.first
-                                |> List.Extra.frequencies
-                                |> List.map (\( slug, frequency ) -> { slug = slug, count = frequency })
-                            )
-                       )
-                    |> (\( names, slugCount ) ->
-                            List.map
-                                (\{ slug, count } ->
-                                    { slug = slug
-                                    , count = count
-                                    , title = Dict.get slug names |> Maybe.withDefault slug
-                                    }
+            (List.concatMap
+                (\{ metadata } ->
+                    metadata.tags
+                        |> List.map (\tag -> ( String.Normalize.slug tag, tag ))
+                        |> (\tags ->
+                                ( Dict.fromList tags
+                                , tags
+                                    |> List.map Tuple.first
+                                    |> List.Extra.frequencies
+                                    |> List.map (\( slug, frequency ) -> { slug = slug, count = frequency })
                                 )
-                                slugCount
-                       )
+                           )
+                        |> (\( names, slugCount ) ->
+                                List.map
+                                    (\{ slug, count } ->
+                                        { slug = slug
+                                        , count = count
+                                        , title = Dict.get slug names |> Maybe.withDefault slug
+                                        }
+                                    )
+                                    slugCount
+                           )
+                )
             )
 
 
@@ -83,16 +79,24 @@ metadataDecoder slug =
         (Decode.field "tags" <| Decode.list Decode.string)
 
 
-allMetadata : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } (List Metadata)
-allMetadata =
+allBlogposts : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } (List Blogpost)
+allBlogposts =
     blogpostFiles
         |> BackendTask.map
             (List.map
-                (\file -> File.onlyFrontmatter (metadataDecoder file.slug) <| file.filePath)
+                (\file ->
+                    file.filePath
+                        |> File.bodyWithFrontmatter
+                            (\markdownString ->
+                                Decode.map2 Blogpost
+                                    (metadataDecoder file.slug)
+                                    (Decode.succeed markdownString)
+                            )
+                )
             )
         |> BackendTask.resolve
         |> BackendTask.map
-            (List.sortBy (.publishedDate >> Date.toRataDie) >> List.reverse)
+            (List.sortBy (.metadata >> .publishedDate >> Date.toRataDie) >> List.reverse)
 
 
 blogpostFiles : BackendTask error (List { filePath : String, path : List String, slug : String })
@@ -123,19 +127,3 @@ blogpostFromSlug slug =
                     (Decode.succeed markdownString)
             )
         |> BackendTask.allowFatal
-
-
-markdownToView :
-    String
-    -> List (Html msg)
-markdownToView markdownString =
-    markdownString
-        |> Markdown.Parser.parse
-        |> Result.mapError (\_ -> "Markdown error.")
-        |> Result.andThen
-            (\blocks ->
-                Markdown.Renderer.render
-                    Markdown.Renderer.defaultHtmlRenderer
-                    blocks
-            )
-        |> Result.withDefault [ Html.text "failed to read markdown" ]

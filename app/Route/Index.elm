@@ -51,10 +51,8 @@ route =
 
 data : BackendTask FatalError Data
 data =
-    Blogpost.allMetadata
-        |> BackendTask.map
-            (List.sortBy (.publishedDate >> Date.toRataDie) >> List.reverse)
-        |> BackendTask.map (\allBlogposts -> { blogpostMetadata = allBlogposts })
+    Blogpost.allBlogposts
+        |> BackendTask.map (\allBlogposts -> List.map .metadata allBlogposts |> (\allMetadata -> { blogpostMetadata = allMetadata }))
         |> BackendTask.allowFatal
 
 

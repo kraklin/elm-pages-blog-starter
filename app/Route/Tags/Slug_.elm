@@ -66,15 +66,16 @@ type alias ActionData =
 data : RouteParams -> BackendTask FatalError Data
 data routeParams =
     BackendTask.map2 (\blogposts tags -> Data blogposts tags (List.filter (\tag -> tag.slug == routeParams.slug) tags |> List.head))
-        (Blogpost.allMetadata
+        (Blogpost.allBlogposts
             |> BackendTask.map
-                (\metadata ->
-                    List.filter
-                        (\{ tags } ->
-                            List.map String.Normalize.slug tags
-                                |> List.member routeParams.slug
-                        )
-                        metadata
+                (\blogposts ->
+                    blogposts
+                        |> List.map .metadata
+                        |> List.filter
+                            (\{ tags } ->
+                                List.map String.Normalize.slug tags
+                                    |> List.member routeParams.slug
+                            )
                 )
         )
         Blogpost.allTags

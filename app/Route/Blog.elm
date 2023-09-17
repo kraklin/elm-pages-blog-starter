@@ -50,7 +50,9 @@ route =
 data : BackendTask FatalError Data
 data =
     BackendTask.map2 Data
-        Blogpost.allMetadata
+        (Blogpost.allBlogposts
+            |> BackendTask.map (List.map .metadata)
+        )
         Blogpost.allTags
         |> BackendTask.allowFatal
 
