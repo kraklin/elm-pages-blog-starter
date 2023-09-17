@@ -93,8 +93,8 @@ allBlogposts =
                         Array.indexedMap
                             (\index blogpost ->
                                 { blogpost
-                                    | previousPost = Array.get (index - 1) blogposts |> Maybe.map .metadata
-                                    , nextPost = Array.get (index + 1) blogposts |> Maybe.map .metadata
+                                    | previousPost = Array.get (index + 1) blogposts |> Maybe.map .metadata
+                                    , nextPost = Array.get (index - 1) blogposts |> Maybe.map .metadata
                                 }
                             )
                             blogposts
