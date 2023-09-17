@@ -34,7 +34,7 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
                 |> Html.Extra.viewMaybe
                     (\{ title, slug } ->
                         Html.div [ Attrs.class "flex flex-col mt-4 xl:mt-8" ]
-                            [ Html.span [] [ Html.text "Previous post" ]
+                            [ Html.span [] [ Html.text "Newer post" ]
                             , "← " ++ title |> bottomLink slug
                             ]
                     )
@@ -44,19 +44,24 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
                 |> Html.Extra.viewMaybe
                     (\{ title, slug } ->
                         Html.div [ Attrs.class "flex flex-col sm:text-right mt-4 xl:mt-8" ]
-                            [ Html.span [] [ Html.text "Next post" ]
+                            [ Html.span [] [ Html.text "Older post" ]
                             , title ++ " →" |> bottomLink slug
                             ]
                     )
     in
     Html.div []
-        [ Html.h1 [ Attrs.class "my-16 font-bold text-5xl text-gray-900 dark:text-gray-100" ] [ Html.text metadata.title ]
-        , Html.p [ Attrs.class "my-4 font-bold text-xl text-gray-900 dark:text-gray-100" ] [ Html.text metadata.description ]
+        [ Html.h1 [ Attrs.class "my-16 pb-8 font-bold text-center border-b text-5xl text-gray-900 dark:text-gray-100" ]
+            [ Html.div [] [ viewPublishedDate metadata.publishedDate ]
+            , Html.text metadata.title
+            ]
         , Html.div
-            [ Attrs.class "prose  lg:prose-xl dark:prose-invert" ]
+            [ Attrs.class "mx-auto prose-p:my-4 prose lg:prose-xl dark:prose-invert" ]
+            [ Html.p [ Attrs.class "font-bold" ] [ Html.text metadata.description ] ]
+        , Html.div
+            [ Attrs.class "mx-auto prose lg:prose-xl dark:prose-invert" ]
             (Markdown.toHtml body)
         , Html.div
-            [ Attrs.class "flex flex-col text-sm font-medium sm:flex-row sm:justify-between sm:text-base" ]
+            [ Attrs.class "mt-8 border-t flex flex-col text-sm font-medium sm:flex-row sm:justify-between sm:text-base" ]
             [ previous, next ]
         ]
 
