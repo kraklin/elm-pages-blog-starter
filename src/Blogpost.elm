@@ -8,11 +8,12 @@ module Blogpost exposing
     , blogpostFromSlug
     )
 
+import Array
 import BackendTask exposing (BackendTask)
 import BackendTask.File as File exposing (FileReadError)
 import BackendTask.Glob as Glob
 import Date exposing (Date)
-import Dict
+import Dict exposing (Dict)
 import FatalError exposing (FatalError)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Extra as Decode
@@ -23,6 +24,8 @@ import String.Normalize
 type alias Blogpost =
     { metadata : Metadata
     , body : String
+    , previousPost : Maybe Metadata
+    , nextPost : Maybe Metadata
     }
 
 
@@ -81,6 +84,23 @@ metadataDecoder slug =
 
 allBlogposts : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } (List Blogpost)
 allBlogposts =
+    let
+        addPreviousNextPosts orderedBlogposts =
+            orderedBlogposts
+                |> BackendTask.map Array.fromList
+                |> BackendTask.map
+                    (\blogposts ->
+                        Array.indexedMap
+                            (\index blogpost ->
+                                { blogpost
+                                    | previousPost = Array.get (index - 1) blogposts |> Maybe.map .metadata
+                                    , nextPost = Array.get (index + 1) blogposts |> Maybe.map .metadata
+                                }
+                            )
+                            blogposts
+                    )
+                |> BackendTask.map Array.toList
+    in
     blogpostFiles
         |> BackendTask.map
             (List.map
@@ -88,7 +108,7 @@ allBlogposts =
                     file.filePath
                         |> File.bodyWithFrontmatter
                             (\markdownString ->
-                                Decode.map2 Blogpost
+                                Decode.map2 (\metadata body -> Blogpost metadata body Nothing Nothing)
                                     (metadataDecoder file.slug)
                                     (Decode.succeed markdownString)
                             )
@@ -97,6 +117,12 @@ allBlogposts =
         |> BackendTask.resolve
         |> BackendTask.map
             (List.sortBy (.metadata >> .publishedDate >> Date.toRataDie) >> List.reverse)
+        |> addPreviousNextPosts
+
+
+allBlogpostsDict : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } (Dict String Blogpost)
+allBlogpostsDict =
+    allBlogposts |> BackendTask.map (\blogposts -> List.map (\blogpost -> ( blogpost.metadata.slug, blogpost )) blogposts |> Dict.fromList)
 
 
 blogpostFiles : BackendTask error (List { filePath : String, path : List String, slug : String })
@@ -119,11 +145,11 @@ blogpostFiles =
 
 blogpostFromSlug : String -> BackendTask FatalError Blogpost
 blogpostFromSlug slug =
-    ("content/blog/" ++ slug ++ ".md")
-        |> File.bodyWithFrontmatter
-            (\markdownString ->
-                Decode.map2 Blogpost
-                    (metadataDecoder slug)
-                    (Decode.succeed markdownString)
-            )
+    allBlogpostsDict
         |> BackendTask.allowFatal
+        |> BackendTask.andThen
+            (\blogpostDict ->
+                Dict.get slug blogpostDict
+                    |> Maybe.map BackendTask.succeed
+                    |> Maybe.withDefault (BackendTask.fail <| FatalError.fromString <| "Unable to find post with slug " ++ slug)
+            )
