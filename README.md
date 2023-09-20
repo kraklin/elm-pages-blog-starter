@@ -17,7 +17,7 @@
 
 - ~~Layout~~ 
 - ~~Blogposts~~ 
-- ~~Tags~~ 
+- ~~Tags~~
 - ~~About page~~ 
 - ~~Syntax highlighting of code~~ 
   - cover all supported languages
@@ -32,4 +32,6 @@
 - 404 page
 
 Nice to have later:
+
 - Support blogposts series
+- Highlight code lines 
