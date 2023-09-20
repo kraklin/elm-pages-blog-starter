@@ -4,9 +4,11 @@ import Html exposing (Html)
 import Html.Attributes as Attrs
 import Markdown.Parser
 import Markdown.Renderer exposing (defaultHtmlRenderer)
+import Parser exposing (DeadEnd)
 import SyntaxHighlight
 
 
+language : Maybe String -> String -> Result (List DeadEnd) SyntaxHighlight.HCode
 language lang =
     case lang of
         Just "elm" ->
@@ -16,6 +18,7 @@ language lang =
             SyntaxHighlight.noLang
 
 
+syntaxHighlight : { a | language : Maybe String, body : String } -> Html msg
 syntaxHighlight codeBlock =
     Html.div [ Attrs.class "no-prose" ]
         [ SyntaxHighlight.useTheme SyntaxHighlight.oneDark
@@ -26,6 +29,7 @@ syntaxHighlight codeBlock =
         ]
 
 
+renderer : Markdown.Renderer.Renderer (Html msg)
 renderer =
     { defaultHtmlRenderer
         | codeBlock =
