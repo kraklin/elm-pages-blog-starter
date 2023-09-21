@@ -51,25 +51,25 @@ allTags =
                 (\{ metadata } ->
                     metadata.tags
                         |> List.map (\tag -> ( String.Normalize.slug tag, tag ))
-                        |> (\tags ->
-                                ( Dict.fromList tags
-                                , tags
-                                    |> List.map Tuple.first
-                                    |> List.Extra.frequencies
-                                    |> List.map (\( slug, frequency ) -> { slug = slug, count = frequency })
-                                )
-                           )
-                        |> (\( names, slugCount ) ->
-                                List.map
-                                    (\{ slug, count } ->
-                                        { slug = slug
-                                        , count = count
-                                        , title = Dict.get slug names |> Maybe.withDefault slug
-                                        }
-                                    )
-                                    slugCount
-                           )
                 )
+                >> (\tags ->
+                        ( Dict.fromList tags
+                        , tags
+                            |> List.map Tuple.first
+                            |> List.Extra.frequencies
+                            |> List.map (\( slug, frequency ) -> { slug = slug, count = frequency })
+                        )
+                   )
+                >> (\( names, slugCount ) ->
+                        List.map
+                            (\{ slug, count } ->
+                                { slug = slug
+                                , count = count
+                                , title = Dict.get slug names |> Maybe.withDefault slug
+                                }
+                            )
+                            slugCount
+                   )
             )
 
 
