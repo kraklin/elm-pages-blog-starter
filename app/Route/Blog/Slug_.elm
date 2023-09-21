@@ -62,12 +62,17 @@ head :
     App Data ActionData RouteParams
     -> List Head.Tag
 head app =
+    let
+        imagePath =
+            app.data.metadata.image
+                |> Maybe.withDefault "/media/logo.svg"
+    in
     Seo.summary
-        { canonicalUrlOverride = Nothing
+        { canonicalUrlOverride = Just Settings.canonicalUrl
         , siteName = Settings.title
         , image =
-            { url = Pages.Url.external "TODO"
-            , alt = "elm-pages logo"
+            { url = Pages.Url.external <| Settings.canonicalUrl ++ imagePath
+            , alt = app.data.metadata.title
             , dimensions = Nothing
             , mimeType = Nothing
             }
