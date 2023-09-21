@@ -7,6 +7,10 @@ tags:
   - elm
 ---
 
+> Borrowed from [Jeroen's blog](https://jfmengels.net/announcing-elm-review/)
+---
+
+
 I am happy to announce the release of [`elm-review`](https://package.elm-lang.org/packages/jfmengels/elm-review/latest/) and its [CLI](https://www.npmjs.com/package/elm-review).
 
 ## What is elm-review?
