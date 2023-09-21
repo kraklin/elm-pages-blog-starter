@@ -33,7 +33,8 @@ type alias Metadata =
     { title : String
     , publishedDate : Date
     , slug : String
-    , description : String
+    , image : Maybe String
+    , description : Maybe String
     , tags : List String
     }
 
@@ -74,12 +75,13 @@ allTags =
 
 metadataDecoder : String -> Decoder Metadata
 metadataDecoder slug =
-    Decode.map5 Metadata
+    Decode.map6 Metadata
         (Decode.field "title" Decode.string)
         (Decode.field "published" (Decode.map (Result.withDefault (Date.fromRataDie 1) << Date.fromIsoString) Decode.string))
         (Decode.succeed slug)
-        (Decode.field "description" Decode.string)
-        (Decode.field "tags" <| Decode.list Decode.string)
+        (Decode.maybe (Decode.field "image" Decode.string))
+        (Decode.maybe (Decode.field "description" Decode.string))
+        (Decode.map (Maybe.withDefault []) (Decode.maybe (Decode.field "tags" <| Decode.list Decode.string)))
 
 
 allBlogposts : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } (List Blogpost)

@@ -47,15 +47,61 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
                             , title ++ " →" |> bottomLink slug
                             ]
                     )
+
+        header =
+            Html.div
+                [ Attrs.class "space-y-1 pb-10 text-center dark:border-gray-700"
+                ]
+                [ Html.div
+                    [ Attrs.class "pt-10 relative"
+                    ]
+                    [ Html.h1 [ Attrs.class "my-16 pb-8 font-bold text-center border-b text-5xl text-gray-900 dark:text-gray-100" ]
+                        [ Html.div [] [ viewPublishedDate metadata.publishedDate ]
+                        , Html.text metadata.title
+                        ]
+                    ]
+                , Html.Extra.viewMaybe
+                    (\imagePath ->
+                        Html.div
+                            [ Attrs.class "w-full"
+                            ]
+                            [ Html.div
+                                [ Attrs.class "relative mt-6 -mx-6 md:-mx-8 2xl:-mx-24"
+                                ]
+                                [ Html.div
+                                    [ Attrs.class "aspect-[2/1] w-full relative"
+                                    ]
+                                    [ Html.img
+                                        [ Attrs.alt "O Canada"
+                                        , Attrs.attribute "loading" "lazy"
+                                        , Attrs.attribute "decoding" "async"
+                                        , Attrs.attribute "data-nimg" "fill"
+                                        , Attrs.class "object-cover"
+                                        , Attrs.attribute "sizes" "100vw"
+                                        , Attrs.style "position" "absolute"
+                                        , Attrs.style "height" "100%"
+                                        , Attrs.style "width" "100%"
+                                        , Attrs.style "inset" "0px"
+                                        , Attrs.style "color" "transparent"
+                                        , Attrs.src imagePath
+                                        ]
+                                        []
+                                    ]
+                                ]
+                            ]
+                    )
+                    metadata.image
+                ]
     in
     Html.div []
-        [ Html.h1 [ Attrs.class "my-16 pb-8 font-bold text-center border-b text-5xl text-gray-900 dark:text-gray-100" ]
-            [ Html.div [] [ viewPublishedDate metadata.publishedDate ]
-            , Html.text metadata.title
-            ]
-        , Html.div
-            [ Attrs.class "mx-auto prose-p:my-4 prose lg:prose-xl dark:prose-invert" ]
-            [ Html.p [ Attrs.class "font-bold" ] [ Html.text metadata.description ] ]
+        [ header
+        , Html.Extra.viewMaybe
+            (\description ->
+                Html.div
+                    [ Attrs.class "mx-auto prose-p:my-4 prose lg:prose-xl dark:prose-invert" ]
+                    [ Html.p [ Attrs.class "font-bold" ] [ Html.text description ] ]
+            )
+            metadata.description
         , Html.div
             [ Attrs.class "mx-auto prose lg:prose-xl dark:prose-invert" ]
             (Markdown.toHtml body)
@@ -121,10 +167,14 @@ viewListItem metadata =
                           <|
                             List.map viewTag metadata.tags
                         ]
-                    , Html.div
-                        [ Attrs.class "prose max-w-none text-gray-500 dark:text-gray-400"
-                        ]
-                        [ Html.text metadata.description ]
+                    , Html.Extra.viewMaybe
+                        (\description ->
+                            Html.div
+                                [ Attrs.class "prose max-w-none text-gray-500 dark:text-gray-400"
+                                ]
+                                [ Html.text description ]
+                        )
+                        metadata.description
                     ]
                 , Html.div
                     [ Attrs.class "text-base font-medium leading-6"

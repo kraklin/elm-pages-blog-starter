@@ -4,6 +4,7 @@ import Blogpost exposing (Metadata, TagWithCount)
 import Date exposing (Date)
 import Html exposing (Html)
 import Html.Attributes as Attrs
+import Html.Extra
 import Layout.Tags
 import Route
 
@@ -51,10 +52,14 @@ viewBlogpostMetadata metadata =
                   <|
                     List.map Layout.Tags.viewTag metadata.tags
                 ]
-            , Html.div
-                [ Attrs.class "prose max-w-none text-gray-500 dark:text-gray-400"
-                ]
-                [ Html.text metadata.description ]
+            , Html.Extra.viewMaybe
+                (\description ->
+                    Html.div
+                        [ Attrs.class "prose max-w-none text-gray-500 dark:text-gray-400"
+                        ]
+                        [ Html.text description ]
+                )
+                metadata.description
             ]
         ]
 

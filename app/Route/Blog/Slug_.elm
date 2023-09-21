@@ -71,7 +71,7 @@ head app =
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = app.data.metadata.description
+        , description = Maybe.withDefault "" app.data.metadata.description
         , locale = Nothing
         , title = app.data.metadata.title
         }
