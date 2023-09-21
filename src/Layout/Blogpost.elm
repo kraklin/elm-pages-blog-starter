@@ -32,8 +32,8 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
             previousPost
                 |> Html.Extra.viewMaybe
                     (\{ title, slug } ->
-                        Html.div [ Attrs.class "flex flex-col mt-4 xl:mt-8" ]
-                            [ Html.span [] [ Html.text "Newer post" ]
+                        Html.div [ Attrs.class "sm:col-start-1 flex flex-col mt-4 xl:mt-8" ]
+                            [ Html.span [] [ Html.text "Older post" ]
                             , "← " ++ title |> bottomLink slug
                             ]
                     )
@@ -42,8 +42,8 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
             nextPost
                 |> Html.Extra.viewMaybe
                     (\{ title, slug } ->
-                        Html.div [ Attrs.class "flex flex-col sm:text-right mt-4 xl:mt-8" ]
-                            [ Html.span [] [ Html.text "Older post" ]
+                        Html.div [ Attrs.class "sm:col-start-2 flex flex-col sm:text-right mt-4 xl:mt-8" ]
+                            [ Html.span [] [ Html.text "Newer post" ]
                             , title ++ " →" |> bottomLink slug
                             ]
                     )
@@ -72,7 +72,7 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
                                     [ Attrs.class "aspect-[2/1] w-full relative"
                                     ]
                                     [ Html.img
-                                        [ Attrs.alt "O Canada"
+                                        [ Attrs.alt metadata.title
                                         , Attrs.attribute "loading" "lazy"
                                         , Attrs.attribute "decoding" "async"
                                         , Attrs.attribute "data-nimg" "fill"
@@ -106,7 +106,7 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
             [ Attrs.class "mx-auto prose lg:prose-xl dark:prose-invert" ]
             (Markdown.toHtml body)
         , Html.div
-            [ Attrs.class "mt-8 border-t flex flex-col text-sm font-medium sm:flex-row sm:justify-between sm:text-base" ]
+            [ Attrs.class "mt-8 border-t grid grid-cols-1 text-sm font-medium sm:grid-cols-2 sm:text-base" ]
             [ previous, next ]
         ]
 
