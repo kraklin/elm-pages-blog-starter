@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "postinstall": "elm-tooling install",
-    "start": "elm-pages dev",
+    "start": "INCLUDE_DRAFTS=true elm-pages dev",
     "build": "elm-pages build"
   },
   "devDependencies": {

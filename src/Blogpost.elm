@@ -1,15 +1,18 @@
 module Blogpost exposing
     ( Blogpost
     , Metadata
+    , Status(..)
     , TagWithCount
     , allBlogposts
     , allTags
     , blogpostFiles
     , blogpostFromSlug
+    , getPublishedDate
     )
 
 import Array
 import BackendTask exposing (BackendTask)
+import BackendTask.Env
 import BackendTask.File as File exposing (FileReadError)
 import BackendTask.Glob as Glob
 import Date exposing (Date)
@@ -29,13 +32,19 @@ type alias Blogpost =
     }
 
 
+type Status
+    = Draft
+    | Published
+    | PublishedWithDate Date
+
+
 type alias Metadata =
     { title : String
-    , publishedDate : Date
     , slug : String
     , image : Maybe String
     , description : Maybe String
     , tags : List String
+    , status : Status
     }
 
 
@@ -73,15 +82,42 @@ allTags =
             )
 
 
+decodeStatus =
+    Decode.map2
+        (\publishedDate statusString ->
+            case ( statusString, publishedDate ) of
+                ( Just "draft", _ ) ->
+                    Draft
+
+                ( _, Just date ) ->
+                    PublishedWithDate date
+
+                _ ->
+                    Published
+        )
+        (Decode.maybe (Decode.field "published" (Decode.map (Result.withDefault (Date.fromRataDie 1) << Date.fromIsoString) Decode.string)))
+        (Decode.maybe (Decode.field "status" Decode.string))
+
+
 metadataDecoder : String -> Decoder Metadata
 metadataDecoder slug =
-    Decode.map6 Metadata
-        (Decode.field "title" Decode.string)
-        (Decode.field "published" (Decode.map (Result.withDefault (Date.fromRataDie 1) << Date.fromIsoString) Decode.string))
-        (Decode.succeed slug)
-        (Decode.maybe (Decode.field "image" Decode.string))
-        (Decode.maybe (Decode.field "description" Decode.string))
-        (Decode.map (Maybe.withDefault []) (Decode.maybe (Decode.field "tags" <| Decode.list Decode.string)))
+    Decode.succeed Metadata
+        |> Decode.andMap (Decode.field "title" Decode.string)
+        |> Decode.andMap (Decode.succeed slug)
+        |> Decode.andMap (Decode.maybe (Decode.field "image" Decode.string))
+        |> Decode.andMap (Decode.maybe (Decode.field "description" Decode.string))
+        |> Decode.andMap (Decode.map (Maybe.withDefault []) (Decode.maybe (Decode.field "tags" <| Decode.list Decode.string)))
+        |> Decode.andMap decodeStatus
+
+
+getPublishedDate : Metadata -> Date
+getPublishedDate { status } =
+    case status of
+        PublishedWithDate date ->
+            date
+
+        _ ->
+            Date.fromRataDie 1
 
 
 allBlogposts : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } (List Blogpost)
@@ -102,6 +138,14 @@ allBlogposts =
                             blogposts
                     )
                 |> BackendTask.map Array.toList
+
+        addDraftTag metadata =
+            case metadata.status of
+                Draft ->
+                    { metadata | tags = "draft" :: metadata.tags }
+
+                _ ->
+                    metadata
     in
     blogpostFiles
         |> BackendTask.map
@@ -114,11 +158,25 @@ allBlogposts =
                                     (metadataDecoder file.slug)
                                     (Decode.succeed markdownString)
                             )
+                        |> BackendTask.map (\blogpost -> { blogpost | metadata = addDraftTag blogpost.metadata })
                 )
             )
         |> BackendTask.resolve
+        |> BackendTask.andThen
+            (\blogposts ->
+                BackendTask.Env.get "INCLUDE_DRAFTS"
+                    |> BackendTask.map
+                        (\includeDrafts ->
+                            case includeDrafts of
+                                Just "true" ->
+                                    blogposts
+
+                                _ ->
+                                    List.filter (\{ metadata } -> metadata.status /= Draft) blogposts
+                        )
+            )
         |> BackendTask.map
-            (List.sortBy (.metadata >> .publishedDate >> Date.toRataDie) >> List.reverse)
+            (List.sortBy (.metadata >> getPublishedDate >> Date.toRataDie) >> List.reverse)
         |> addPreviousNextPosts
 
 

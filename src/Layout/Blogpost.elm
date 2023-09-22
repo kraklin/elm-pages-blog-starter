@@ -5,7 +5,7 @@ module Layout.Blogpost exposing
     , viewTag
     )
 
-import Blogpost exposing (Blogpost, Metadata)
+import Blogpost exposing (Blogpost, Metadata, Status(..))
 import Date
 import Html exposing (Html)
 import Html.Attributes as Attrs
@@ -56,7 +56,7 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
                     [ Attrs.class "pt-10 relative"
                     ]
                     [ Html.h1 [ Attrs.class "my-16 pb-8 font-bold text-center border-b text-5xl text-gray-900 dark:text-gray-100" ]
-                        [ Html.div [] [ viewPublishedDate metadata.publishedDate ]
+                        [ Html.div [] [ viewPublishedDate <| metadata.status ]
                         , Html.text metadata.title
                         ]
                     ]
@@ -111,22 +111,34 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
         ]
 
 
-viewPublishedDate : Date.Date -> Html msg
-viewPublishedDate date =
-    Html.dl []
-        [ Html.dt
-            [ Attrs.class "sr-only"
-            ]
-            [ Html.text "Published on" ]
-        , Html.dd
-            [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
-            ]
-            [ Html.time
-                [ Attrs.datetime <| Date.toIsoString date
+viewPublishedDate : Blogpost.Status -> Html msg
+viewPublishedDate status =
+    case status of
+        Draft ->
+            Html.span
+                [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
                 ]
-                [ Html.text <| Date.format "d. MMM YYYY" date ]
-            ]
-        ]
+                [ Html.text "Draft"
+                ]
+
+        PublishedWithDate date ->
+            Html.dl []
+                [ Html.dt
+                    [ Attrs.class "sr-only"
+                    ]
+                    [ Html.text "Published on" ]
+                , Html.dd
+                    [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
+                    ]
+                    [ Html.time
+                        [ Attrs.datetime <| Date.toIsoString date
+                        ]
+                        [ Html.text <| Date.format "d. MMM YYYY" date ]
+                    ]
+                ]
+
+        Blogpost.Published ->
+            Html.Extra.nothing
 
 
 viewTag : String -> Html msg
@@ -144,7 +156,7 @@ viewListItem metadata =
         [ Html.div
             [ Attrs.class "space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0"
             ]
-            [ viewPublishedDate metadata.publishedDate
+            [ viewPublishedDate metadata.status
             , Html.div
                 [ Attrs.class "space-y-5 xl:col-span-3"
                 ]

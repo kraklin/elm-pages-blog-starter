@@ -9,22 +9,34 @@ import Layout.Tags
 import Route
 
 
-viewPublishedDate : Date -> Html msg
-viewPublishedDate date =
-    Html.dl []
-        [ Html.dt
-            [ Attrs.class "sr-only"
-            ]
-            [ Html.text "Published on" ]
-        , Html.dd
-            [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
-            ]
-            [ Html.time
-                [ Attrs.datetime <| Date.toIsoString date
+viewPublishedDate : Blogpost.Status -> Html msg
+viewPublishedDate status =
+    case status of
+        Blogpost.Draft ->
+            Html.span
+                [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
                 ]
-                [ Html.text <| Date.format "d. MMM YYYY" date ]
-            ]
-        ]
+                [ Html.text "Draft"
+                ]
+
+        Blogpost.PublishedWithDate date ->
+            Html.dl []
+                [ Html.dt
+                    [ Attrs.class "sr-only"
+                    ]
+                    [ Html.text "Published on" ]
+                , Html.dd
+                    [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
+                    ]
+                    [ Html.time
+                        [ Attrs.datetime <| Date.toIsoString date
+                        ]
+                        [ Html.text <| Date.format "d. MMM YYYY" date ]
+                    ]
+                ]
+
+        Blogpost.Published ->
+            Html.Extra.nothing
 
 
 viewBlogpostMetadata : Metadata -> Html msg
@@ -32,7 +44,7 @@ viewBlogpostMetadata metadata =
     Html.article
         [ Attrs.class "space-y-2 flex flex-col xl:space-y-0"
         ]
-        [ viewPublishedDate metadata.publishedDate
+        [ viewPublishedDate metadata.status
         , Html.div
             [ Attrs.class "space-y-3"
             ]
