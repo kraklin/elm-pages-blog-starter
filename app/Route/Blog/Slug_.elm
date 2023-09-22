@@ -67,7 +67,7 @@ head app =
             app.data.metadata.image
                 |> Maybe.withDefault "/media/logo.svg"
     in
-    Seo.summary
+    Seo.summaryLarge
         { canonicalUrlOverride = Just Settings.canonicalUrl
         , siteName = Settings.title
         , image =
