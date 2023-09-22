@@ -22,11 +22,12 @@
 - ~~Syntax highlighting of code~~ 
   - cover all supported languages
 - ~~Previous and next links in blogposts~~ 
-- Images
-  - main image in header and in SEO
-  - inserting images in body of blogposts
-- drafts
-  - don't show them on production, but show them on localhost
+- ~~Images~~
+  - ~~main image in header and in SEO ~~
+  - ~~inserting images in body of blogposts~~
+- ~~drafts~~
+  - ~~don't show them on production, but show them on localhost~~
+- support slug override in frontmatter
 - SEO support refactoring
 - Display author of the post
 - 404 page
