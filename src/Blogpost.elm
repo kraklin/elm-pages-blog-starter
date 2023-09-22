@@ -5,7 +5,6 @@ module Blogpost exposing
     , TagWithCount
     , allBlogposts
     , allTags
-    , blogpostFiles
     , blogpostFromSlug
     , getPublishedDate
     )

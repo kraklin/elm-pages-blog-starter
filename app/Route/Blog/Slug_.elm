@@ -38,10 +38,11 @@ route =
 
 pages : BackendTask FatalError (List RouteParams)
 pages =
-    Blogpost.blogpostFiles
+    Blogpost.allBlogposts
+        |> BackendTask.allowFatal
         |> BackendTask.map
-            (\slugs ->
-                List.map (\{ slug } -> { slug = slug }) slugs
+            (\blogposts ->
+                List.map (\{ metadata } -> { slug = metadata.slug }) blogposts
             )
 
 
