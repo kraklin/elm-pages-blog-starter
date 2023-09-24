@@ -35,4 +35,5 @@
 Nice to have later:
 
 - Support blogposts series
+- Edited date
 - Highlight code lines 

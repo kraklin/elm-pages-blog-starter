@@ -1,4 +1,4 @@
-module Blogpost exposing
+module Content.Blogpost exposing
     ( Blogpost
     , Metadata
     , Status(..)

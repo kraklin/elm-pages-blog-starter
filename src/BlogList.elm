@@ -1,6 +1,6 @@
 module BlogList exposing (view)
 
-import Blogpost exposing (Metadata, TagWithCount)
+import Content.Blogpost exposing (Metadata, Status(..), TagWithCount)
 import Date exposing (Date)
 import Html exposing (Html)
 import Html.Attributes as Attrs
@@ -9,17 +9,17 @@ import Layout.Tags
 import Route
 
 
-viewPublishedDate : Blogpost.Status -> Html msg
+viewPublishedDate : Status -> Html msg
 viewPublishedDate status =
     case status of
-        Blogpost.Draft ->
+        Draft ->
             Html.span
                 [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
                 ]
                 [ Html.text "Draft"
                 ]
 
-        Blogpost.PublishedWithDate date ->
+        PublishedWithDate date ->
             Html.dl []
                 [ Html.dt
                     [ Attrs.class "sr-only"
@@ -35,7 +35,7 @@ viewPublishedDate status =
                     ]
                 ]
 
-        Blogpost.Published ->
+        Published ->
             Html.Extra.nothing
 
 
@@ -76,7 +76,7 @@ viewBlogpostMetadata metadata =
         ]
 
 
-view : List TagWithCount -> List Blogpost.Metadata -> Maybe TagWithCount -> List (Html msg)
+view : List TagWithCount -> List Metadata -> Maybe TagWithCount -> List (Html msg)
 view tags metadata selectedTag =
     let
         header =

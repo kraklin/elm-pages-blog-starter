@@ -1,7 +1,7 @@
 module Route.About exposing (ActionData, Data, Model, Msg, route)
 
-import About exposing (Author)
 import BackendTask
+import Content.About exposing (Author)
 import Head
 import Head.Seo as Seo
 import Layout.About
@@ -44,7 +44,7 @@ route =
 
 
 data =
-    About.defaultAuthor
+    Content.About.defaultAuthor
         |> BackendTask.allowFatal
         |> BackendTask.map Data
 

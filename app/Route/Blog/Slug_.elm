@@ -1,7 +1,7 @@
 module Route.Blog.Slug_ exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
-import Blogpost exposing (Blogpost)
+import Content.Blogpost exposing (Blogpost)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -38,7 +38,7 @@ route =
 
 pages : BackendTask FatalError (List RouteParams)
 pages =
-    Blogpost.allBlogposts
+    Content.Blogpost.allBlogposts
         |> BackendTask.allowFatal
         |> BackendTask.map
             (\blogposts ->
@@ -56,7 +56,7 @@ type alias ActionData =
 
 data : RouteParams -> BackendTask FatalError Data
 data routeParams =
-    Blogpost.blogpostFromSlug routeParams.slug
+    Content.Blogpost.blogpostFromSlug routeParams.slug
 
 
 head :

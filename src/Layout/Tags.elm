@@ -1,6 +1,6 @@
 module Layout.Tags exposing (view, viewTag)
 
-import Blogpost exposing (TagWithCount)
+import Content.Blogpost exposing (TagWithCount)
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import String.Normalize

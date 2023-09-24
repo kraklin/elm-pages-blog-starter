@@ -4,7 +4,7 @@ import BackendTask exposing (BackendTask, allowFatal)
 import BackendTask.File as File
 import BackendTask.Glob as Glob
 import BlogList
-import Blogpost exposing (Blogpost, TagWithCount)
+import Content.Blogpost exposing (Blogpost, Metadata, TagWithCount)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -46,14 +46,14 @@ route =
 
 pages : BackendTask FatalError (List RouteParams)
 pages =
-    Blogpost.allTags
+    Content.Blogpost.allTags
         |> BackendTask.allowFatal
         |> BackendTask.map
             (List.map (\tag -> { slug = tag.title |> String.Normalize.slug }))
 
 
 type alias Data =
-    { blogposts : List Blogpost.Metadata
+    { blogposts : List Metadata
     , tags : List TagWithCount
     , selectedTag : Maybe TagWithCount
     }
@@ -66,7 +66,7 @@ type alias ActionData =
 data : RouteParams -> BackendTask FatalError Data
 data routeParams =
     BackendTask.map2 (\blogposts tags -> Data blogposts tags (List.filter (\tag -> tag.slug == routeParams.slug) tags |> List.head))
-        (Blogpost.allBlogposts
+        (Content.Blogpost.allBlogposts
             |> BackendTask.map
                 (\blogposts ->
                     blogposts
@@ -78,7 +78,7 @@ data routeParams =
                             )
                 )
         )
-        Blogpost.allTags
+        Content.Blogpost.allTags
         |> BackendTask.allowFatal
 
 

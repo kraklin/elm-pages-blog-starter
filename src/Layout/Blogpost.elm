@@ -5,7 +5,7 @@ module Layout.Blogpost exposing
     , viewTag
     )
 
-import Blogpost exposing (Blogpost, Metadata, Status(..))
+import Content.Blogpost exposing (Blogpost, Metadata, Status(..))
 import Date
 import Html exposing (Html)
 import Html.Attributes as Attrs
@@ -111,7 +111,7 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
         ]
 
 
-viewPublishedDate : Blogpost.Status -> Html msg
+viewPublishedDate : Status -> Html msg
 viewPublishedDate status =
     case status of
         Draft ->
@@ -137,7 +137,7 @@ viewPublishedDate status =
                     ]
                 ]
 
-        Blogpost.Published ->
+        Published ->
             Html.Extra.nothing
 
 

@@ -1,4 +1,4 @@
-module About exposing (Author, defaultAuthor)
+module Content.About exposing (Author, defaultAuthor)
 
 import BackendTask exposing (BackendTask)
 import BackendTask.File as File

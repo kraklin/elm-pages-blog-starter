@@ -1,7 +1,7 @@
 module Route.Tags exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
-import Blogpost exposing (TagWithCount)
+import Content.Blogpost exposing (TagWithCount)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -47,7 +47,7 @@ route =
 
 data : BackendTask FatalError Data
 data =
-    Blogpost.allTags
+    Content.Blogpost.allTags
         |> BackendTask.map (\allTags -> { tags = allTags })
         |> BackendTask.allowFatal
 

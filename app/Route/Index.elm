@@ -1,7 +1,7 @@
 module Route.Index exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
-import Blogpost
+import Content.Blogpost exposing (Metadata)
 import Date
 import FatalError exposing (FatalError)
 import Head
@@ -32,7 +32,7 @@ type alias RouteParams =
 
 
 type alias Data =
-    { blogpostMetadata : List Blogpost.Metadata
+    { blogpostMetadata : List Metadata
     }
 
 
@@ -51,7 +51,7 @@ route =
 
 data : BackendTask FatalError Data
 data =
-    Blogpost.allBlogposts
+    Content.Blogpost.allBlogposts
         |> BackendTask.map (\allBlogposts -> List.map .metadata allBlogposts |> (\allMetadata -> { blogpostMetadata = allMetadata }))
         |> BackendTask.allowFatal
 
@@ -83,6 +83,7 @@ view :
 view app shared =
     { title = Settings.title
     , body =
+        --TODO move to layout part
         [ Html.div [ Attrs.class "space-y-2 pb-8 pt-6 md:space-y-5" ]
             [ Html.h1 [ Attrs.class "text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14" ] [ Html.text "Latest" ]
             , Html.p [ Attrs.class "text-lg leading-7 text-gray-500 dark:text-gray-400" ] [ Html.text Settings.subtitle ]

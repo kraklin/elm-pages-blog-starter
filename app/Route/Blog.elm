@@ -2,7 +2,7 @@ module Route.Blog exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
 import BlogList
-import Blogpost exposing (TagWithCount)
+import Content.Blogpost exposing (Metadata, TagWithCount)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -29,7 +29,7 @@ type alias RouteParams =
 
 type alias Data =
     { blogposts :
-        List Blogpost.Metadata
+        List Metadata
     , tags : List TagWithCount
     }
 
@@ -50,10 +50,10 @@ route =
 data : BackendTask FatalError Data
 data =
     BackendTask.map2 Data
-        (Blogpost.allBlogposts
+        (Content.Blogpost.allBlogposts
             |> BackendTask.map (List.map .metadata)
         )
-        Blogpost.allTags
+        Content.Blogpost.allTags
         |> BackendTask.allowFatal
 
 
