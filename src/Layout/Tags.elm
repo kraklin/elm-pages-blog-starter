@@ -3,6 +3,7 @@ module Layout.Tags exposing (view, viewTag)
 import Content.Blogpost exposing (TagWithCount)
 import Html exposing (Html)
 import Html.Attributes as Attrs
+import Route
 import String.Normalize
 
 
@@ -11,27 +12,27 @@ viewTagWithCount { slug, title, count } =
     Html.div
         [ Attrs.class "mb-2 mr-5 mt-2"
         ]
-        [ Html.a
-            [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-            , Attrs.href <| "/tags/" ++ slug
-            ]
-            [ Html.text title ]
-        , Html.a
-            [ Attrs.class "-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300"
-            , Attrs.attribute "aria-label" ("View posts tagged " ++ title)
-            , Attrs.href <| "/tags/" ++ slug
-            ]
-            [ Html.text <| "(" ++ String.fromInt count ++ ")" ]
+        [ Route.Tags__Slug_ { slug = String.Normalize.slug slug }
+            |> Route.link
+                [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                ]
+                [ Html.text title ]
+        , Route.Tags__Slug_ { slug = String.Normalize.slug slug }
+            |> Route.link
+                [ Attrs.class "-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300"
+                , Attrs.attribute "aria-label" ("View posts tagged " ++ title)
+                ]
+                [ Html.text <| "(" ++ String.fromInt count ++ ")" ]
         ]
 
 
 viewTag : String -> Html msg
 viewTag slug =
-    Html.a
-        [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-        , Attrs.href <| "/tags/" ++ String.Normalize.slug slug
-        ]
-        [ Html.text slug ]
+    Route.Tags__Slug_ { slug = String.Normalize.slug slug }
+        |> Route.link
+            [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            ]
+            [ Html.text slug ]
 
 
 view : List TagWithCount -> Html msg
