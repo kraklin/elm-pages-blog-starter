@@ -2,6 +2,7 @@
 title: Announcing elm-review
 image: /images/announcing-elm-review/order-chaos.jpeg
 status: draft
+slug: jfmengels-announcing-elm-review
 tags: 
   - elm-review
   - elm
