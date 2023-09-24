@@ -1,11 +1,11 @@
 module Route.Blog exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
-import BlogList
 import Content.Blogpost exposing (Metadata, TagWithCount)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
+import Layout.Blogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import Route
@@ -84,5 +84,5 @@ view :
 view app shared =
     { title = "Blog"
     , body =
-        BlogList.view app.data.tags app.data.blogposts Nothing
+        Layout.Blogpost.viewPostList app.data.tags app.data.blogposts Nothing
     }

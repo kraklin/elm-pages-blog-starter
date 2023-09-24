@@ -3,7 +3,6 @@ module Route.Tags.Slug_ exposing (ActionData, Data, Model, Msg, route)
 import BackendTask exposing (BackendTask, allowFatal)
 import BackendTask.File as File
 import BackendTask.Glob as Glob
-import BlogList
 import Content.Blogpost exposing (Blogpost, Metadata, TagWithCount)
 import FatalError exposing (FatalError)
 import Head
@@ -11,6 +10,7 @@ import Head.Seo as Seo
 import Html exposing (Html)
 import Json.Decode as Decode
 import Json.Decode.Extra as Decode
+import Layout.Blogpost
 import Markdown.Parser
 import Markdown.Renderer
 import Pages.Url
@@ -108,5 +108,5 @@ view :
     -> View (PagesMsg Msg)
 view app sharedModel =
     { title = "Tag: TODO"
-    , body = BlogList.view app.data.tags app.data.blogposts app.data.selectedTag
+    , body = Layout.Blogpost.viewPostList app.data.tags app.data.blogposts app.data.selectedTag
     }
