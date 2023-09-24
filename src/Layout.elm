@@ -11,7 +11,8 @@ import Svg.Attributes as SvgAttrs
 
 menu : List { label : String, route : Route }
 menu =
-    [ { label = "Blog", route = Route.Blog }
+    [ { label = "Drafts", route = Route.Tags__Slug_ { slug = "draft" } }
+    , { label = "Blog", route = Route.Blog }
     , { label = "Tags", route = Route.Tags }
     , { label = "About", route = Route.About }
     ]

@@ -102,7 +102,7 @@ metadataDecoder : String -> Decoder Metadata
 metadataDecoder slug =
     Decode.succeed Metadata
         |> Decode.andMap (Decode.field "title" Decode.string)
-        |> Decode.andMap (Decode.succeed slug)
+        |> Decode.andMap (Decode.maybe (Decode.field "slug" Decode.string) |> Decode.map (Maybe.withDefault slug >> String.Normalize.slug >> Debug.log "slug"))
         |> Decode.andMap (Decode.maybe (Decode.field "image" Decode.string))
         |> Decode.andMap (Decode.maybe (Decode.field "description" Decode.string))
         |> Decode.andMap (Decode.map (Maybe.withDefault []) (Decode.maybe (Decode.field "tags" <| Decode.list Decode.string)))
