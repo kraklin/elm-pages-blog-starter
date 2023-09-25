@@ -1,4 +1,4 @@
-module Layout.Markdown exposing (toHtml)
+module Layout.Markdown exposing (blogpostToHtml, toHtml)
 
 import Html exposing (Html)
 import Html.Attributes as Attrs
@@ -35,6 +35,11 @@ syntaxHighlight codeBlock =
 
 renderer : Markdown.Renderer.Renderer (Html msg)
 renderer =
+    Markdown.Renderer.defaultHtmlRenderer
+
+
+blogpostRenderer : Markdown.Renderer.Renderer (Html msg)
+blogpostRenderer =
     let
         headingElement level id =
             case level of
@@ -68,6 +73,7 @@ renderer =
                     [ Html.a
                         [ Attrs.href <| "#" ++ id
                         , Attrs.class "not-prose group "
+                        , Attrs.attribute "aria-label" <| "Permalink for " ++ rawText
                         ]
                         [ Html.span [ Attrs.class "group-hover:underline decoration-primary-500" ] children
                         , Phosphor.link Phosphor.Thin
@@ -80,9 +86,21 @@ renderer =
     }
 
 
-toHtml :
-    String
-    -> List (Html msg)
+blogpostToHtml : String -> List (Html msg)
+blogpostToHtml markdownString =
+    markdownString
+        |> Markdown.Parser.parse
+        |> Result.mapError (\_ -> "Markdown error.")
+        |> Result.andThen
+            (\blocks ->
+                Markdown.Renderer.render
+                    blogpostRenderer
+                    blocks
+            )
+        |> Result.withDefault [ Html.text "failed to read markdown" ]
+
+
+toHtml : String -> List (Html msg)
 toHtml markdownString =
     markdownString
         |> Markdown.Parser.parse
