@@ -2,9 +2,13 @@ module Layout.Markdown exposing (toHtml)
 
 import Html exposing (Html)
 import Html.Attributes as Attrs
+import Markdown.Block as Block exposing (Block)
 import Markdown.Parser
 import Markdown.Renderer exposing (defaultHtmlRenderer)
 import Parser exposing (DeadEnd)
+import Phosphor
+import String.Normalize
+import Svg.Attributes as SvgAttrs
 import SyntaxHighlight
 
 
@@ -31,8 +35,46 @@ syntaxHighlight codeBlock =
 
 renderer : Markdown.Renderer.Renderer (Html msg)
 renderer =
+    let
+        headingElement level id =
+            case level of
+                Block.H1 ->
+                    Html.h1 [ Attrs.id id ]
+
+                Block.H2 ->
+                    Html.h2 [ Attrs.id id ]
+
+                Block.H3 ->
+                    Html.h3 [ Attrs.id id ]
+
+                Block.H4 ->
+                    Html.h4 [ Attrs.id id ]
+
+                Block.H5 ->
+                    Html.h5 [ Attrs.id id ]
+
+                Block.H6 ->
+                    Html.h6 [ Attrs.id id ]
+    in
     { defaultHtmlRenderer
-        | codeBlock =
+        | heading =
+            \{ level, rawText, children } ->
+                let
+                    id =
+                        String.Normalize.slug rawText
+                in
+                headingElement level
+                    id
+                    [ Html.a
+                        [ Attrs.href <| "#" ++ id
+                        , Attrs.class "not-prose group "
+                        ]
+                        [ Html.span [ Attrs.class "group-hover:underline decoration-primary-500" ] children
+                        , Phosphor.link Phosphor.Thin
+                            |> Phosphor.toHtml [ SvgAttrs.class "text-primary-300 inline-block text-xl ml-2" ]
+                        ]
+                    ]
+        , codeBlock =
             \block ->
                 syntaxHighlight block
     }
