@@ -5,24 +5,104 @@ module Layout.Blogpost exposing
     , viewPublishedDate
     )
 
+import Content.About exposing (Author)
 import Content.Blogpost exposing (Blogpost, Metadata, Status(..), TagWithCount)
 import Date
+import Dict exposing (Dict)
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Extra
 import Layout.Markdown as Markdown
 import Layout.Tags
 import Route
-import String.Normalize
+
+
+type alias AuthorRecord =
+    { name : String
+    , image : String
+    , twitter : Maybe String
+    }
 
 
 
 -- VIEW
 
 
-viewBlogpost : Blogpost -> Html msg
-viewBlogpost { metadata, body, previousPost, nextPost } =
+viewBlogpostAuthor author =
+    Html.li
+        [ Attrs.class "flex items-center space-x-2"
+        ]
+        [ Html.img
+            [ Attrs.alt "avatar"
+            , Attrs.attribute "loading" "lazy"
+            , Attrs.width 38
+            , Attrs.height 38
+            , Attrs.attribute "decoding" "async"
+            , Attrs.attribute "data-nimg" "1"
+            , Attrs.class "h-10 w-10 rounded-full"
+            , Attrs.style "color" "transparent"
+            , Attrs.src author.image
+            ]
+            []
+        , Html.dl
+            [ Attrs.class "whitespace-nowrap text-sm font-medium leading-5"
+            ]
+            [ Html.dt
+                [ Attrs.class "sr-only"
+                ]
+                [ Html.text "Name" ]
+            , Html.dd
+                [ Attrs.class "text-gray-900 dark:text-gray-100"
+                ]
+                [ Html.text author.name ]
+            , Html.Extra.viewMaybe
+                (\_ ->
+                    Html.dt
+                        [ Attrs.class "sr-only"
+                        ]
+                        [ Html.text "Twitter" ]
+                )
+                author.twitter
+            , Html.Extra.viewMaybe
+                (\twitter ->
+                    Html.dd []
+                        [ Html.a
+                            [ Attrs.target "_blank"
+                            , Attrs.rel "noopener noreferrer"
+                            , Attrs.href <| "https://twitter.com/" ++ twitter
+                            , Attrs.class "text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                            ]
+                            [ Html.text twitter ]
+                        ]
+                )
+                author.twitter
+            ]
+        ]
+
+
+viewBlogpost : Dict String Author -> Blogpost -> Html msg
+viewBlogpost authors { metadata, body, previousPost, nextPost } =
     let
+        authorsTwitter socials =
+            socials
+                |> List.filter (\social -> Tuple.first social == "twitter")
+                |> List.map (Tuple.second >> String.replace "https://twitter.com/" "@")
+                |> List.head
+
+        blogpostAuthors =
+            metadata.authors
+                |> List.filterMap
+                    (\authorSlug ->
+                        Dict.get authorSlug authors
+                            |> Maybe.map
+                                (\author ->
+                                    { name = author.name
+                                    , image = "/images/authors/" ++ authorSlug ++ ".png"
+                                    , twitter = authorsTwitter author.socials
+                                    }
+                                )
+                    )
+
         bottomLink slug title =
             Route.link
                 [ Attrs.class "text-primary-500 hover:text-primary-600 dark:hover:text-primary-400" ]
@@ -56,9 +136,24 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
                 [ Html.div
                     [ Attrs.class "pt-10 relative"
                     ]
-                    [ Html.h1 [ Attrs.class "my-16 pb-8 font-bold text-center border-b text-5xl text-gray-900 dark:text-gray-100" ]
+                    [ Html.h1 [ Attrs.class "mt-16 pb-8 font-bold text-center text-5xl text-gray-900 dark:text-gray-100" ]
                         [ Html.div [] [ viewPublishedDate <| metadata.status ]
                         , Html.text metadata.title
+                        ]
+                    ]
+                , Html.dl
+                    [ Attrs.class "px-28 pb-10 pt-6 xl:pt-11 "
+                    ]
+                    [ Html.dt
+                        [ Attrs.class "sr-only"
+                        ]
+                        [ Html.text "Authors" ]
+                    , Html.dd []
+                        [ Html.ul
+                            [ Attrs.class "flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8"
+                            ]
+                          <|
+                            List.map viewBlogpostAuthor blogpostAuthors
                         ]
                     ]
                 , Html.Extra.viewMaybe

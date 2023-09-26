@@ -1,7 +1,9 @@
-module Content.About exposing (Author, defaultAuthor)
+module Content.About exposing (Author, allAuthors, defaultAuthor)
 
 import BackendTask exposing (BackendTask)
 import BackendTask.File as File
+import BackendTask.Glob as Glob
+import Dict exposing (Dict)
 import FatalError exposing (FatalError)
 import Json.Decode as Decode
 
@@ -13,6 +15,37 @@ type alias Author =
     , occupation : Maybe String
     , company : Maybe String
     }
+
+
+authorFiles : BackendTask error (List { filePath : String, slug : String })
+authorFiles =
+    Glob.succeed
+        (\filePath fileName ->
+            { filePath = filePath
+            , slug = fileName
+            }
+        )
+        |> Glob.captureFilePath
+        |> Glob.match (Glob.literal "content/authors/")
+        |> Glob.capture Glob.wildcard
+        |> Glob.match (Glob.literal ".md")
+        |> Glob.toBackendTask
+
+
+allAuthors : BackendTask FatalError (Dict String Author)
+allAuthors =
+    authorFiles
+        |> BackendTask.map
+            (List.map
+                (\file ->
+                    file.filePath
+                        |> File.bodyWithFrontmatter authorDecoder
+                        |> BackendTask.map (\author -> ( file.slug, author ))
+                )
+            )
+        |> BackendTask.resolve
+        |> BackendTask.allowFatal
+        |> BackendTask.map Dict.fromList
 
 
 authorDecoder : String -> Decode.Decoder Author

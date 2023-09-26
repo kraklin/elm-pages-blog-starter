@@ -1,7 +1,9 @@
 module Route.Blog.Slug_ exposing (ActionData, Data, Model, Msg, route)
 
 import BackendTask exposing (BackendTask)
+import Content.About exposing (Author)
 import Content.Blogpost exposing (Blogpost)
+import Dict exposing (Dict)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -47,7 +49,9 @@ pages =
 
 
 type alias Data =
-    Blogpost
+    { blogpost : Blogpost
+    , authors : Dict String Author
+    }
 
 
 type alias ActionData =
@@ -56,7 +60,9 @@ type alias ActionData =
 
 data : RouteParams -> BackendTask FatalError Data
 data routeParams =
-    Content.Blogpost.blogpostFromSlug routeParams.slug
+    BackendTask.map2 Data
+        (Content.Blogpost.blogpostFromSlug routeParams.slug)
+        Content.About.allAuthors
 
 
 head :
@@ -65,7 +71,7 @@ head :
 head app =
     let
         imagePath =
-            app.data.metadata.image
+            app.data.blogpost.metadata.image
                 |> Maybe.withDefault "/media/logo.svg"
     in
     Seo.summaryLarge
@@ -73,13 +79,13 @@ head app =
         , siteName = Settings.title
         , image =
             { url = Pages.Url.external <| Settings.canonicalUrl ++ imagePath
-            , alt = app.data.metadata.title
+            , alt = app.data.blogpost.metadata.title
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = Maybe.withDefault "" app.data.metadata.description
+        , description = Maybe.withDefault "" app.data.blogpost.metadata.description
         , locale = Nothing
-        , title = app.data.metadata.title
+        , title = app.data.blogpost.metadata.title
         }
         |> Seo.website
 
@@ -89,6 +95,6 @@ view :
     -> Shared.Model
     -> View (PagesMsg Msg)
 view app sharedModel =
-    { title = app.data.metadata.title
-    , body = [ Layout.Blogpost.viewBlogpost app.data ]
+    { title = app.data.blogpost.metadata.title
+    , body = [ Layout.Blogpost.viewBlogpost app.data.authors app.data.blogpost ]
     }

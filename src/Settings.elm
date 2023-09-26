@@ -17,7 +17,7 @@ canonicalUrl =
 
 title : String
 title =
-    "ElmBlog Template"
+    "Elm Blog Starter kit"
 
 
 subtitle : String

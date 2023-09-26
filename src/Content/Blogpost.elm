@@ -14,6 +14,7 @@ import BackendTask exposing (BackendTask)
 import BackendTask.Env
 import BackendTask.File as File exposing (FileReadError)
 import BackendTask.Glob as Glob
+import Content.About exposing (Author)
 import Date exposing (Date)
 import Dict exposing (Dict)
 import FatalError exposing (FatalError)
@@ -43,6 +44,7 @@ type alias Metadata =
     , image : Maybe String
     , description : Maybe String
     , tags : List String
+    , authors : List String
     , status : Status
     }
 
@@ -114,6 +116,11 @@ metadataDecoder slug =
                 (Maybe.withDefault [])
                 (Decode.maybe (Decode.field "tags" <| Decode.list Decode.string))
             )
+        |> Decode.andMap
+            (Decode.map
+                (Maybe.withDefault [ "default" ])
+                (Decode.maybe (Decode.field "authors" <| Decode.list Decode.string))
+            )
         |> Decode.andMap decodeStatus
 
 
@@ -153,6 +160,9 @@ allBlogposts =
 
                 _ ->
                     metadata
+
+        author shortName =
+            shortName
     in
     blogpostFiles
         |> BackendTask.map
