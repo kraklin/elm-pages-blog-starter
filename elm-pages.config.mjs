@@ -7,9 +7,13 @@ export default {
   headTagsTemplate(context) {
     return `
 <link rel="stylesheet" href="/style.css" />
-<link rel="icon" type="image/svg+xml" href="/media/logo.svg">
+<link rel="icon" href="/media/logo.svg">
+<link rel="mask-icon" href="/media/logo.svg" color="#000000">
+<link rel="apple-touch-icon" href="logo-180.png">
 <meta name="generator" content="elm-pages v${context.cliVersion}" />
 `;
+//  <link rel="manifest" href="manifest.json">
+
   },
   preloadTagForFile(file) {
     // add preload directives for JS assets and font assets, etc., skip for CSS files
