@@ -17,19 +17,12 @@ import Layout.Tags
 import Route
 
 
-type alias AuthorRecord =
-    { name : String
-    , image : String
-    , twitter : Maybe String
-    }
-
-
 
 -- VIEW
 
 
-viewBlogpostAuthor author =
-    Html.li
+viewBlogpostAuthor published author =
+    Html.div
         [ Attrs.class "flex items-center space-x-2"
         ]
         [ Html.img
@@ -39,43 +32,23 @@ viewBlogpostAuthor author =
             , Attrs.height 38
             , Attrs.attribute "decoding" "async"
             , Attrs.attribute "data-nimg" "1"
-            , Attrs.class "h-10 w-10 rounded-full"
+            , Attrs.class "h-16 w-16 rounded-full"
             , Attrs.style "color" "transparent"
             , Attrs.src author.image
             ]
             []
         , Html.dl
-            [ Attrs.class "whitespace-nowrap text-sm font-medium leading-5"
+            [ Attrs.class "flex flex-col items-start whitespace-nowrap text-sm font-medium leading-5"
             ]
             [ Html.dt
                 [ Attrs.class "sr-only"
                 ]
                 [ Html.text "Name" ]
             , Html.dd
-                [ Attrs.class "text-gray-900 dark:text-gray-100"
+                [ Attrs.class "text-base md:text-xl text-gray-900 dark:text-gray-100"
                 ]
                 [ Html.text author.name ]
-            , Html.Extra.viewMaybe
-                (\_ ->
-                    Html.dt
-                        [ Attrs.class "sr-only"
-                        ]
-                        [ Html.text "Twitter" ]
-                )
-                author.twitter
-            , Html.Extra.viewMaybe
-                (\twitter ->
-                    Html.dd []
-                        [ Html.a
-                            [ Attrs.target "_blank"
-                            , Attrs.rel "noopener noreferrer"
-                            , Attrs.href <| "https://twitter.com/" ++ twitter
-                            , Attrs.class "text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                            ]
-                            [ Html.text twitter ]
-                        ]
-                )
-                author.twitter
+            , viewPublishedDate published
             ]
         ]
 
@@ -83,19 +56,12 @@ viewBlogpostAuthor author =
 viewBlogpost : Dict String Author -> Blogpost -> Html msg
 viewBlogpost authors { metadata, body, previousPost, nextPost } =
     let
-        authorsTwitter socials =
-            socials
-                |> List.filter (\social -> Tuple.first social == "twitter")
-                |> List.map (Tuple.second >> String.replace "https://twitter.com/" "@")
-                |> List.head
-
         blogpostAuthors =
             metadata.authors
                 |> List.map
                     (\author ->
                         { name = author.name
                         , image = "/images/authors/" ++ author.slug ++ ".png"
-                        , twitter = authorsTwitter author.socials
                         }
                     )
 
@@ -125,33 +91,30 @@ viewBlogpost authors { metadata, body, previousPost, nextPost } =
                             ]
                     )
 
+        authorsView =
+            Html.dl
+                [ Attrs.class "pb-4 xl:pb-8 pt-4 xl:pt-12 xl:px-28"
+                ]
+                [ Html.dt
+                    [ Attrs.class "sr-only"
+                    ]
+                    [ Html.text "Authors" ]
+                , Html.dd [] <|
+                    List.map (viewBlogpostAuthor metadata.status) blogpostAuthors
+                ]
+
         header =
             Html.div
-                [ Attrs.class "space-y-1 pb-10 text-center dark:border-gray-700"
+                [ Attrs.class "space-y-1 pb-4 xl:pb-10 text-center dark:border-gray-700"
                 ]
                 [ Html.div
-                    [ Attrs.class "pt-10 relative"
+                    [ Attrs.class "pt-10"
                     ]
                     [ Html.h1 [ Attrs.class "mt-16 pb-8 font-bold text-center text-5xl text-gray-900 dark:text-gray-100" ]
-                        [ Html.div [] [ viewPublishedDate <| metadata.status ]
-                        , Html.text metadata.title
+                        [ Html.text metadata.title
                         ]
                     ]
-                , Html.dl
-                    [ Attrs.class "px-28 pb-10 pt-6 xl:pt-11 "
-                    ]
-                    [ Html.dt
-                        [ Attrs.class "sr-only"
-                        ]
-                        [ Html.text "Authors" ]
-                    , Html.dd []
-                        [ Html.ul
-                            [ Attrs.class "flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8"
-                            ]
-                          <|
-                            List.map viewBlogpostAuthor blogpostAuthors
-                        ]
-                    ]
+                , authorsView
                 , Html.Extra.viewMaybe
                     (\imagePath ->
                         Html.div
