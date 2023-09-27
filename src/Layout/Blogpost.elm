@@ -91,16 +91,12 @@ viewBlogpost authors { metadata, body, previousPost, nextPost } =
 
         blogpostAuthors =
             metadata.authors
-                |> List.filterMap
-                    (\authorSlug ->
-                        Dict.get authorSlug authors
-                            |> Maybe.map
-                                (\author ->
-                                    { name = author.name
-                                    , image = "/images/authors/" ++ authorSlug ++ ".png"
-                                    , twitter = authorsTwitter author.socials
-                                    }
-                                )
+                |> List.map
+                    (\author ->
+                        { name = author.name
+                        , image = "/images/authors/" ++ author.slug ++ ".png"
+                        , twitter = authorsTwitter author.socials
+                        }
                     )
 
         bottomLink slug title =

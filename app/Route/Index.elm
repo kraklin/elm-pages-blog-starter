@@ -53,7 +53,6 @@ data : BackendTask FatalError Data
 data =
     Content.Blogpost.allBlogposts
         |> BackendTask.map (\allBlogposts -> List.map .metadata allBlogposts |> (\allMetadata -> { blogpostMetadata = allMetadata }))
-        |> BackendTask.allowFatal
 
 
 head :

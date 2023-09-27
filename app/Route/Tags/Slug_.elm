@@ -47,7 +47,6 @@ route =
 pages : BackendTask FatalError (List RouteParams)
 pages =
     Content.Blogpost.allTags
-        |> BackendTask.allowFatal
         |> BackendTask.map
             (List.map (\tag -> { slug = tag.title |> String.Normalize.slug }))
 
@@ -79,7 +78,6 @@ data routeParams =
                 )
         )
         Content.Blogpost.allTags
-        |> BackendTask.allowFatal
 
 
 head :

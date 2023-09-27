@@ -49,7 +49,6 @@ data : BackendTask FatalError Data
 data =
     Content.Blogpost.allTags
         |> BackendTask.map (\allTags -> { tags = allTags })
-        |> BackendTask.allowFatal
 
 
 head :

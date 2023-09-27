@@ -54,7 +54,6 @@ data =
             |> BackendTask.map (List.map .metadata)
         )
         Content.Blogpost.allTags
-        |> BackendTask.allowFatal
 
 
 head :

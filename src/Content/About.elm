@@ -14,6 +14,7 @@ type alias Author =
     , socials : List ( String, String )
     , occupation : Maybe String
     , company : Maybe String
+    , slug : String
     }
 
 
@@ -39,8 +40,8 @@ allAuthors =
             (List.map
                 (\file ->
                     file.filePath
-                        |> File.bodyWithFrontmatter authorDecoder
-                        |> BackendTask.map (\author -> ( file.slug, author ))
+                        |> File.bodyWithFrontmatter (authorDecoder file.slug)
+                        |> BackendTask.map (\author -> ( author.slug, author ))
                 )
             )
         |> BackendTask.resolve
@@ -48,15 +49,16 @@ allAuthors =
         |> BackendTask.map Dict.fromList
 
 
-authorDecoder : String -> Decode.Decoder Author
-authorDecoder body =
-    Decode.map4 (Author body)
+authorDecoder : String -> String -> Decode.Decoder Author
+authorDecoder slug body =
+    Decode.map5 (Author body)
         (Decode.field "name" Decode.string)
         (Decode.map (Maybe.withDefault []) <| Decode.maybe <| Decode.field "socials" <| Decode.keyValuePairs Decode.string)
         (Decode.maybe <| Decode.field "occupation" Decode.string)
         (Decode.maybe <| Decode.field "company" Decode.string)
+        (Decode.succeed slug)
 
 
 defaultAuthor : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } Author
 defaultAuthor =
-    File.bodyWithFrontmatter authorDecoder "/content/authors/default.md"
+    File.bodyWithFrontmatter (authorDecoder "default") "/content/authors/default.md"

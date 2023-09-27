@@ -44,7 +44,7 @@ type alias Metadata =
     , image : Maybe String
     , description : Maybe String
     , tags : List String
-    , authors : List String
+    , authors : List Author
     , status : Status
     }
 
@@ -53,7 +53,7 @@ type alias TagWithCount =
     { slug : String, title : String, count : Int }
 
 
-allTags : BackendTask { fatal : FatalError, recoverable : FileReadError Decode.Error } (List TagWithCount)
+allTags : BackendTask FatalError (List TagWithCount)
 allTags =
     allBlogposts
         |> BackendTask.map
@@ -100,8 +100,8 @@ decodeStatus =
         (Decode.maybe (Decode.field "status" Decode.string))
 
 
-metadataDecoder : String -> Decoder Metadata
-metadataDecoder slug =
+metadataDecoder : Dict String Author -> String -> Decoder Metadata
+metadataDecoder authorsDict slug =
     Decode.succeed Metadata
         |> Decode.andMap (Decode.field "title" Decode.string)
         |> Decode.andMap
@@ -120,6 +120,7 @@ metadataDecoder slug =
             (Decode.map
                 (Maybe.withDefault [ "default" ])
                 (Decode.maybe (Decode.field "authors" <| Decode.list Decode.string))
+                |> Decode.map (\authors -> List.filterMap (\authorSlug -> Dict.get authorSlug authorsDict) authors)
             )
         |> Decode.andMap decodeStatus
 
@@ -134,7 +135,7 @@ getPublishedDate { status } =
             Date.fromRataDie 1
 
 
-allBlogposts : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } (List Blogpost)
+allBlogposts : BackendTask FatalError (List Blogpost)
 allBlogposts =
     let
         addPreviousNextPosts orderedBlogposts =
@@ -164,20 +165,24 @@ allBlogposts =
         author shortName =
             shortName
     in
-    blogpostFiles
-        |> BackendTask.map
-            (List.map
+    BackendTask.map2
+        (\blogposts authorsDict ->
+            List.map
                 (\file ->
                     file.filePath
                         |> File.bodyWithFrontmatter
                             (\markdownString ->
                                 Decode.map2 (\metadata body -> Blogpost metadata body Nothing Nothing)
-                                    (metadataDecoder file.slug)
+                                    (metadataDecoder authorsDict file.slug)
                                     (Decode.succeed markdownString)
                             )
                         |> BackendTask.map (\blogpost -> { blogpost | metadata = addDraftTag blogpost.metadata })
+                        |> BackendTask.allowFatal
                 )
-            )
+                blogposts
+        )
+        blogpostFiles
+        Content.About.allAuthors
         |> BackendTask.resolve
         |> BackendTask.andThen
             (\blogposts ->
@@ -197,12 +202,12 @@ allBlogposts =
         |> addPreviousNextPosts
 
 
-allBlogpostsDict : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } (Dict String Blogpost)
+allBlogpostsDict : BackendTask FatalError (Dict String Blogpost)
 allBlogpostsDict =
     allBlogposts |> BackendTask.map (\blogposts -> List.map (\blogpost -> ( blogpost.metadata.slug, blogpost )) blogposts |> Dict.fromList)
 
 
-blogpostFiles : BackendTask error (List { filePath : String, path : List String, slug : String })
+blogpostFiles : BackendTask FatalError (List { filePath : String, path : List String, slug : String })
 blogpostFiles =
     Glob.succeed
         (\filePath path fileName ->
@@ -223,7 +228,6 @@ blogpostFiles =
 blogpostFromSlug : String -> BackendTask FatalError Blogpost
 blogpostFromSlug slug =
     allBlogpostsDict
-        |> BackendTask.allowFatal
         |> BackendTask.andThen
             (\blogpostDict ->
                 Dict.get slug blogpostDict
