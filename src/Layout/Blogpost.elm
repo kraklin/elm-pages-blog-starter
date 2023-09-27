@@ -31,7 +31,7 @@ authorImages authors =
                 , Attrs.height 38
                 , Attrs.attribute "decoding" "async"
                 , Attrs.attribute "data-nimg" "1"
-                , Attrs.class "h-16 w-16 rounded-full"
+                , Attrs.class "h-16 w-16 rounded-full hidden sm:block"
                 , Attrs.style "color" "transparent"
                 , Attrs.src image
                 ]
@@ -123,7 +123,14 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
                     [ authorImages blogpostAuthors
                     , Html.div [ Attrs.class "flex flex-col justify-around items-start" ]
                         [ Html.span [ Attrs.class "text-xl font-bold text-white" ] [ Html.text <| String.join ", " <| List.map .name blogpostAuthors ]
-                        , viewPublishedDate metadata.status
+                        , Html.div [ Attrs.class "flex space-x-4" ]
+                            [ viewPublishedDate metadata.status
+                            , Html.span []
+                                [ Html.text "Reading time: "
+                                , Html.text <| String.fromInt metadata.readingTimeInMin
+                                , Html.text "min"
+                                ]
+                            ]
                         ]
                     ]
                 ]

@@ -46,6 +46,7 @@ type alias Metadata =
     , tags : List String
     , authors : List Author
     , status : Status
+    , readingTimeInMin : Int
     }
 
 
@@ -123,6 +124,7 @@ metadataDecoder authorsDict slug =
                 |> Decode.map (\authors -> List.filterMap (\authorSlug -> Dict.get authorSlug authorsDict) authors)
             )
         |> Decode.andMap decodeStatus
+        |> Decode.andMap (Decode.succeed 1)
 
 
 getPublishedDate : Metadata -> Date
@@ -154,6 +156,14 @@ allBlogposts =
                     )
                 |> BackendTask.map Array.toList
 
+        updateReadingTime blogposts =
+            let
+                updatedMetadata blogpost metadata =
+                    { metadata | readingTimeInMin = String.split " " blogpost |> List.length |> (\words -> words // 200) }
+            in
+            blogposts
+                |> BackendTask.map (List.map (\blogpost -> { blogpost | metadata = updatedMetadata blogpost.body blogpost.metadata }))
+
         addDraftTag metadata =
             case metadata.status of
                 Draft ->
@@ -161,9 +171,6 @@ allBlogposts =
 
                 _ ->
                     metadata
-
-        author shortName =
-            shortName
     in
     BackendTask.map2
         (\blogposts authorsDict ->
@@ -200,6 +207,7 @@ allBlogposts =
         |> BackendTask.map
             (List.sortBy (.metadata >> getPublishedDate >> Date.toRataDie) >> List.reverse)
         |> addPreviousNextPosts
+        |> updateReadingTime
 
 
 allBlogpostsDict : BackendTask FatalError (Dict String Blogpost)
