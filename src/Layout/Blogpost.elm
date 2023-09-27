@@ -73,8 +73,8 @@ viewBlogpostAuthor published author =
         ]
 
 
-viewBlogpost : Dict String Author -> Blogpost -> Html msg
-viewBlogpost authors { metadata, body, previousPost, nextPost } =
+viewBlogpost : Blogpost -> Html msg
+viewBlogpost { metadata, body, previousPost, nextPost } =
     let
         blogpostAuthors =
             metadata.authors

@@ -49,7 +49,6 @@ pages =
 
 type alias Data =
     { blogpost : Blogpost
-    , authors : Dict String Author
     }
 
 
@@ -59,9 +58,8 @@ type alias ActionData =
 
 data : RouteParams -> BackendTask FatalError Data
 data routeParams =
-    BackendTask.map2 Data
+    BackendTask.map Data
         (Content.Blogpost.blogpostFromSlug routeParams.slug)
-        Content.About.allAuthors
 
 
 head :
@@ -95,5 +93,5 @@ view :
     -> View (PagesMsg Msg)
 view app sharedModel =
     { title = app.data.blogpost.metadata.title
-    , body = [ Layout.Blogpost.viewBlogpost app.data.authors app.data.blogpost ]
+    , body = [ Layout.Blogpost.viewBlogpost app.data.blogpost ]
     }
