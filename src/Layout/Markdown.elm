@@ -24,12 +24,20 @@ language lang =
 
 syntaxHighlight : { a | language : Maybe String, body : String } -> Html msg
 syntaxHighlight codeBlock =
+    let
+        sanitiseCodeBlock =
+            if String.endsWith "\n" codeBlock.body then
+                String.dropRight 1 codeBlock.body
+
+            else
+                codeBlock.body
+    in
     Html.div [ Attrs.class "no-prose" ]
         [ SyntaxHighlight.useTheme SyntaxHighlight.oneDark
-        , language codeBlock.language codeBlock.body
+        , language codeBlock.language sanitiseCodeBlock
             |> Result.map (SyntaxHighlight.toBlockHtml (Just 1))
             |> Result.withDefault
-                (Html.pre [] [ Html.code [] [ Html.text codeBlock.body ] ])
+                (Html.pre [] [ Html.code [] [ Html.text sanitiseCodeBlock ] ])
         ]
 
 
