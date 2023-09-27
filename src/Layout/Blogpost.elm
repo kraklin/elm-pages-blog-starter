@@ -21,6 +21,26 @@ import Route
 -- VIEW
 
 
+authorImages authors =
+    List.map
+        (\{ image } ->
+            Html.img
+                [ Attrs.alt "avatar"
+                , Attrs.attribute "loading" "lazy"
+                , Attrs.width 38
+                , Attrs.height 38
+                , Attrs.attribute "decoding" "async"
+                , Attrs.attribute "data-nimg" "1"
+                , Attrs.class "h-16 w-16 rounded-full"
+                , Attrs.style "color" "transparent"
+                , Attrs.src image
+                ]
+                []
+        )
+        authors
+        |> Html.div [ Attrs.class "flex -space-x-2" ]
+
+
 viewBlogpostAuthor published author =
     Html.div
         [ Attrs.class "flex items-center space-x-2"
@@ -99,8 +119,13 @@ viewBlogpost authors { metadata, body, previousPost, nextPost } =
                     [ Attrs.class "sr-only"
                     ]
                     [ Html.text "Authors" ]
-                , Html.dd [] <|
-                    List.map (viewBlogpostAuthor metadata.status) blogpostAuthors
+                , Html.dd [ Attrs.class "flex space-x-4" ]
+                    [ authorImages blogpostAuthors
+                    , Html.div [ Attrs.class "flex flex-col justify-around items-start" ]
+                        [ Html.span [ Attrs.class "text-xl font-bold text-white" ] [ Html.text <| String.join ", " <| List.map .name blogpostAuthors ]
+                        , viewPublishedDate metadata.status
+                        ]
+                    ]
                 ]
 
         header =
