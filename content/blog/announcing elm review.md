@@ -2,7 +2,7 @@
 title: Announcing elm-review
 image: /images/announcing-elm-review/order-chaos.jpeg
 authors: [jeroen, default]
-status: draft
+published: "2019-09-29"
 slug: jfmengels-announcing-elm-review
 tags: 
   - elm-review
