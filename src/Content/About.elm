@@ -11,6 +11,7 @@ import Json.Decode as Decode
 type alias Author =
     { body : String
     , name : String
+    , avatar : Maybe String
     , socials : List ( String, String )
     , occupation : Maybe String
     , company : Maybe String
@@ -51,8 +52,9 @@ allAuthors =
 
 authorDecoder : String -> String -> Decode.Decoder Author
 authorDecoder slug body =
-    Decode.map5 (Author body)
+    Decode.map6 (Author body)
         (Decode.field "name" Decode.string)
+        (Decode.maybe <| Decode.field "avatar" Decode.string)
         (Decode.map (Maybe.withDefault []) <| Decode.maybe <| Decode.field "socials" <| Decode.keyValuePairs Decode.string)
         (Decode.maybe <| Decode.field "occupation" Decode.string)
         (Decode.maybe <| Decode.field "company" Decode.string)

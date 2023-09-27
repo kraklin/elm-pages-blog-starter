@@ -2,6 +2,7 @@
 title: Demystifying Pratt Parsers
 description: Pratt parsers are a beautiful way of solving the operator precedence problem.
 published: "2023-07-03"
+authors: [martin, default]
 ---
 ## TL;DR
 

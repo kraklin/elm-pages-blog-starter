@@ -81,7 +81,7 @@ viewBlogpost authors { metadata, body, previousPost, nextPost } =
                 |> List.map
                     (\author ->
                         { name = author.name
-                        , image = "/images/authors/" ++ author.slug ++ ".png"
+                        , image = author.avatar |> Maybe.withDefault "/images/authors/default.png"
                         }
                     )
 

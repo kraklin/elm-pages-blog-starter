@@ -1,6 +1,6 @@
 ---
 name: Franklin Frisby
-avatar: /images/avatar.png
+avatar: /images/authors/default.png
 occupation: Professor of Functional Programming
 company: East Elm University
 socials:

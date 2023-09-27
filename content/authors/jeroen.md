@@ -1,6 +1,6 @@
 ---
 name: Jeroen Engels
-avatar: /images/avatar.png
+avatar: /images/authors/jeroen.png
 socials:
   twitter: https://twitter.com/jfmengels
 ---
