@@ -58,14 +58,18 @@ data =
 head :
     App Data ActionData RouteParams
     -> List Head.Tag
-head app =
-    Seo.summary
+head _ =
+    let
+        imageUrl =
+            [ "media", "blog-image.png" ] |> UrlPath.join |> Pages.Url.fromPath
+    in
+    (Seo.summaryLarge
         { canonicalUrlOverride = Nothing
         , siteName = Settings.title
         , image =
-            { url = [ "logo.svg" ] |> UrlPath.join |> Pages.Url.fromPath
+            { url = imageUrl
             , alt = "logo"
-            , dimensions = Nothing
+            , dimensions = Just { width = 512, height = 512 }
             , mimeType = Nothing
             }
         , description = Settings.subtitle
@@ -73,6 +77,8 @@ head app =
         , title = Settings.title
         }
         |> Seo.website
+    )
+        ++ [ Head.metaName "image" (Head.raw <| String.dropRight 1 Settings.canonicalUrl ++ Pages.Url.toString imageUrl) ]
 
 
 view :

@@ -15,6 +15,10 @@ canonicalUrl =
     "https://elm-pages-blog-template.netlify.com"
 
 
+
+--"https://thirty-results-pick.loca.lt/"
+
+
 title : String
 title =
     "Elm Blog Starter kit"
