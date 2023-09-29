@@ -8,6 +8,8 @@ import Head
 import Head.Seo as Seo
 import Html
 import Html.Attributes as Attrs
+import LanguageTag.Country as Country
+import LanguageTag.Language as Language
 import Layout.Blogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
@@ -69,11 +71,11 @@ head _ =
         , image =
             { url = imageUrl
             , alt = "logo"
-            , dimensions = Just { width = 512, height = 512 }
+            , dimensions = Just { width = 500, height = 333 }
             , mimeType = Nothing
             }
         , description = Settings.subtitle
-        , locale = Nothing
+        , locale = Just ( Language.en, Country.us )
         , title = Settings.title
         }
         |> Seo.website
