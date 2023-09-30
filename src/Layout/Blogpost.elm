@@ -79,17 +79,17 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
 
         authorsView =
             Html.dl
-                [ Attrs.class "pb-4 xl:pb-8 pt-4 xl:pt-12"
+                [ Attrs.class "max-w-[65ch] py-4 xl:pb-8 xl:pt-12"
                 ]
                 [ Html.dt
                     [ Attrs.class "sr-only"
                     ]
                     [ Html.text "Authors" ]
-                , Html.dd [ Attrs.class "flex" ]
+                , Html.dd [ Attrs.class "border-l-4 border-primary-500 pl-4 flex" ]
                     [ authorImages blogpostAuthors
                     , Html.div [ Attrs.class "flex flex-col justify-around items-start sm:pl-4" ]
-                        [ Html.span [ Attrs.class "text-lg font-bold text-white" ] [ Html.text <| String.join ", " <| List.map .name blogpostAuthors ]
-                        , Html.div [ Attrs.class "flex space-x-4" ]
+                        [ Html.span [ Attrs.class "text-lg font-bold text-black dark:text-white" ] [ Html.text <| String.join ", " <| List.map .name blogpostAuthors ]
+                        , Html.div [ Attrs.class "flex space-x-4 text-base" ]
                             [ viewPublishedDate metadata.status
                             , Html.span []
                                 [ Html.text "Reading time: "
@@ -103,11 +103,11 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
 
         header =
             Html.div
-                [ Attrs.class "max-width-[65ch] space-y-1 pb-4 xl:pb-10 dark:border-gray-700"
+                [ Attrs.class "max-w-[65ch] m-auto space-y-1 xl:text-xl dark:border-gray-700"
                 ]
                 [ Html.div
                     []
-                    [ Html.h1 [ Attrs.class "mt-8 pb-4 font-bold text-5xl text-gray-900 dark:text-gray-100" ]
+                    [ Html.h1 [ Attrs.class "mt-8 pb-4 font-bold text-3xl md:text-5xl text-gray-900 dark:text-gray-100" ]
                         [ Html.text metadata.title
                         ]
                     , authorsView
@@ -168,7 +168,7 @@ viewPublishedDate status =
     case status of
         Draft ->
             Html.span
-                [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
+                [ Attrs.class "leading-6 text-gray-500 dark:text-gray-400"
                 ]
                 [ Html.text "Draft"
                 ]
@@ -180,7 +180,7 @@ viewPublishedDate status =
                     ]
                     [ Html.text "Published on" ]
                 , Html.dd
-                    [ Attrs.class "text-base font-medium leading-6 text-gray-500 dark:text-gray-400"
+                    [ Attrs.class "leading-6 text-gray-500 dark:text-gray-400"
                     ]
                     [ Html.time
                         [ Attrs.datetime <| Date.toIsoString date

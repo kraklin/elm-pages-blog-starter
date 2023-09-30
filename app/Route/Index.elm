@@ -63,7 +63,7 @@ head _ =
         imageUrl =
             [ "media", "blog-image.png" ] |> UrlPath.join |> Pages.Url.fromPath
     in
-    (Seo.summary
+    Seo.summaryLarge
         { canonicalUrlOverride = Nothing
         , siteName = Settings.title
         , image =
@@ -77,8 +77,6 @@ head _ =
         , title = Settings.title
         }
         |> Seo.website
-    )
-        ++ [ Head.metaName "image" (Head.raw <| Pages.Url.toString imageUrl) ]
 
 
 view :
