@@ -194,7 +194,7 @@ view showMenu onMenuToggle body =
                             ]
                             [ logo
                             , Html.div
-                                [ Attrs.class "hidden h-6 text-2xl font-semibold sm:block dark:text-white"
+                                [ Attrs.class "h-6 text-2xl font-semibold dark:text-white"
                                 ]
                                 [ Html.text Settings.title ]
                             ]

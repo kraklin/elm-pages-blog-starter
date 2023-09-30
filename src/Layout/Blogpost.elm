@@ -29,7 +29,7 @@ authorImages authors =
                 , Attrs.height 38
                 , Attrs.attribute "decoding" "async"
                 , Attrs.attribute "data-nimg" "1"
-                , Attrs.class "h-16 w-16 rounded-full hidden sm:block"
+                , Attrs.class "h-12 w-12 rounded-full hidden sm:block"
                 , Attrs.style "color" "transparent"
                 , Attrs.src image
                 ]
@@ -79,22 +79,22 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
 
         authorsView =
             Html.dl
-                [ Attrs.class "pb-4 xl:pb-8 pt-4 xl:pt-12 xl:px-28"
+                [ Attrs.class "pb-4 xl:pb-8 pt-4 xl:pt-12"
                 ]
                 [ Html.dt
                     [ Attrs.class "sr-only"
                     ]
                     [ Html.text "Authors" ]
-                , Html.dd [ Attrs.class "flex space-x-4" ]
+                , Html.dd [ Attrs.class "flex" ]
                     [ authorImages blogpostAuthors
-                    , Html.div [ Attrs.class "flex flex-col justify-around items-start" ]
-                        [ Html.span [ Attrs.class "text-xl font-bold text-white" ] [ Html.text <| String.join ", " <| List.map .name blogpostAuthors ]
+                    , Html.div [ Attrs.class "flex flex-col justify-around items-start sm:pl-4" ]
+                        [ Html.span [ Attrs.class "text-lg font-bold text-white" ] [ Html.text <| String.join ", " <| List.map .name blogpostAuthors ]
                         , Html.div [ Attrs.class "flex space-x-4" ]
                             [ viewPublishedDate metadata.status
                             , Html.span []
                                 [ Html.text "Reading time: "
                                 , Html.text <| String.fromInt metadata.readingTimeInMin
-                                , Html.text "min"
+                                , Html.text " min"
                                 ]
                             ]
                         ]
@@ -103,16 +103,15 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
 
         header =
             Html.div
-                [ Attrs.class "space-y-1 pb-4 xl:pb-10 text-center dark:border-gray-700"
+                [ Attrs.class "max-width-[65ch] space-y-1 pb-4 xl:pb-10 dark:border-gray-700"
                 ]
                 [ Html.div
-                    [ Attrs.class "pt-10"
-                    ]
-                    [ Html.h1 [ Attrs.class "mt-16 pb-8 font-bold text-center text-5xl text-gray-900 dark:text-gray-100" ]
+                    []
+                    [ Html.h1 [ Attrs.class "mt-8 pb-4 font-bold text-5xl text-gray-900 dark:text-gray-100" ]
                         [ Html.text metadata.title
                         ]
+                    , authorsView
                     ]
-                , authorsView
                 , Html.Extra.viewMaybe
                     (\imagePath ->
                         Html.div
@@ -155,7 +154,7 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
                     [ Html.p [ Attrs.class "font-bold" ] [ Html.text description ] ]
             )
             metadata.description
-        , Html.div
+        , Html.article
             [ Attrs.class "mx-auto prose lg:prose-xl dark:prose-invert" ]
             (Markdown.blogpostToHtml body)
         , Html.div
