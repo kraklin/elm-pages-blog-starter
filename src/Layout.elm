@@ -42,23 +42,24 @@ logo =
 
 viewMainMenuItem : { label : String, route : Route } -> Html msg
 viewMainMenuItem { label, route } =
-    Html.a
+    Route.link
         [ Attrs.class "hidden sm:block font-medium text-gray-900 dark:text-gray-100 hover:underline decoration-primary-500"
-        , Attrs.href <| Route.toString route
         ]
         [ Html.text label ]
+        route
 
 
-viewSideMainMenuItem : { label : String, route : Route } -> Html msg
-viewSideMainMenuItem { label, route } =
+viewSideMainMenuItem : msg -> { label : String, route : Route } -> Html msg
+viewSideMainMenuItem onMenuToggle { label, route } =
     Html.div
         [ Attrs.class "px-12 py-4"
         ]
-        [ Html.a
+        [ Route.link
             [ Attrs.class "text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
-            , Attrs.href <| Route.toString route
+            , Events.onClick onMenuToggle
             ]
             [ Html.text label ]
+            route
         ]
 
 
@@ -113,7 +114,7 @@ viewMenu showMenu onMenuToggle =
         sideMenuItems =
             { label = "Home", route = Route.Index }
                 :: menu
-                |> List.map viewSideMainMenuItem
+                |> List.map (viewSideMainMenuItem onMenuToggle)
     in
     Html.div
         [ Attrs.class "flex items-center leading-5 space-x-4 sm:space-x-6"
