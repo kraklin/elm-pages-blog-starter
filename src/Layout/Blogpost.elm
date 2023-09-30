@@ -2,13 +2,10 @@ module Layout.Blogpost exposing
     ( viewBlogpost
     , viewListItem
     , viewPostList
-    , viewPublishedDate
     )
 
-import Content.About exposing (Author)
 import Content.Blogpost exposing (Blogpost, Metadata, Status(..), TagWithCount)
 import Date
-import Dict exposing (Dict)
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Extra
@@ -21,6 +18,7 @@ import Route
 -- VIEW
 
 
+authorImages : List { a | image : String } -> Html msg
 authorImages authors =
     List.map
         (\{ image } ->
@@ -39,38 +37,6 @@ authorImages authors =
         )
         authors
         |> Html.div [ Attrs.class "flex -space-x-2" ]
-
-
-viewBlogpostAuthor published author =
-    Html.div
-        [ Attrs.class "flex items-center space-x-2"
-        ]
-        [ Html.img
-            [ Attrs.alt "avatar"
-            , Attrs.attribute "loading" "lazy"
-            , Attrs.width 38
-            , Attrs.height 38
-            , Attrs.attribute "decoding" "async"
-            , Attrs.attribute "data-nimg" "1"
-            , Attrs.class "h-16 w-16 rounded-full"
-            , Attrs.style "color" "transparent"
-            , Attrs.src author.image
-            ]
-            []
-        , Html.dl
-            [ Attrs.class "flex flex-col items-start whitespace-nowrap text-sm font-medium leading-5"
-            ]
-            [ Html.dt
-                [ Attrs.class "sr-only"
-                ]
-                [ Html.text "Name" ]
-            , Html.dd
-                [ Attrs.class "text-base md:text-xl text-gray-900 dark:text-gray-100"
-                ]
-                [ Html.text author.name ]
-            , viewPublishedDate published
-            ]
-        ]
 
 
 viewBlogpost : Blogpost -> Html msg

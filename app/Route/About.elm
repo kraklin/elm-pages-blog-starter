@@ -1,13 +1,13 @@
-module Route.About exposing (ActionData, Data, Model, Msg, route)
+module Route.About exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask
 import Content.About exposing (Author)
+import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
 import Layout.About
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
-import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import UrlPath
@@ -43,6 +43,7 @@ route =
         |> RouteBuilder.buildNoState { view = view }
 
 
+data : BackendTask.BackendTask FatalError Data
 data =
     Content.About.defaultAuthor
         |> BackendTask.allowFatal
@@ -52,7 +53,7 @@ data =
 head :
     App Data ActionData RouteParams
     -> List Head.Tag
-head app =
+head _ =
     Seo.summary
         { canonicalUrlOverride = Nothing
         , siteName = "elm-pages"
@@ -73,7 +74,7 @@ view :
     App Data ActionData RouteParams
     -> Shared.Model
     -> View (PagesMsg Msg)
-view app shared =
+view app _ =
     { title = "About"
     , body =
         [ Layout.About.view app.data.author ]

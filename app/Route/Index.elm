@@ -1,8 +1,7 @@
-module Route.Index exposing (ActionData, Data, Model, Msg, route)
+module Route.Index exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
 import Content.Blogpost exposing (Metadata)
-import Date
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -13,7 +12,6 @@ import LanguageTag.Language as Language
 import Layout.Blogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
-import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Settings
 import Shared
@@ -65,7 +63,7 @@ head _ =
         imageUrl =
             [ "media", "blog-image.png" ] |> UrlPath.join |> Pages.Url.fromPath
     in
-    (Seo.summaryLarge
+    (Seo.summary
         { canonicalUrlOverride = Nothing
         , siteName = Settings.title
         , image =
@@ -80,14 +78,14 @@ head _ =
         }
         |> Seo.website
     )
-        ++ [ Head.metaName "image" (Head.raw <| String.dropRight 1 Settings.canonicalUrl ++ Pages.Url.toString imageUrl) ]
+        ++ [ Head.metaName "image" (Head.raw <| Pages.Url.toString imageUrl) ]
 
 
 view :
     App Data ActionData RouteParams
     -> Shared.Model
     -> View (PagesMsg Msg)
-view app shared =
+view app _ =
     { title = Settings.title
     , body =
         --TODO move to layout part

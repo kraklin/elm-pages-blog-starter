@@ -1,18 +1,11 @@
-module Route.Tags.Slug_ exposing (ActionData, Data, Model, Msg, route)
+module Route.Tags.Slug_ exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
-import BackendTask exposing (BackendTask, allowFatal)
-import BackendTask.File as File
-import BackendTask.Glob as Glob
-import Content.Blogpost exposing (Blogpost, Metadata, TagWithCount)
+import BackendTask exposing (BackendTask)
+import Content.Blogpost exposing (Metadata, TagWithCount)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
-import Html exposing (Html)
-import Json.Decode as Decode
-import Json.Decode.Extra as Decode
 import Layout.Blogpost
-import Markdown.Parser
-import Markdown.Renderer
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
@@ -83,7 +76,7 @@ data routeParams =
 head :
     App Data ActionData RouteParams
     -> List Head.Tag
-head app =
+head _ =
     Seo.summary
         { canonicalUrlOverride = Nothing
         , siteName = Settings.title
@@ -104,7 +97,7 @@ view :
     App Data ActionData RouteParams
     -> Shared.Model
     -> View (PagesMsg Msg)
-view app sharedModel =
+view app _ =
     { title = "Tag: TODO"
     , body = Layout.Blogpost.viewPostList app.data.tags app.data.blogposts app.data.selectedTag
     }

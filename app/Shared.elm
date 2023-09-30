@@ -25,8 +25,7 @@ template =
 
 
 type Msg
-    = SharedMsg SharedMsg
-    | MenuClicked
+    = MenuClicked
 
 
 type alias Data =
@@ -55,7 +54,7 @@ init :
             , pageUrl : Maybe PageUrl
             }
     -> ( Model, Effect Msg )
-init flags maybePagePath =
+init _ _ =
     ( { showMenu = False }
     , Effect.none
     )
@@ -64,9 +63,6 @@ init flags maybePagePath =
 update : Msg -> Model -> ( Model, Effect Msg )
 update msg model =
     case msg of
-        SharedMsg globalMsg ->
-            ( model, Effect.none )
-
         MenuClicked ->
             ( { model | showMenu = not model.showMenu }, Effect.none )
 
@@ -91,7 +87,7 @@ view :
     -> (Msg -> msg)
     -> View msg
     -> { body : List (Html msg), title : String }
-view sharedData page model toMsg pageView =
+view _ _ model toMsg pageView =
     { body = Layout.view model.showMenu (toMsg MenuClicked) pageView.body
     , title = pageView.title
     }

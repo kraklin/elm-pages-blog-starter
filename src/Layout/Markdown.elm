@@ -2,7 +2,7 @@ module Layout.Markdown exposing (blogpostToHtml, toHtml)
 
 import Html exposing (Html)
 import Html.Attributes as Attrs
-import Markdown.Block as Block exposing (Block)
+import Markdown.Block as Block
 import Markdown.Parser
 import Markdown.Renderer exposing (defaultHtmlRenderer)
 import Parser exposing (DeadEnd)

@@ -1,15 +1,18 @@
-module Effect exposing (Effect(..), batch, fromCmd, map, none, perform)
+module Effect exposing
+    ( Effect(..), batch, fromCmd, map, none, perform
+    , FormData
+    )
 
 {-|
 
 @docs Effect, batch, fromCmd, map, none, perform
+@docs FormData
 
 -}
 
 import Browser.Navigation
 import Form
 import Http
-import Json.Decode as Decode
 import Pages.Fetcher
 import Url exposing (Url)
 
@@ -19,23 +22,6 @@ type Effect msg
     = None
     | Cmd (Cmd msg)
     | Batch (List (Effect msg))
-    | SetField { formId : String, name : String, value : String }
-    | FetchRouteData
-        { data : Maybe FormData
-        , toMsg : Result Http.Error Url -> msg
-        }
-    | Submit
-        { values : FormData
-        , toMsg : Result Http.Error Url -> msg
-        }
-    | SubmitFetcher (Pages.Fetcher.Fetcher msg)
-
-
-{-| -}
-type alias RequestInfo =
-    { contentType : String
-    , body : String
-    }
 
 
 {-| -}
@@ -69,26 +55,6 @@ map fn effect =
         Batch list ->
             Batch (List.map (map fn) list)
 
-        FetchRouteData fetchInfo ->
-            FetchRouteData
-                { data = fetchInfo.data
-                , toMsg = fetchInfo.toMsg >> fn
-                }
-
-        Submit fetchInfo ->
-            Submit
-                { values = fetchInfo.values
-                , toMsg = fetchInfo.toMsg >> fn
-                }
-
-        SetField info ->
-            SetField info
-
-        SubmitFetcher fetcher ->
-            fetcher
-                |> Pages.Fetcher.map fn
-                |> SubmitFetcher
-
 
 {-| -}
 perform :
@@ -119,21 +85,8 @@ perform ({ fromPageMsg, key } as helpers) effect =
         Cmd cmd ->
             Cmd.map fromPageMsg cmd
 
-        SetField info ->
-            helpers.setField info
-
         Batch list ->
             Cmd.batch (List.map (perform helpers) list)
-
-        FetchRouteData fetchInfo ->
-            helpers.fetchRouteData
-                fetchInfo
-
-        Submit record ->
-            helpers.submit record
-
-        SubmitFetcher record ->
-            helpers.runFetcher record
 
 
 type alias FormData =

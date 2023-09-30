@@ -6,13 +6,12 @@ module Content.Blogpost exposing
     , allBlogposts
     , allTags
     , blogpostFromSlug
-    , getPublishedDate
     )
 
 import Array
 import BackendTask exposing (BackendTask)
 import BackendTask.Env
-import BackendTask.File as File exposing (FileReadError)
+import BackendTask.File as File
 import BackendTask.Glob as Glob
 import Content.About exposing (Author)
 import Date exposing (Date)
@@ -84,6 +83,7 @@ allTags =
             )
 
 
+decodeStatus : Decoder Status
 decodeStatus =
     Decode.map2
         (\publishedDate statusString ->

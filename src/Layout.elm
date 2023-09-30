@@ -3,7 +3,7 @@ module Layout exposing (view)
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Events as Events
-import Route exposing (Route(..))
+import Route exposing (Route)
 import Settings
 import Svg
 import Svg.Attributes as SvgAttrs

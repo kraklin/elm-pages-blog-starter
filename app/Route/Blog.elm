@@ -1,4 +1,4 @@
-module Route.Blog exposing (ActionData, Data, Model, Msg, route)
+module Route.Blog exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
 import Content.Blogpost exposing (Metadata, TagWithCount)
@@ -8,7 +8,6 @@ import Head.Seo as Seo
 import Layout.Blogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
-import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import UrlPath
@@ -59,7 +58,7 @@ data =
 head :
     App Data ActionData RouteParams
     -> List Head.Tag
-head app =
+head _ =
     Seo.summary
         { canonicalUrlOverride = Nothing
         , siteName = "elm-pages"
@@ -80,7 +79,7 @@ view :
     App Data ActionData RouteParams
     -> Shared.Model
     -> View (PagesMsg Msg)
-view app shared =
+view app _ =
     { title = "Blog"
     , body =
         Layout.Blogpost.viewPostList app.data.tags app.data.blogposts Nothing

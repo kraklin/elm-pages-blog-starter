@@ -1,4 +1,4 @@
-module Route.Tags exposing (ActionData, Data, Model, Msg, route)
+module Route.Tags exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
 import Content.Blogpost exposing (TagWithCount)
@@ -8,7 +8,6 @@ import Head.Seo as Seo
 import Layout.Tags
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
-import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import UrlPath
@@ -54,7 +53,7 @@ data =
 head :
     App Data ActionData RouteParams
     -> List Head.Tag
-head app =
+head _ =
     Seo.summary
         { canonicalUrlOverride = Nothing
         , siteName = "elm-pages"
@@ -75,7 +74,7 @@ view :
     App Data ActionData RouteParams
     -> Shared.Model
     -> View (PagesMsg Msg)
-view app shared =
+view app _ =
     { title = "Tags"
     , body =
         [ Layout.Tags.view app.data.tags ]

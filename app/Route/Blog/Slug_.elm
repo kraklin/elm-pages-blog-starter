@@ -1,9 +1,7 @@
-module Route.Blog.Slug_ exposing (ActionData, Data, Model, Msg, route)
+module Route.Blog.Slug_ exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
-import Content.About exposing (Author)
 import Content.Blogpost exposing (Blogpost)
-import Dict exposing (Dict)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -69,18 +67,18 @@ head app =
     let
         imagePath =
             app.data.blogpost.metadata.image
-                |> Maybe.withDefault "/media/logo.svg"
+                |> Maybe.withDefault "/media/blog-image.png"
     in
     Seo.summaryLarge
         { canonicalUrlOverride = Just Settings.canonicalUrl
         , siteName = Settings.title
         , image =
-            { url = Pages.Url.external <| Settings.canonicalUrl ++ imagePath
+            { url = Pages.Url.external imagePath
             , alt = app.data.blogpost.metadata.title
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = Maybe.withDefault "" app.data.blogpost.metadata.description
+        , description = Maybe.withDefault Settings.subtitle app.data.blogpost.metadata.description
         , locale = Nothing
         , title = app.data.blogpost.metadata.title
         }
@@ -91,7 +89,7 @@ view :
     App Data ActionData RouteParams
     -> Shared.Model
     -> View (PagesMsg Msg)
-view app sharedModel =
+view app _ =
     { title = app.data.blogpost.metadata.title
     , body = [ Layout.Blogpost.viewBlogpost app.data.blogpost ]
     }

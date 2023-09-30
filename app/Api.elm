@@ -1,4 +1,4 @@
-module Api exposing (routes)
+module Api exposing (manifest, routes)
 
 import ApiRoute exposing (ApiRoute)
 import BackendTask exposing (BackendTask)
