@@ -11,6 +11,8 @@ export default {
 <link rel="mask-icon" href="/media/logo.svg" color="#000000">
 <link rel="apple-touch-icon" href="logo-180.png">
 <meta name="generator" content="elm-pages v${context.cliVersion}" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a" />
 `;
 //  <link rel="manifest" href="manifest.json">
 
