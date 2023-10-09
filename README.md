@@ -18,7 +18,7 @@
 - ~~Tags~~
 - ~~About page~~ 
 - ~~Syntax highlighting of code~~ 
-  - cover all supported languages
+  ~~- cover all supported languages~~
 - ~~Previous and next links in blogposts~~ 
 - ~~Images~~
   - ~~main image in header and in SEO ~~

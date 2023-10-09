@@ -18,6 +18,27 @@ language lang =
         Just "elm" ->
             SyntaxHighlight.elm
 
+        Just "css" ->
+            SyntaxHighlight.css
+
+        Just "sql" ->
+            SyntaxHighlight.sql
+
+        Just "xml" ->
+            SyntaxHighlight.xml
+
+        Just "html" ->
+            SyntaxHighlight.xml
+
+        Just "nix" ->
+            SyntaxHighlight.nix
+
+        Just "json" ->
+            SyntaxHighlight.json
+
+        Just "python" ->
+            SyntaxHighlight.python
+
         _ ->
             SyntaxHighlight.noLang
 
