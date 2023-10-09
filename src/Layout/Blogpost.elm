@@ -243,7 +243,7 @@ viewListItem metadata =
                 [ Html.div
                     [ Attrs.class "space-y-6"
                     ]
-                    [ Html.div []
+                    [ Html.div [ Attrs.class "space-y-4 xl:space-y-2" ]
                         [ Html.h2
                             [ Attrs.class "text-2xl font-bold leading-8 tracking-tight"
                             ]
@@ -254,7 +254,7 @@ viewListItem metadata =
                                     [ Html.text metadata.title ]
                             ]
                         , Html.div
-                            [ Attrs.class "flex flex-wrap"
+                            [ Attrs.class "flex flex-wrap space-x-4 xl:space-x-2"
                             ]
                           <|
                             List.map Layout.Tags.viewTag metadata.tags

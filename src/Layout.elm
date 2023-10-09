@@ -116,7 +116,7 @@ viewMenu showMenu onMenuToggle =
                 :: menu
                 |> List.map (viewSideMainMenuItem onMenuToggle)
     in
-    Html.div
+    Html.nav
         [ Attrs.class "flex items-center leading-5 space-x-4 sm:space-x-6"
         ]
         (mainMenuItems
@@ -167,7 +167,7 @@ viewMenu showMenu onMenuToggle =
                                 ]
                             ]
                         ]
-                    , Html.nav
+                    , Html.div
                         [ Attrs.class "fixed mt-8 h-full"
                         ]
                         sideMenuItems
@@ -179,7 +179,7 @@ viewMenu showMenu onMenuToggle =
 view : Bool -> msg -> List (Html msg) -> List (Html msg)
 view showMenu onMenuToggle body =
     [ background
-    , Html.section [ Attrs.class "mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0" ]
+    , Html.div [ Attrs.class "mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0" ]
         [ Html.div [ Attrs.class "flex h-screen flex-col justify-between font-sans" ]
             [ Html.header
                 [ Attrs.class "flex items-center justify-between py-10"
