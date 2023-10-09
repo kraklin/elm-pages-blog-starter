@@ -1,10 +1,41 @@
-module Layout.About exposing (view)
+module Layout.About exposing (seoHeaders, view)
 
+import Content.About exposing (Author)
+import Head
+import Head.Seo as Seo
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Extra
 import Layout.Markdown as Markdown
+import Pages.Url
 import Phosphor
+import Settings
+import UrlPath
+
+
+seoHeaders : Author -> List Head.Tag
+seoHeaders author =
+    let
+        imageUrl =
+            author.avatar
+                |> Maybe.map (\authorAvatar -> Pages.Url.fromPath <| UrlPath.fromString authorAvatar)
+                |> Maybe.withDefault
+                    ([ "media", "blog-image.png" ] |> UrlPath.join |> Pages.Url.fromPath)
+    in
+    Seo.summary
+        { canonicalUrlOverride = Nothing
+        , siteName = Settings.title
+        , image =
+            { url = imageUrl
+            , alt = author.name
+            , dimensions = Just { width = 300, height = 300 }
+            , mimeType = Nothing
+            }
+        , description = author.name ++ " - " ++ (author.occupation |> Maybe.withDefault ("Author of blogposts on " ++ Settings.title))
+        , locale = Settings.locale
+        , title = author.name
+        }
+        |> Seo.website
 
 
 socialsView : List ( String, String ) -> Html msg
@@ -64,7 +95,7 @@ socialsView socials =
             ]
 
 
-view : { a | name : String, occupation : Maybe String, company : Maybe String, socials : List ( String, String ), body : String } -> Html msg
+view : Author -> Html msg
 view author =
     Html.div
         [ Attrs.class "divide-y divide-gray-200 dark:divide-gray-700"
