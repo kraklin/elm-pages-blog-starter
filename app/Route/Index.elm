@@ -9,6 +9,7 @@ import Html
 import Html.Attributes as Attrs
 import LanguageTag.Country as Country
 import LanguageTag.Language as Language
+import Layout
 import Layout.Blogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
@@ -59,24 +60,7 @@ head :
     App Data ActionData RouteParams
     -> List Head.Tag
 head _ =
-    let
-        imageUrl =
-            [ "media", "blog-image.png" ] |> UrlPath.join |> Pages.Url.fromPath
-    in
-    Seo.summaryLarge
-        { canonicalUrlOverride = Nothing
-        , siteName = Settings.title
-        , image =
-            { url = imageUrl
-            , alt = "logo"
-            , dimensions = Just { width = 500, height = 333 }
-            , mimeType = Nothing
-            }
-        , description = Settings.subtitle
-        , locale = Just ( Language.en, Country.us )
-        , title = Settings.title
-        }
-        |> Seo.website
+    Layout.seoHeaders
 
 
 view :

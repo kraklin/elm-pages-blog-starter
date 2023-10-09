@@ -5,6 +5,7 @@ import Content.Blogpost exposing (TagWithCount)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
+import Layout
 import Layout.Tags
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
@@ -27,8 +28,7 @@ type alias RouteParams =
 
 
 type alias Data =
-    { tags : List TagWithCount
-    }
+    List TagWithCount
 
 
 type alias ActionData =
@@ -47,27 +47,13 @@ route =
 data : BackendTask FatalError Data
 data =
     Content.Blogpost.allTags
-        |> BackendTask.map (\allTags -> { tags = allTags })
 
 
 head :
     App Data ActionData RouteParams
     -> List Head.Tag
 head _ =
-    Seo.summary
-        { canonicalUrlOverride = Nothing
-        , siteName = "elm-pages"
-        , image =
-            { url = [ "images", "icon-png.png" ] |> UrlPath.join |> Pages.Url.fromPath
-            , alt = "elm-pages logo"
-            , dimensions = Nothing
-            , mimeType = Nothing
-            }
-        , description = "Welcome to elm-pages!"
-        , locale = Nothing
-        , title = "elm-pages is running"
-        }
-        |> Seo.website
+    Layout.seoHeaders
 
 
 view :
@@ -77,5 +63,5 @@ view :
 view app _ =
     { title = "Tags"
     , body =
-        [ Layout.Tags.view app.data.tags ]
+        [ Layout.Tags.view app.data ]
     }

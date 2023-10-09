@@ -1,12 +1,40 @@
-module Layout exposing (view)
+module Layout exposing (seoHeaders, view)
 
+import Head exposing (Tag)
+import Head.Seo as Seo
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Events as Events
+import LanguageTag.Country as Country
+import LanguageTag.Language as Language
+import Pages.Url
 import Route exposing (Route)
 import Settings
 import Svg
 import Svg.Attributes as SvgAttrs
+import UrlPath
+
+
+seoHeaders : List Tag
+seoHeaders =
+    let
+        imageUrl =
+            [ "media", "blog-image.png" ] |> UrlPath.join |> Pages.Url.fromPath
+    in
+    Seo.summaryLarge
+        { canonicalUrlOverride = Nothing
+        , siteName = Settings.title
+        , image =
+            { url = imageUrl
+            , alt = "logo"
+            , dimensions = Just { width = 500, height = 333 }
+            , mimeType = Nothing
+            }
+        , description = Settings.subtitle
+        , locale = Just ( Language.en, Country.us )
+        , title = Settings.title
+        }
+        |> Seo.website
 
 
 menu : List { label : String, route : Route }

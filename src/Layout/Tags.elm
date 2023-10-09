@@ -14,15 +14,15 @@ viewTagWithCount { slug, title, count } =
         ]
         [ Route.Tags__Slug_ { slug = String.Normalize.slug slug }
             |> Route.link
-                [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                ]
-                [ Html.text title ]
-        , Route.Tags__Slug_ { slug = String.Normalize.slug slug }
-            |> Route.link
-                [ Attrs.class "-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300"
+                [ Attrs.class "text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                 , Attrs.attribute "aria-label" ("View posts tagged " ++ title)
                 ]
-                [ Html.text <| "(" ++ String.fromInt count ++ ")" ]
+                [ Html.text title
+                , Html.span
+                    [ Attrs.class "ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300"
+                    ]
+                    [ Html.text <| "(" ++ String.fromInt count ++ ")" ]
+                ]
         ]
 
 
