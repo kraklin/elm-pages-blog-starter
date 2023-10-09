@@ -68,8 +68,23 @@ head app =
         imagePath =
             app.data.blogpost.metadata.image
                 |> Maybe.withDefault "/media/blog-image.png"
+
+        authorsHeader =
+            case app.data.blogpost.metadata.authors of
+                [] ->
+                    []
+
+                [ author ] ->
+                    [ Head.metaName "twitter:label1" <| Head.raw "Author"
+                    , Head.metaName "twitter:data1" <| Head.raw author.name
+                    ]
+
+                authors ->
+                    [ Head.metaName "twitter:label1" <| Head.raw "Authors"
+                    , Head.metaName "twitter:data1" <| Head.raw <| String.join ", " <| List.map .name authors
+                    ]
     in
-    Seo.summaryLarge
+    (Seo.summaryLarge
         { canonicalUrlOverride = Just Settings.canonicalUrl
         , siteName = Settings.title
         , image =
@@ -83,6 +98,11 @@ head app =
         , title = app.data.blogpost.metadata.title
         }
         |> Seo.website
+    )
+        ++ authorsHeader
+        ++ [ Head.metaName "twitter:label2" <| Head.raw "Reading time"
+           , Head.metaName "twitter:data2" <| Head.raw <| String.fromInt app.data.blogpost.metadata.readingTimeInMin ++ " min"
+           ]
 
 
 view :
