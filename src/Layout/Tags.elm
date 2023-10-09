@@ -14,7 +14,7 @@ viewTagWithCount { slug, title, count } =
         ]
         [ Route.Tags__Slug_ { slug = String.Normalize.slug slug }
             |> Route.link
-                [ Attrs.class "text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                [ Attrs.class "text-sm font-medium uppercase text-primary-700 dark:text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                 , Attrs.attribute "aria-label" ("View posts tagged " ++ title)
                 ]
                 [ Html.text title
@@ -30,7 +30,7 @@ viewTag : String -> Html msg
 viewTag slug =
     Route.Tags__Slug_ { slug = String.Normalize.slug slug }
         |> Route.link
-            [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            [ Attrs.class "mr-3 text-sm font-medium uppercase text-primary-700 dark:text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
             ]
             [ Html.text slug ]
 

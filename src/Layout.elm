@@ -48,7 +48,7 @@ menu =
 logo : Html msg
 logo =
     Html.div
-        [ Attrs.class "mr-1 text-primary-400"
+        [ Attrs.class "mr-1 text-primary-600 dark:text-primary-500"
         ]
         [ Svg.svg
             [ SvgAttrs.width "80"
