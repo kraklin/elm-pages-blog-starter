@@ -92,9 +92,8 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
                         , Html.div [ Attrs.class "flex space-x-4 text-base" ]
                             [ viewPublishedDate metadata.status
                             , Html.span []
-                                [ Html.text "Reading time: "
-                                , Html.text <| String.fromInt metadata.readingTimeInMin
-                                , Html.text " min"
+                                [ Html.text <| String.fromInt metadata.readingTimeInMin
+                                , Html.text " min reading time"
                                 ]
                             ]
                         ]
@@ -253,11 +252,10 @@ viewListItem metadata =
                                     ]
                                     [ Html.text metadata.title ]
                             ]
-                        , Html.div
-                            [ Attrs.class "flex flex-wrap space-x-4 xl:space-x-2"
-                            ]
-                          <|
-                            List.map Layout.Tags.viewTag metadata.tags
+                        , Html.Extra.viewIf (not <| List.isEmpty metadata.tags)
+                            (Html.div [ Attrs.class "flex flex-wrap space-x-4 xl:space-x-2" ]
+                                (List.map Layout.Tags.viewTag metadata.tags)
+                            )
                         ]
                     , Html.Extra.viewMaybe
                         (\description ->
