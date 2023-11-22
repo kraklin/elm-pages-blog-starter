@@ -272,7 +272,7 @@ viewListItem metadata =
                     [ Route.Blog__Slug_ { slug = metadata.slug }
                         |> Route.link
                             [ Attrs.class "text-primary-700 dark:text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                            , Attrs.attribute "aria-label" ("Read \"" ++ metadata.title ++ "\"")
+                            , Attrs.attribute "aria-label" ("Read more about \"" ++ metadata.title ++ "\"")
                             ]
                             [ Html.text "Read more →" ]
                     ]
