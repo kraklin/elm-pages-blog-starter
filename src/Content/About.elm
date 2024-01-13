@@ -63,4 +63,4 @@ authorDecoder slug body =
 
 defaultAuthor : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } Author
 defaultAuthor =
-    File.bodyWithFrontmatter (authorDecoder "default") "/content/authors/default.md"
+    File.bodyWithFrontmatter (authorDecoder "default") "content/authors/default.md"
