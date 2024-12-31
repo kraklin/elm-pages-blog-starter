@@ -5,3 +5,4 @@ dist/
 .elm-pages/
 functions/
 bun.lockb
+.idea/
