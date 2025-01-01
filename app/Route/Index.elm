@@ -7,8 +7,8 @@ import Head
 import Head.Seo as Seo
 import Html
 import Html.Attributes as Attrs
-import LanguageTag.Country as Country
 import LanguageTag.Language as Language
+import LanguageTag.Region as Region
 import Layout
 import Layout.Blogpost
 import Pages.Url

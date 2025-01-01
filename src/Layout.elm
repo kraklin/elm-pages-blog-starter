@@ -5,8 +5,8 @@ import Head.Seo as Seo
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Events as Events
-import LanguageTag.Country as Country
 import LanguageTag.Language as Language
+import LanguageTag.Region as Region
 import Pages.Url
 import Route exposing (Route)
 import Settings
@@ -31,7 +31,7 @@ seoHeaders =
             , mimeType = Nothing
             }
         , description = Settings.subtitle
-        , locale = Just ( Language.en, Country.us )
+        , locale = Just ( Language.en, Region.us )
         , title = Settings.title
         }
         |> Seo.website

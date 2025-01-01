@@ -6,8 +6,8 @@ module Settings exposing
     , title
     )
 
-import LanguageTag.Country as Country
 import LanguageTag.Language as Language
+import LanguageTag.Region as Region
 
 
 canonicalUrl : String
@@ -15,9 +15,9 @@ canonicalUrl =
     "https://elm-pages-blog-template.netlify.com"
 
 
-locale : Maybe ( Language.Language, Country.Country )
+locale : Maybe ( Language.Language, Region.Region )
 locale =
-    Just ( Language.en, Country.us )
+    Just ( Language.en, Region.us )
 
 
 title : String
