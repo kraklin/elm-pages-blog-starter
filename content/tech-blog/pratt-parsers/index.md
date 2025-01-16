@@ -4,11 +4,12 @@ description: Pratt parsers are a beautiful way of solving the operator precedenc
 published: "2023-07-03"
 authors: [martin, default]
 ---
+
 ## TL;DR
 
 Here's the algorithm for `pratt(precLimit)`:
 
-[![Pratt parser algorithm](/images/pratt-parsers/algorithm.png)](/images/pratt-parsers/algorithm.png)
+[![Pratt parser algorithm](/content/tech-blog/pratt-parsers/assets/algorithm.png)](/images/pratt-parsers/algorithm.png)
 
 [Here's a minimal commented Pratt parser example in Elm.](https://ellie-app.com/nfKBxpKJ5pva1)
 
@@ -33,17 +34,17 @@ The underlying problem is the frequent ambiguity in combinations of operators. F
 
 There are two options, each leading to a different value.
 
-![Ambiguity of multiple binary operators](/images/pratt-parsers/ambiguity.png)
+![Ambiguity of multiple binary operators](/content/tech-blog/pratt-parsers/assets/ambiguity.png)
 
 There are [a few algorithms](https://en.wikipedia.org/wiki/Operator-precedence_parser) to solve this problem. Among them, my favorite is the [Pratt parser](https://en.wikipedia.org/wiki/Operator-precedence_parser#Pratt_parsing)---the most intuitive and declarative solution in my view.
 
 Pratt parsers are an algorithm that takes your tokens (`[1, +, 2, *, 3]`) and a table like:
 
 | Operator | Precedence |
-| ---      | ---        |
+| -------- | ---------- |
 | +        | 1          |
 | -        | 1          |
-| *        | 2          |
+| \*       | 2          |
 | /        | 2          |
 | ^        | 3          |
 
@@ -97,7 +98,7 @@ That way the Pratt parser manages to consume all operations above its limit. A P
 
 ...Well, that was a mouthful. Here it is in the flowchart form again:
 
-[![Pratt parser algorithm](/images/pratt-parsers/algorithm.png)](/images/pratt-parsers/algorithm.png)
+[![Pratt parser algorithm](/content/tech-blog/pratt-parsers/assets/algorithm.png)](/images/pratt-parsers/algorithm.png)
 
 I wouldn't blame you if it didn't click right away! To aid understanding, let's examine what the algorithm does from a few different perspectives: visually, then reading through an execution trace, and then finally the code itself.
 
@@ -105,61 +106,61 @@ I wouldn't blame you if it didn't click right away! To aid understanding, let's 
 
 Here's the expression we're interested in parsing:
 
-![Original expression](/images/pratt-parsers/source.png)
+![Original expression](/content/tech-blog/pratt-parsers/assets/source.png)
 
 If we focus on _adding parentheses_ (instead of tree creation), we want to end up with something similar to the following:
 
-![Expression with added parentheses](/images/pratt-parsers/parenthesized.png)
+![Expression with added parentheses](/content/tech-blog/pratt-parsers/assets/parenthesized.png)
 
 Let's assign the precedence values to the operators:
 
 | Operator | Precedence |
-| ---      | ---        |
+| -------- | ---------- |
 | +        | 1          |
 | -        | 1          |
-| *        | 2          |
+| \*       | 2          |
 | /        | 2          |
 | ^        | 3          |
 
 Now let's put operators on separate lines according to their precedence:
 
-![Separated](/images/pratt-parsers/separated.png)
+![Separated](/content/tech-blog/pratt-parsers/assets/separated.png)
 
 In order to get some visual intuition on this problem, we'll repeat a simple process on each level: given a region in a level above, we'll draw regions _between_ the operators on our current level:
 
-![Process we'll follow](/images/pratt-parsers/process.png)
+![Process we'll follow](/content/tech-blog/pratt-parsers/assets/process.png)
 
 At the very top (`p=0`) we'll start with one large region:
 
-![p=0](/images/pratt-parsers/p0.png)
+![p=0](/content/tech-blog/pratt-parsers/assets/p0.png)
 
 One level below (`p=1`), we split the region whenever we encounter an operator on our level---that is, `+` or `-`.
 
-![p=1](/images/pratt-parsers/p1.png)
+![p=1](/content/tech-blog/pratt-parsers/assets/p1.png)
 
 Continuing on to `p=2`, we'll split each blue region when we find `*` or `/`.
 
 > To make the diagram less cluttered, we'll skip processing regions with single numbers, eg. here `1` and `2`.
 
-![p=2](/images/pratt-parsers/p2.png)
+![p=2](/content/tech-blog/pratt-parsers/assets/p2.png)
 
 And then finally on level `p=3` we split the region containing the `^`.
 
-![p=3](/images/pratt-parsers/p3.png)
+![p=3](/content/tech-blog/pratt-parsers/assets/p3.png)
 
 By now perhaps you already see what's happening: _each blue region represents a set of parentheses!_
 
 Let's clean the diagram up a little before we show that off: parentheses with no operators inside aren't very helpful (eg. `(3)` vs `3`), so we'll remove the blue regions that only hold single numbers:
 
-![Cleaned up](/images/pratt-parsers/cleanedup.png)
+![Cleaned up](/content/tech-blog/pratt-parsers/assets/cleanedup.png)
 
 And now we can finally replace each beginning of a blue region with `(` and each end with `)`:
 
-![Converted](/images/pratt-parsers/converted.png)
+![Converted](/content/tech-blog/pratt-parsers/assets/converted.png)
 
 Merging each level into the one above, we end up with the parenthesized expression we wanted:
 
-![Merged](/images/pratt-parsers/parenthesized.png)
+![Merged](/content/tech-blog/pratt-parsers/assets/parenthesized.png)
 
 What we have been doing visually, corresponds to the Pratt parser algorithm: the blue regions on level `p=n` are calls to the `pratt(n)` parser. (Except for the leftmost numbers of each block, which are handled by the `prefix` parser.)
 
@@ -170,6 +171,7 @@ Let's now walk through the algorithm on an example to see that. _(I swear there'
 The source we're trying to parse is `1+2-3*4+5/6^7-8*9`.
 
 It corresponds to a sequence of tokens:
+
 ```elm
 [ 1, +, 2, -, 3, *, 4, +, 5, /, 6, ^, 7, -, 8, *, 9 ]
 ```
@@ -177,10 +179,10 @@ It corresponds to a sequence of tokens:
 The precedences are as follows:
 
 | Operator | Precedence |
-| ---      | ---        |
+| -------- | ---------- |
 | +        | 1          |
 | -        | 1          |
-| *        | 2          |
+| \*       | 2          |
 | /        | 2          |
 | ^        | 3          |
 
@@ -452,7 +454,7 @@ groupedExpr tokens =
     -- Has consumed TLeftParen already
     case pratt 0 tokens of
         Nothing -> Nothing
-        Just (expr, tokensAfterExpr) -> 
+        Just (expr, tokensAfterExpr) ->
             case tokensAfterExpr of
                 -- A closing paren must follow
                 TRightParen :: rest -> Just (expr, rest)
@@ -494,7 +496,7 @@ binaryOp left op precedence tokensAfterOp =
 which then gives us the freedom to write postfix parsers. With some handwaving they could look like:
 
 ```elm
-{-| 
+{-|
 Example: 5!
 
 Token expectations:
