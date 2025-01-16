@@ -1,11 +1,11 @@
 module Route.Tags.Slug_ exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
-import Content.Blogpost exposing (Metadata, TagWithCount)
+import Content.TechBlogpost exposing (Metadata, TagWithCount)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
-import Layout.Blogpost
+import Layout.TechBlogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
@@ -39,7 +39,7 @@ route =
 
 pages : BackendTask FatalError (List RouteParams)
 pages =
-    Content.Blogpost.allTags
+    Content.TechBlogpost.allTags
         |> BackendTask.map
             (List.map (\tag -> { slug = tag.title |> String.Normalize.slug }))
 
@@ -58,7 +58,7 @@ type alias ActionData =
 data : RouteParams -> BackendTask FatalError Data
 data routeParams =
     BackendTask.map2 (\blogposts tags -> Data blogposts tags (List.filter (\tag -> tag.slug == routeParams.slug) tags |> List.head))
-        (Content.Blogpost.allBlogposts
+        (Content.TechBlogpost.allBlogposts
             |> BackendTask.map
                 (\blogposts ->
                     blogposts
@@ -70,7 +70,7 @@ data routeParams =
                             )
                 )
         )
-        Content.Blogpost.allTags
+        Content.TechBlogpost.allTags
 
 
 head :
@@ -99,5 +99,5 @@ view :
     -> View (PagesMsg Msg)
 view app _ =
     { title = "Tag: TODO"
-    , body = Layout.Blogpost.viewPostList app.data.tags app.data.blogposts app.data.selectedTag
+    , body = Layout.TechBlogpost.viewPostList app.data.tags app.data.blogposts app.data.selectedTag
     }

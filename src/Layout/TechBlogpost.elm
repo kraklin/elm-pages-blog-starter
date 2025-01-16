@@ -1,10 +1,10 @@
-module Layout.Blogpost exposing
+module Layout.TechBlogpost exposing
     ( viewBlogpost
     , viewListItem
     , viewPostList
     )
 
-import Content.Blogpost exposing (Blogpost, Metadata, Status(..), TagWithCount)
+import Content.TechBlogpost exposing (Blogpost, Metadata, Status(..), TagWithCount)
 import Date
 import Html exposing (Html)
 import Html.Attributes as Attrs

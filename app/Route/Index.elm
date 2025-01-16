@@ -1,7 +1,7 @@
 module Route.Index exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
-import Content.Blogpost exposing (Metadata)
+import Content.TechBlogpost exposing (Metadata)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -10,7 +10,7 @@ import Html.Attributes as Attrs
 import LanguageTag.Language as Language
 import LanguageTag.Region as Region
 import Layout
-import Layout.Blogpost
+import Layout.TechBlogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
@@ -52,7 +52,7 @@ route =
 
 data : BackendTask FatalError Data
 data =
-    Content.Blogpost.allBlogposts
+    Content.TechBlogpost.allBlogposts
         |> BackendTask.map (\allBlogposts -> List.map .metadata allBlogposts |> (\allMetadata -> { blogpostMetadata = allMetadata }))
 
 
@@ -75,6 +75,6 @@ view app _ =
             [ Html.h1 [ Attrs.class "text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14" ] [ Html.text "Latest" ]
             , Html.p [ Attrs.class "text-lg leading-7 text-gray-500 dark:text-gray-400" ] [ Html.text Settings.subtitle ]
             ]
-        , Html.div [] <| List.map Layout.Blogpost.viewListItem app.data.blogpostMetadata
+        , Html.div [] <| List.map Layout.TechBlogpost.viewListItem app.data.blogpostMetadata
         ]
     }

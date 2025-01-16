@@ -1,12 +1,12 @@
-module Route.TechBlog exposing (ActionData, Data, Model, Msg, RouteParams, route)
+module Route.LifeBlog exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
-import Content.TechBlogpost exposing (Metadata, TagWithCount)
+import Content.LifeBlogpost exposing (Metadata, TagWithCount)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
 import Layout
-import Layout.TechBlogpost
+import Layout.LifeBlogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
@@ -50,10 +50,10 @@ route =
 data : BackendTask FatalError Data
 data =
     BackendTask.map2 Data
-        (Content.TechBlogpost.allBlogposts
+        (Content.LifeBlogpost.allBlogposts
             |> BackendTask.map (List.map .metadata)
         )
-        Content.TechBlogpost.allTags
+        Content.LifeBlogpost.allTags
 
 
 head :
@@ -68,7 +68,7 @@ view :
     -> Shared.Model
     -> View (PagesMsg Msg)
 view app _ =
-    { title = "Tech Blog"
+    { title = "Life Blog"
     , body =
-        Layout.TechBlogpost.viewPostList app.data.tags app.data.blogposts Nothing
+        Layout.LifeBlogpost.viewPostList app.data.tags app.data.blogposts Nothing
     }

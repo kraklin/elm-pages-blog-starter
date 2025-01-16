@@ -1,4 +1,4 @@
-module Content.Blogpost exposing
+module Content.TechBlogpost exposing
     ( Blogpost
     , Metadata
     , Status(..)
@@ -188,7 +188,7 @@ allBlogposts =
                 )
                 blogposts
         )
-        blogpostFiles
+        techBlogPostFiles
         Content.About.allAuthors
         |> BackendTask.resolve
         |> BackendTask.andThen
@@ -215,8 +215,8 @@ allBlogpostsDict =
     allBlogposts |> BackendTask.map (\blogposts -> List.map (\blogpost -> ( blogpost.metadata.slug, blogpost )) blogposts |> Dict.fromList)
 
 
-blogpostFiles : BackendTask FatalError (List { filePath : String, path : List String, slug : String })
-blogpostFiles =
+techBlogPostFiles : BackendTask FatalError (List { filePath : String, path : List String, slug : String })
+techBlogPostFiles =
     Glob.succeed
         (\filePath path fileName ->
             { filePath = filePath
