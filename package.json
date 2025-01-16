@@ -19,7 +19,8 @@
     "vite": "^4.3.5"
   },
   "dependencies": {
-    "@netlify/functions": "^1.4.0"
+    "@netlify/functions": "^1.4.0",
+    "lamdera": "^0.19.1-1.3.2"
   },
   "volta": {
     "node": "22.13.0",
