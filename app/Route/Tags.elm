@@ -1,7 +1,8 @@
 module Route.Tags exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
-import Content.TechBlogpost exposing (TagWithCount)
+import Content.LifeBlogpost
+import Content.TechBlogpost
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -28,7 +29,7 @@ type alias RouteParams =
 
 
 type alias Data =
-    List TagWithCount
+    List Content.TechBlogpost.TagWithCount
 
 
 type alias ActionData =
@@ -46,7 +47,7 @@ route =
 
 data : BackendTask FatalError Data
 data =
-    Content.TechBlogpost.allTags
+    BackendTask.map2 (++) Content.TechBlogpost.allTags Content.LifeBlogpost.allTags
 
 
 head :
