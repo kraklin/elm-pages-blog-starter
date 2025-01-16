@@ -225,7 +225,7 @@ blogpostFiles =
             }
         )
         |> Glob.captureFilePath
-        |> Glob.match (Glob.literal "content/blog/")
+        |> Glob.match (Glob.literal "content/tech-blog/")
         |> Glob.capture Glob.recursiveWildcard
         |> Glob.match (Glob.literal "/")
         |> Glob.capture Glob.wildcard
