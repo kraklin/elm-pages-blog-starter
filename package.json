@@ -20,5 +20,8 @@
   },
   "dependencies": {
     "@netlify/functions": "^1.4.0"
+  },
+  "volta": {
+    "node": "22.13.0"
   }
 }
