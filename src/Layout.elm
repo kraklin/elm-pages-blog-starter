@@ -39,7 +39,7 @@ seoHeaders =
 
 menu : List { label : String, route : Route }
 menu =
-    [ { label = "Blog", route = Route.Blog }
+    [ { label = "Teck Blog", route = Route.TechBlog }
     , { label = "Tags", route = Route.Tags }
     , { label = "About", route = Route.About }
     ]

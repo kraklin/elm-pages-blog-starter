@@ -1,4 +1,4 @@
-module Route.Blog exposing (ActionData, Data, Model, Msg, RouteParams, route)
+module Route.TechBlog exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
 import Content.Blogpost exposing (Metadata, TagWithCount)
@@ -68,7 +68,7 @@ view :
     -> Shared.Model
     -> View (PagesMsg Msg)
 view app _ =
-    { title = "Blog"
+    { title = "Tech Blog"
     , body =
         Layout.Blogpost.viewPostList app.data.tags app.data.blogposts Nothing
     }

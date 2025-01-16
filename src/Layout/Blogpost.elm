@@ -55,7 +55,7 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
             Route.link
                 [ Attrs.class "text-primary-700 dark:text-primary-500 hover:text-primary-600 dark:hover:text-primary-400" ]
                 [ Html.text title ]
-                (Route.Blog__Slug_ { slug = slug })
+                (Route.TechBlog__Slug_ { slug = slug })
 
         previous =
             previousPost
@@ -205,7 +205,7 @@ viewBlogpostMetadata metadata =
                 [ Html.h2
                     [ Attrs.class "text-2xl font-bold leading-8 tracking-tight"
                     ]
-                    [ Route.Blog__Slug_ { slug = metadata.slug }
+                    [ Route.TechBlog__Slug_ { slug = metadata.slug }
                         |> Route.link
                             [ Attrs.class "text-gray-900 hover:underline decoration-primary-600 dark:text-gray-100"
                             ]
@@ -246,7 +246,7 @@ viewListItem metadata =
                         [ Html.h2
                             [ Attrs.class "text-2xl font-bold leading-8 tracking-tight"
                             ]
-                            [ Route.Blog__Slug_ { slug = metadata.slug }
+                            [ Route.TechBlog__Slug_ { slug = metadata.slug }
                                 |> Route.link
                                     [ Attrs.class "text-gray-900 hover:underline decoration-primary-600 dark:text-gray-100"
                                     ]
@@ -269,7 +269,7 @@ viewListItem metadata =
                 , Html.div
                     [ Attrs.class "text-base font-medium leading-6"
                     ]
-                    [ Route.Blog__Slug_ { slug = metadata.slug }
+                    [ Route.TechBlog__Slug_ { slug = metadata.slug }
                         |> Route.link
                             [ Attrs.class "text-primary-700 dark:text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                             , Attrs.attribute "aria-label" ("Read more about \"" ++ metadata.title ++ "\"")
@@ -301,7 +301,7 @@ viewPostList tags metadata selectedTag =
         allPostsLink =
             case selectedTag of
                 Just _ ->
-                    Route.Blog
+                    Route.TechBlog
                         |> Route.link
                             []
                             [ Html.h3
