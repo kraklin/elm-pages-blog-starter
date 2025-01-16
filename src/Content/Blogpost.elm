@@ -229,7 +229,8 @@ blogpostFiles =
         |> Glob.capture Glob.recursiveWildcard
         |> Glob.match (Glob.literal "/")
         |> Glob.capture Glob.wildcard
-        |> Glob.match (Glob.literal ".md")
+        |> Glob.match (Glob.literal "/")
+        |> Glob.match (Glob.literal "index.md")
         |> Glob.toBackendTask
 
 
