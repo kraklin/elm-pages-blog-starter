@@ -24,8 +24,6 @@ jobs:
 
       - name: Build with elm-pages
         run: npm run build
-        with:
-          exclude_assets: ".git, .github"
 
       - name: Create .nojekyll file
         run: touch ./dist/.nojekyll
@@ -35,3 +33,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          exclude_assets: ".git, .github"
