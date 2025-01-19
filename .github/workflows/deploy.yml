@@ -29,10 +29,6 @@ jobs:
             - .git
             - .github
 
-      # temp
-      - name: List built files
-        run: ls -R ./dist
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
