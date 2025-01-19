@@ -12,7 +12,7 @@ import LanguageTag.Region as Region
 
 canonicalUrl : String
 canonicalUrl =
-    "https://elm-pages-blog-template.netlify.com"
+    "https://hahnah.github.io/www"
 
 
 locale : Maybe ( Language.Language, Region.Region )
