@@ -25,9 +25,7 @@ jobs:
       - name: Build with elm-pages
         run: npm run build
         with:
-          exclude_assets:
-            - .git
-            - .github
+          exclude_assets: [".git", ".github"]
 
       - name: Create .nojekyll file
         run: touch ./dist/.nojekyll
