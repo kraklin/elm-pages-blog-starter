@@ -24,6 +24,10 @@ jobs:
 
       - name: Build with elm-pages
         run: npm run build
+        with:
+          exclude_assets:
+            - .git
+            - .github
 
       # temp
       - name: List built files
