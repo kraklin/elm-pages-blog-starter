@@ -223,30 +223,6 @@ allBlogPostFiles =
         |> Glob.toBackendTask
 
 
-
---Glob.succeed
---    (\filePath path fileName ->
---        { filePath = filePath
---        , path = path
---        , slug = fileName
---        }
---    )
---    |> Glob.captureFilePath
---    |> Glob.match (Glob.literal "content/")
---    |> Glob.match
---        (Glob.oneOf
---            ( ( "tech-blog/", () )
---            , [ ( "life-blog/", () ) ]
---            )
---        )
---    |> Glob.capture Glob.recursiveWildcard
---    |> Glob.match (Glob.literal "/")
---    |> Glob.capture Glob.wildcard
---    |> Glob.match (Glob.literal "/")
---    |> Glob.match (Glob.literal "index.md")
---    |> Glob.toBackendTask
-
-
 blogpostFromSlug : String -> BackendTask FatalError Blogpost
 blogpostFromSlug slug =
     allBlogpostsDict
