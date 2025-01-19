@@ -13,6 +13,7 @@ import RouteBuilder exposing (App, StatelessRoute)
 import Settings
 import Shared
 import String.Normalize
+import Url
 import View exposing (View)
 
 
@@ -42,7 +43,15 @@ pages : BackendTask FatalError (List RouteParams)
 pages =
     Content.AllBlogpost.allTags
         |> BackendTask.map
-            (List.map (\tag -> { slug = tag.title |> String.Normalize.slug }))
+            (List.map
+                (\tag ->
+                    { slug =
+                        tag.title
+                            |> String.Normalize.slug
+                            |> Url.percentEncode
+                    }
+                )
+            )
 
 
 type alias Data =
@@ -58,7 +67,16 @@ type alias ActionData =
 
 data : RouteParams -> BackendTask FatalError Data
 data routeParams =
-    BackendTask.map2 (\blogposts tags -> Data blogposts tags (List.filter (\tag -> tag.slug == routeParams.slug) tags |> List.head))
+    let
+        decodedSlug =
+            routeParams.slug
+                |> Url.percentDecode
+                |> Maybe.withDefault routeParams.slug
+    in
+    BackendTask.map2
+        (\blogposts tags ->
+            Data blogposts tags (List.filter (\tag -> tag.slug == decodedSlug) tags |> List.head)
+        )
         (Content.AllBlogpost.allBlogposts
             |> BackendTask.map
                 (\blogposts ->
@@ -67,7 +85,7 @@ data routeParams =
                         |> List.filter
                             (\{ tags } ->
                                 List.map String.Normalize.slug tags
-                                    |> List.member routeParams.slug
+                                    |> List.member decodedSlug
                             )
                 )
         )
