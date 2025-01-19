@@ -1,7 +1,8 @@
 module Route.TechBlog.Slug_ exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
-import Content.TechBlogpost exposing (Blogpost)
+import Content.BlogpostCommon exposing (Blogpost)
+import Content.TechBlogpost
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo

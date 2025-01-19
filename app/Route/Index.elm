@@ -1,7 +1,9 @@
 module Route.Index exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
-import Content.TechBlogpost exposing (Metadata)
+import Content.BlogpostCommon exposing (Metadata)
+import Content.LifeBlogpost
+import Content.TechBlogpost
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo

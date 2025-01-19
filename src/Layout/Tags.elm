@@ -1,6 +1,6 @@
 module Layout.Tags exposing (view, viewTag)
 
-import Content.TechBlogpost exposing (TagWithCount)
+import Content.BlogpostCommon exposing (TagWithCount)
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Route

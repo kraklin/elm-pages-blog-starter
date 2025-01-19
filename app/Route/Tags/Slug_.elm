@@ -1,7 +1,8 @@
 module Route.Tags.Slug_ exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
-import Content.TechBlogpost exposing (Metadata, TagWithCount)
+import Content.BlogpostCommon exposing (Metadata, TagWithCount)
+import Content.TechBlogpost
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo

@@ -4,7 +4,7 @@ module Layout.TechBlogpost exposing
     , viewPostList
     )
 
-import Content.TechBlogpost exposing (Blogpost, Metadata, Status(..), TagWithCount)
+import Content.BlogpostCommon exposing (Blogpost, Metadata, Status(..), TagWithCount)
 import Date
 import Html exposing (Html)
 import Html.Attributes as Attrs

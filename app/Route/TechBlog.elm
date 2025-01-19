@@ -1,7 +1,7 @@
 module Route.TechBlog exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
-import Content.TechBlogpost exposing (Metadata, TagWithCount)
+import Content.TechBlogpost
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
@@ -9,33 +9,31 @@ import Layout
 import Layout.TechBlogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
+import Route.BlogCommon
 import RouteBuilder exposing (App, StatelessRoute)
 import Shared
 import UrlPath
 import View exposing (View)
 
 
-type alias Model =
-    {}
-
-
-type alias Msg =
-    ()
-
-
-type alias RouteParams =
-    {}
+type alias ActionData =
+    Route.BlogCommon.ActionData
 
 
 type alias Data =
-    { blogposts :
-        List Metadata
-    , tags : List TagWithCount
-    }
+    Route.BlogCommon.Data
 
 
-type alias ActionData =
-    {}
+type alias Model =
+    Route.BlogCommon.Model
+
+
+type alias Msg =
+    Route.BlogCommon.Msg
+
+
+type alias RouteParams =
+    Route.BlogCommon.RouteParams
 
 
 route : StatelessRoute RouteParams Data ActionData
@@ -49,7 +47,7 @@ route =
 
 data : BackendTask FatalError Data
 data =
-    BackendTask.map2 Data
+    BackendTask.map2 Route.BlogCommon.Data
         (Content.TechBlogpost.allBlogposts
             |> BackendTask.map (List.map .metadata)
         )

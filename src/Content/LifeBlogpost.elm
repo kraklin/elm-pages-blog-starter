@@ -1,9 +1,5 @@
 module Content.LifeBlogpost exposing
-    ( Blogpost
-    , Metadata
-    , Status(..)
-    , TagWithCount
-    , allBlogposts
+    ( allBlogposts
     , allTags
     , blogpostFromSlug
     )
@@ -14,6 +10,7 @@ import BackendTask.Env
 import BackendTask.File as File
 import BackendTask.Glob as Glob
 import Content.About exposing (Author)
+import Content.BlogpostCommon exposing (Blogpost, Metadata, Status(..), TagWithCount)
 import Date exposing (Date)
 import Dict exposing (Dict)
 import FatalError exposing (FatalError)
@@ -23,34 +20,8 @@ import List.Extra
 import String.Normalize
 
 
-type alias Blogpost =
-    { metadata : Metadata
-    , body : String
-    , previousPost : Maybe Metadata
-    , nextPost : Maybe Metadata
-    }
-
-
-type Status
-    = Draft
-    | Published
-    | PublishedWithDate Date
-
-
-type alias Metadata =
-    { title : String
-    , slug : String
-    , image : Maybe String
-    , description : Maybe String
-    , tags : List String
-    , authors : List Author
-    , status : Status
-    , readingTimeInMin : Int
-    }
-
-
 type alias TagWithCount =
-    { slug : String, title : String, count : Int }
+    Content.BlogpostCommon.TagWithCount
 
 
 allTags : BackendTask FatalError (List TagWithCount)

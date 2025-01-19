@@ -1,7 +1,8 @@
 module Route.LifeBlog.Slug_ exposing (ActionData, Data, Model, Msg, RouteParams, route)
 
 import BackendTask exposing (BackendTask)
-import Content.LifeBlogpost exposing (Blogpost)
+import Content.BlogpostCommon exposing (Blogpost)
+import Content.LifeBlogpost
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
