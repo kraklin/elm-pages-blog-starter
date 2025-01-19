@@ -1,12 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 
-const colors = require('tailwindcss/colors')
+import colors from "tailwindcss/colors";
 
 export default {
   content: [
     "./app/**/*.{elm, ts, js}",
     "./src/**/*.{elm, ts, js}",
-    "./index.html"
+    "./index.html",
   ],
   theme: {
     extend: {
@@ -15,8 +15,5 @@ export default {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
-}
-
+  plugins: [require("@tailwindcss/typography")],
+};
