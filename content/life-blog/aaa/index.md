@@ -2,8 +2,7 @@
 title: Hahnah
 description: "Introducing myself."
 published: "2025-01-16"
-tags:
-  - 自己紹介
+tags: ["自己紹介", "About Me"]
 ---
 
 ## Who am i?
