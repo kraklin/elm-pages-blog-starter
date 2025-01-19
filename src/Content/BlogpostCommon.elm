@@ -1,4 +1,4 @@
-module Content.BlogpostCommon exposing (Blogpost, Metadata, Status(..), TagWithCount)
+module Content.BlogpostCommon exposing (Blogpost, Category(..), Metadata, Status(..), TagWithCount)
 
 import Content.About exposing (Author)
 import Date exposing (Date)
@@ -23,11 +23,18 @@ type alias Metadata =
     , slug : String
     , image : Maybe String
     , description : Maybe String
+    , category : Category
     , tags : List String
     , authors : List Author
     , status : Status
     , readingTimeInMin : Int
     }
+
+
+type Category
+    = Tech
+    | Life
+    | Unknown
 
 
 type alias TagWithCount =

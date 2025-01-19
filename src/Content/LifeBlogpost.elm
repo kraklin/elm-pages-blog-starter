@@ -10,7 +10,7 @@ import BackendTask.Env
 import BackendTask.File as File
 import BackendTask.Glob as Glob
 import Content.About exposing (Author)
-import Content.BlogpostCommon exposing (Blogpost, Metadata, Status(..), TagWithCount)
+import Content.BlogpostCommon exposing (Blogpost, Category(..), Metadata, Status(..), TagWithCount)
 import Date exposing (Date)
 import Dict exposing (Dict)
 import FatalError exposing (FatalError)
@@ -54,6 +54,23 @@ allTags =
             )
 
 
+decodeCategory : Decoder Category
+decodeCategory =
+    Decode.field "category" Decode.string
+        |> Decode.andThen
+            (\categoryString ->
+                case categoryString of
+                    "tech" ->
+                        Decode.succeed Tech
+
+                    "life" ->
+                        Decode.succeed Life
+
+                    _ ->
+                        Decode.succeed Unknown
+            )
+
+
 decodeStatus : Decoder Status
 decodeStatus =
     Decode.map2
@@ -83,6 +100,7 @@ metadataDecoder authorsDict slug =
             )
         |> Decode.andMap (Decode.maybe (Decode.field "image" Decode.string))
         |> Decode.andMap (Decode.maybe (Decode.field "description" Decode.string))
+        |> Decode.andMap decodeCategory
         |> Decode.andMap
             (Decode.map
                 (Maybe.withDefault [])

@@ -2,6 +2,7 @@
 title: Hahnah
 description: "Introducing myself."
 published: "2025-01-16"
+category: "life"
 tags: ["自己紹介", "About Me"]
 ---
 

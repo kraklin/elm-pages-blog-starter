@@ -2,6 +2,7 @@
 title: "Simple and nice blogging template for elm‑pages"
 description: "Lets try to build some nice small template for elm-pages blogging"
 published: "2023-09-06"
+category: "tech"
 tags: ["elm", "elm-pages", "blog"]
 ---
 
@@ -9,7 +10,7 @@ In the world of software development, there's a humorous term that often makes i
 
 ## The Spark of Inspiration
 
-It all began with a simple desire: I wanted to write a few blog posts. I had some thoughts to share, and I thought, *"Why not start a blog?"* So, I set out to find a blogging platform. After some research, I stumbled upon Elm Pages—an intriguing static site generator built with Elm.
+It all began with a simple desire: I wanted to write a few blog posts. I had some thoughts to share, and I thought, _"Why not start a blog?"_ So, I set out to find a blogging platform. After some research, I stumbled upon Elm Pages—an intriguing static site generator built with Elm.
 
 ## Down the Rabbit Hole
 
@@ -30,4 +31,3 @@ In retrospect, while the journey might have been longer than expected, I realize
 The tale of my yak shaving adventure serves as a reminder that in the world of software development, the journey is often as valuable as the destination. Sometimes, the best way to learn is to dive headfirst into a project, even if it takes you down unexpected paths. Embrace the yak and see where it takes you—you might just discover something incredible along the way.
 
 So, if you find yourself neck-deep in yak hair while chasing a seemingly simple goal, don't despair. Embrace the journey, learn as you go, and relish the satisfaction of taming the shaggy beast. Happy yak shaving, fellow developers!
-
