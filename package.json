@@ -1,6 +1,7 @@
 {
   "name": "elm-pages-app",
   "type": "module",
+  "homepage": "www",
   "scripts": {
     "postinstall": "elm-tooling install",
     "start": "INCLUDE_DRAFTS=true elm-pages dev",
