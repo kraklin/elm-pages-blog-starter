@@ -2,5 +2,5 @@
 name: Martin Janiczek
 avatar: /images/authors/martin.jpg
 socials:
-  twitter: https://twitter.com/Janiczek
+  x: https://x.com/Janiczek
 ---

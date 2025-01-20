@@ -61,7 +61,7 @@ Of course, as an academic paper it has a different target audience, so let's not
 
 And I suspect that's the reason people write summaries. You don't need the 1973 motivation, you just need to _solve the operator precedence problem!_
 
-The best summary and explanation of Pratt parsers I know of (at least for the audience of an amateur programming language designer in 2023) is written by [Bob Nystrom](https://twitter.com/munificentbob) in his blogpost [_"Pratt Parsers: Expression Parsing Made Easy"_](https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/). You should definitely read it! (Along with other Bob's writings, like [_Crafting Interpreters_](https://craftinginterpreters.com).)
+The best summary and explanation of Pratt parsers I know of (at least for the audience of an amateur programming language designer in 2023) is written by [Bob Nystrom](https://x.com/munificentbob) in his blogpost [_"Pratt Parsers: Expression Parsing Made Easy"_](https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/). You should definitely read it! (Along with other Bob's writings, like [_Crafting Interpreters_](https://craftinginterpreters.com).)
 
 The examples Bob gives are written in Java, and the [full example implementation](https://github.com/munificent/bantam) is split across multiple small classes.
 

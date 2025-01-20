@@ -55,9 +55,6 @@ socialsView socials =
                 "x" ->
                     Phosphor.xLogo
 
-                "twitter" ->
-                    Phosphor.twitterLogo
-
                 "instagram" ->
                     Phosphor.instagramLogo
 
