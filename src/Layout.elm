@@ -216,7 +216,7 @@ view showMenu onMenuToggle body =
                 [ Html.div []
                     [ Html.a
                         [ Attrs.attribute "aria-label" Settings.title
-                        , Attrs.href "/"
+                        , Attrs.href Settings.basePath
                         ]
                         [ Html.div
                             [ Attrs.class "flex items-center justify-between"
@@ -245,7 +245,7 @@ view showMenu onMenuToggle body =
                     , Html.div []
                         [ Html.text "•" ]
                     , Html.a
-                        [ Attrs.href "/"
+                        [ Attrs.href Settings.basePath
                         , Attrs.class "hover:underline"
                         ]
                         [ Html.text Settings.title ]
