@@ -241,7 +241,7 @@ view showMenu onMenuToggle body =
                     , Html.div []
                         [ Html.text "•" ]
                     , Html.div []
-                        [ Html.text "© 2023" ]
+                        [ Html.text <| "© " ++ Settings.copyrightYear ]
                     , Html.div []
                         [ Html.text "•" ]
                     , Html.a
@@ -256,10 +256,10 @@ view showMenu onMenuToggle body =
                     [ Html.a
                         [ Attrs.target "_blank"
                         , Attrs.rel "noopener noreferrer"
-                        , Attrs.href "https://github.com/kraklin/elm-pages-blog-starter"
+                        , Attrs.href "https://github.com/hahnah/elm-pages-blog-template"
                         , Attrs.class "hover:underline"
                         ]
-                        [ Html.text "elm-pages blog template" ]
+                        [ Html.text "source code" ]
                     ]
                 ]
             ]

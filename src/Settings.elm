@@ -2,6 +2,7 @@ module Settings exposing
     ( author
     , basePath
     , canonicalUrl
+    , copyrightYear
     , domain
     , locale
     , subtitle
@@ -43,7 +44,7 @@ locale =
 
 title : String
 title =
-    "elm blog"
+    "Hahnah's Site"
 
 
 subtitle : String
@@ -53,7 +54,12 @@ subtitle =
 
 author : String
 author =
-    "Tomas Latal"
+    "Hahnah"
+
+
+copyrightYear : String
+copyrightYear =
+    "2025"
 
 
 xID : Maybe String
