@@ -6,6 +6,7 @@ module Settings exposing
     , locale
     , subtitle
     , title
+    , xID
     )
 
 import LanguageTag.Language as Language
@@ -53,3 +54,9 @@ subtitle =
 author : String
 author =
     "Tomas Latal"
+
+
+xID : Maybe String
+xID =
+    -- or like Just "@superhahnah"
+    Nothing

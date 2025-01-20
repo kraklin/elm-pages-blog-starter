@@ -70,6 +70,14 @@ head app =
             app.data.blogpost.metadata.image
                 |> Maybe.withDefault "/media/blog-image.png"
 
+        creatorHeader =
+            case Settings.xID of
+                Just xID ->
+                    [ Head.metaName "twitter:creator" <| Head.raw xID ]
+
+                Nothing ->
+                    []
+
         authorsHeader =
             case app.data.blogpost.metadata.authors of
                 [] ->
@@ -100,6 +108,7 @@ head app =
         }
         |> Seo.website
     )
+        ++ creatorHeader
         ++ authorsHeader
         ++ [ Head.metaName "twitter:label2" <| Head.raw "Reading time"
            , Head.metaName "twitter:data2" <| Head.raw <| String.fromInt app.data.blogpost.metadata.readingTimeInMin ++ " min"
