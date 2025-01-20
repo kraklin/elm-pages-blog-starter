@@ -1,7 +1,7 @@
 ---
 title: Announcing elm-review
 image: /content/tech-blog/announcing-elm-review/assets/order-chaos.jpeg
-authors: [jeroen, default]
+authors: [dogman, default]
 published: "2019-09-29"
 slug: jfmengels-announcing-elm-review
 category: "tech"
