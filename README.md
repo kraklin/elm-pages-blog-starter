@@ -6,7 +6,7 @@ This is a tempalte for building a blog as static site with elm-pages, forked fro
 
 ## Demo
 
-[https://taupe-mousse-68837d.netlify.app/](https://taupe-mousse-68837d.netlify.app/)
+[https://hahnah-blog-template.netlify.app/](https://hahnah-blog-template.netlify.app/)
 
 ## What is used?
 
