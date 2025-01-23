@@ -1,6 +1,12 @@
 # Hahnah's Blog Template with Elm Pages
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/25a90b8a-f6ca-4823-a957-eb7f6e653b2f/deploy-status)](https://app.netlify.com/sites/taupe-mousse-68837d/deploys)
+
 This is a tempalte for building a blog as static site with elm-pages, forked from [https://github.com/kraklin/elm-pages-blog-starter](https://github.com/kraklin/elm-pages-blog-starter).
+
+## Demo
+
+[https://taupe-mousse-68837d.netlify.app/](https://taupe-mousse-68837d.netlify.app/)
 
 ## What is used?
 
