@@ -44,7 +44,7 @@ locale =
 
 title : String
 title =
-    "Hahnah's Site"
+    "Hahnah's elm-pages Blog Template"
 
 
 subtitle : String
