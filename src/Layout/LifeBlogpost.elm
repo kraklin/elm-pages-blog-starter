@@ -5,10 +5,10 @@ module Layout.LifeBlogpost exposing
     )
 
 import Content.BlogpostCommon exposing (Blogpost, Metadata, Status(..), TagWithCount)
-import Date
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Extra
+import Layout.Blogpost
 import Layout.Markdown as Markdown
 import Layout.Tags
 import Route
@@ -89,8 +89,9 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
                     [ authorImages blogpostAuthors
                     , Html.div [ Attrs.class "flex flex-col justify-around items-start sm:pl-4" ]
                         [ Html.span [ Attrs.class "text-lg font-bold text-black dark:text-white" ] [ Html.text <| String.join ", " <| List.map .name blogpostAuthors ]
-                        , Html.div [ Attrs.class "flex space-x-4 text-base" ]
+                        , Html.div [ Attrs.class "flex flex-wrap space-x-4 text-base" ]
                             [ viewPublishedDate metadata.status
+                            , viewUpdatedDate metadata.status
                             , Html.span []
                                 [ Html.text <| String.fromInt metadata.readingTimeInMin
                                 , Html.text " min reading time"
@@ -163,33 +164,13 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
 
 
 viewPublishedDate : Status -> Html msg
-viewPublishedDate status =
-    case status of
-        Draft ->
-            Html.span
-                [ Attrs.class "leading-6 text-gray-500 dark:text-gray-400"
-                ]
-                [ Html.text "Draft"
-                ]
+viewPublishedDate =
+    Layout.Blogpost.viewPublishedDate
 
-        PublishedWithDate date ->
-            Html.dl []
-                [ Html.dt
-                    [ Attrs.class "sr-only"
-                    ]
-                    [ Html.text "Published on" ]
-                , Html.dd
-                    [ Attrs.class "leading-6 text-gray-500 dark:text-gray-400"
-                    ]
-                    [ Html.time
-                        [ Attrs.datetime <| Date.toIsoString date
-                        ]
-                        [ Html.text <| Date.format "MMM d, YYYY" date ]
-                    ]
-                ]
 
-        Published ->
-            Html.Extra.nothing
+viewUpdatedDate : Status -> Html msg
+viewUpdatedDate =
+    Layout.Blogpost.viewUpdatedDate
 
 
 viewBlogpostMetadata : Metadata -> Html msg

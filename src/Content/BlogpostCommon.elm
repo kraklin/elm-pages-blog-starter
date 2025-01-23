@@ -16,6 +16,7 @@ type Status
     = Draft
     | Published
     | PublishedWithDate Date
+    | PublishedAndUpdatedWithDate Date Date
 
 
 type alias Metadata =

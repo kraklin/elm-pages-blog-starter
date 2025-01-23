@@ -2,6 +2,8 @@ module Layout.Blogpost exposing
     ( viewBlogpost
     , viewListItem
     , viewPostList
+    , viewPublishedDate
+    , viewUpdatedDate
     )
 
 import Content.BlogpostCommon exposing (Blogpost, Category(..), Metadata, Status(..), TagWithCount)
@@ -11,6 +13,7 @@ import Html.Attributes as Attrs
 import Html.Extra
 import Layout.Markdown as Markdown
 import Layout.Tags
+import Phosphor exposing (IconWeight(..))
 import Route
 
 
@@ -185,6 +188,56 @@ viewPublishedDate status =
                         [ Attrs.datetime <| Date.toIsoString date
                         ]
                         [ Html.text <| Date.format "MMM d, YYYY" date ]
+                    ]
+                ]
+
+        PublishedAndUpdatedWithDate publishedDate _ ->
+            Html.dl []
+                [ Html.dt
+                    [ Attrs.class "sr-only"
+                    ]
+                    [ Html.text "Published on" ]
+                , Html.dd
+                    [ Attrs.class "leading-6 text-gray-500 dark:text-gray-400"
+                    ]
+                    [ Html.time
+                        [ Attrs.datetime <| Date.toIsoString publishedDate
+                        ]
+                        [ Html.text <| Date.format "MMM d, YYYY" publishedDate ]
+                    ]
+                ]
+
+        Published ->
+            Html.Extra.nothing
+
+
+viewUpdatedDate : Status -> Html msg
+viewUpdatedDate status =
+    case status of
+        Draft ->
+            Html.Extra.nothing
+
+        PublishedWithDate _ ->
+            Html.Extra.nothing
+
+        PublishedAndUpdatedWithDate _ updatedDate ->
+            Html.dl []
+                [ Html.dt
+                    [ Attrs.class "sr-only"
+                    ]
+                    [ Html.text "Updated on" ]
+                , Html.dd
+                    [ Attrs.class "leading-6 text-gray-500 dark:text-gray-400"
+                    ]
+                    [ Html.div
+                        [ Attrs.class "flex items-center" ]
+                        [ Phosphor.clockClockwise Regular
+                            |> Phosphor.withClass "fill-current text-gray-500 dark:text-gray-400 h-4 w-4"
+                            |> Phosphor.toHtml []
+                        , Html.time
+                            [ Attrs.datetime <| Date.toIsoString updatedDate ]
+                            [ Html.text <| Date.format "MMM d, YYYY" updatedDate ]
+                        ]
                     ]
                 ]
 

@@ -73,19 +73,23 @@ decodeCategory =
 
 decodeStatus : Decoder Status
 decodeStatus =
-    Decode.map2
-        (\publishedDate statusString ->
-            case ( statusString, publishedDate ) of
-                ( Just "draft", _ ) ->
+    Decode.map3
+        (\publishedDate updatedDate statusString ->
+            case ( statusString, publishedDate, updatedDate ) of
+                ( Just "draft", _, _ ) ->
                     Draft
 
-                ( _, Just date ) ->
+                ( _, Just date, Nothing ) ->
                     PublishedWithDate date
+
+                ( _, Just date1, Just date2 ) ->
+                    PublishedAndUpdatedWithDate date1 date2
 
                 _ ->
                     Published
         )
         (Decode.maybe (Decode.field "published" (Decode.map (Result.withDefault (Date.fromRataDie 1) << Date.fromIsoString) Decode.string)))
+        (Decode.maybe (Decode.field "updated" (Decode.map (Result.withDefault (Date.fromRataDie 1) << Date.fromIsoString) Decode.string)))
         (Decode.maybe (Decode.field "status" Decode.string))
 
 
