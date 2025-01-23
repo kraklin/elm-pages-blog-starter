@@ -69,6 +69,10 @@ It's because of elm-pages bug of `build --base ...` command.
 See below issue for more details.  
 [https://github.com/dillonkearns/elm-pages/issues/404](https://github.com/dillonkearns/elm-pages/issues/404)
 
+## Author
+
+Hahnah (Natsuki Harai)
+
 ## LICENSE
 
 See [LICENSE](LICENSE) file.
