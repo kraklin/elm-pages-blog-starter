@@ -71,4 +71,4 @@ See below issue for more details.
 
 ## LICENSE
 
-TBD
+See [LICENSE](LICENSE) file.
