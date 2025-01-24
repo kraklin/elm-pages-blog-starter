@@ -7,7 +7,7 @@ module Settings exposing
     , locale
     , subtitle
     , title
-    , xID
+    , xId
     )
 
 import LanguageTag.Language as Language
@@ -62,7 +62,7 @@ copyrightYear =
     "2025"
 
 
-xID : Maybe String
-xID =
+xId : Maybe String
+xId =
     -- or like Just "@superhahnah"
     Nothing

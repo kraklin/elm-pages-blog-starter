@@ -71,9 +71,9 @@ head app =
                 |> Maybe.withDefault "/media/blog-image.png"
 
         creatorHeader =
-            case Settings.xID of
-                Just xID ->
-                    [ Head.metaName "twitter:creator" <| Head.raw xID ]
+            case Settings.xId of
+                Just xId ->
+                    [ Head.metaName "twitter:creator" <| Head.raw xId ]
 
                 Nothing ->
                     []
