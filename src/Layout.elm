@@ -5,8 +5,6 @@ import Head.Seo as Seo
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Events as Events
-import LanguageTag.Language as Language
-import LanguageTag.Region as Region
 import Pages.Url
 import Route exposing (Route)
 import Settings
