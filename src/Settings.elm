@@ -5,13 +5,18 @@ module Settings exposing
     , copyrightYear
     , domain
     , locale
+    , logoImageForSeo
+    , logoUrl
     , subtitle
     , title
     , xId
     )
 
+import Head.Seo
 import LanguageTag.Language as Language
 import LanguageTag.Region as Region
+import Pages.Url exposing (Url)
+import UrlPath
 
 
 domain : String
@@ -35,6 +40,20 @@ basePath =
 canonicalUrl : String
 canonicalUrl =
     "https://" ++ domain ++ basePath
+
+
+logoUrl : Url
+logoUrl =
+    [ "media", "blog-image.png" ] |> UrlPath.join |> Pages.Url.fromPath
+
+
+logoImageForSeo : Head.Seo.Image
+logoImageForSeo =
+    { url = logoUrl
+    , alt = "logo"
+    , dimensions = Just { width = 500, height = 333 }
+    , mimeType = Nothing
+    }
 
 
 locale : Maybe ( Language.Language, Region.Region )

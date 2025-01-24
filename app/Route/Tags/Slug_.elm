@@ -7,14 +7,12 @@ import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
 import Layout.Blogpost
-import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
 import Settings
 import Shared
 import String.Normalize
 import Url
-import UrlPath
 import View exposing (View)
 
 
@@ -97,19 +95,10 @@ head :
     App Data ActionData RouteParams
     -> List Head.Tag
 head app =
-    let
-        imageUrl =
-            [ "media", "blog-image.png" ] |> UrlPath.join |> Pages.Url.fromPath
-    in
     Seo.summary
         { canonicalUrlOverride = Nothing
         , siteName = Settings.title
-        , image =
-            { url = imageUrl
-            , alt = "logo"
-            , dimensions = Just { width = 500, height = 333 }
-            , mimeType = Nothing
-            }
+        , image = Settings.logoImageForSeo
         , description =
             case app.data.selectedTag of
                 Just tag ->
