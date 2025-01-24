@@ -14,6 +14,7 @@ import Settings
 import Shared
 import String.Normalize
 import Url
+import UrlPath
 import View exposing (View)
 
 
@@ -96,18 +97,22 @@ head :
     App Data ActionData RouteParams
     -> List Head.Tag
 head _ =
+    let
+        imageUrl =
+            [ "media", "blog-image.png" ] |> UrlPath.join |> Pages.Url.fromPath
+    in
     Seo.summary
         { canonicalUrlOverride = Nothing
         , siteName = Settings.title
         , image =
-            { url = Pages.Url.external "TODO"
-            , alt = "elm-pages logo"
-            , dimensions = Nothing
+            { url = imageUrl
+            , alt = "logo"
+            , dimensions = Just { width = 500, height = 333 }
             , mimeType = Nothing
             }
-        , description = "List of Tags: TODO"
-        , locale = Nothing
-        , title = "Tags: TODO"
+        , description = "List of Tags"
+        , locale = Settings.locale
+        , title = "Tags"
         }
         |> Seo.website
 
