@@ -1,7 +1,5 @@
-module Layout exposing (seoHeaders, view)
+module Layout exposing (view)
 
-import Head exposing (Tag)
-import Head.Seo as Seo
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Html.Events as Events
@@ -9,19 +7,6 @@ import Route exposing (Route)
 import Settings
 import Svg
 import Svg.Attributes as SvgAttrs
-
-
-seoHeaders : List Tag
-seoHeaders =
-    Seo.summaryLarge
-        { canonicalUrlOverride = Nothing
-        , siteName = Settings.title
-        , image = Settings.logoImageForSeo
-        , description = Settings.subtitle
-        , locale = Settings.locale
-        , title = Settings.title
-        }
-        |> Seo.website
 
 
 menu : List { label : String, route : Route }

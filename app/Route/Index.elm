@@ -8,16 +8,11 @@ import Head
 import Head.Seo as Seo
 import Html
 import Html.Attributes as Attrs
-import LanguageTag.Language as Language
-import LanguageTag.Region as Region
-import Layout
 import Layout.TechBlogpost
-import Pages.Url
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
 import Settings
 import Shared
-import UrlPath
 import View exposing (View)
 
 
@@ -61,7 +56,15 @@ head :
     App Data ActionData RouteParams
     -> List Head.Tag
 head _ =
-    Layout.seoHeaders
+    Seo.summaryLarge
+        { canonicalUrlOverride = Nothing
+        , siteName = Settings.title
+        , image = Settings.logoImageForSeo
+        , description = Settings.subtitle
+        , locale = Settings.locale
+        , title = Settings.title
+        }
+        |> Seo.website
 
 
 view :
