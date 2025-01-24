@@ -31,7 +31,7 @@ seoHeaders =
             , mimeType = Nothing
             }
         , description = Settings.subtitle
-        , locale = Just ( Language.en, Region.us )
+        , locale = Settings.locale
         , title = Settings.title
         }
         |> Seo.website
