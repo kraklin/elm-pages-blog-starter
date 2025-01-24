@@ -96,7 +96,7 @@ data routeParams =
 head :
     App Data ActionData RouteParams
     -> List Head.Tag
-head _ =
+head app =
     let
         imageUrl =
             [ "media", "blog-image.png" ] |> UrlPath.join |> Pages.Url.fromPath
@@ -110,9 +110,21 @@ head _ =
             , dimensions = Just { width = 500, height = 333 }
             , mimeType = Nothing
             }
-        , description = "List of Tags"
+        , description =
+            case app.data.selectedTag of
+                Just tag ->
+                    "List of posts with tag: " ++ tag.title
+
+                Nothing ->
+                    ""
         , locale = Settings.locale
-        , title = "Tags"
+        , title =
+            case app.data.selectedTag of
+                Just tag ->
+                    tag.title ++ " Posts"
+
+                Nothing ->
+                    ""
         }
         |> Seo.website
 
