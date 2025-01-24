@@ -21,7 +21,8 @@ import UrlPath
 
 domain : String
 domain =
-    "hahnah.github.io"
+    -- or like "hahnah.github.io"
+    "hahnah-blog-template.netlify.app"
 
 
 
