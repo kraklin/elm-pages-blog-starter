@@ -35,7 +35,11 @@ seoHeaders author =
         , locale = Settings.locale
         , title = author.name
         }
-        |> Seo.website
+        |> Seo.profile
+            { firstName = author.name
+            , lastName = ""
+            , username = Just author.name
+            }
 
 
 socialsView : List ( String, String ) -> Html msg
