@@ -70,6 +70,14 @@ head app =
             app.data.blogpost.metadata.image
                 |> Maybe.withDefault "/media/blog-image.png"
 
+        creatorHeader =
+            case Settings.xID of
+                Just xID ->
+                    [ Head.metaName "twitter:creator" <| Head.raw xID ]
+
+                Nothing ->
+                    []
+
         authorsHeader =
             case app.data.blogpost.metadata.authors of
                 [] ->
@@ -86,7 +94,7 @@ head app =
                     ]
     in
     (Seo.summaryLarge
-        { canonicalUrlOverride = Just Settings.canonicalUrl
+        { canonicalUrlOverride = Nothing
         , siteName = Settings.title
         , image =
             { url = Pages.Url.fromPath [ imagePath ]
@@ -95,11 +103,18 @@ head app =
             , mimeType = Nothing
             }
         , description = Maybe.withDefault Settings.subtitle app.data.blogpost.metadata.description
-        , locale = Nothing
+        , locale = Settings.locale
         , title = app.data.blogpost.metadata.title
         }
-        |> Seo.website
+        |> Seo.article
+            { tags = app.data.blogpost.metadata.tags
+            , section = Nothing
+            , publishedTime = app.data.blogpost.metadata.publishedAt
+            , modifiedTime = app.data.blogpost.metadata.updatedAt
+            , expirationTime = Nothing
+            }
     )
+        ++ creatorHeader
         ++ authorsHeader
         ++ [ Head.metaName "twitter:label2" <| Head.raw "Reading time"
            , Head.metaName "twitter:data2" <| Head.raw <| String.fromInt app.data.blogpost.metadata.readingTimeInMin ++ " min"

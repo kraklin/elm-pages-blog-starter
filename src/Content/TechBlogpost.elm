@@ -12,6 +12,7 @@ import BackendTask.Glob as Glob
 import Content.About exposing (Author)
 import Content.BlogpostCommon exposing (Blogpost, Category(..), Metadata, Status(..), TagWithCount)
 import Date exposing (Date)
+import DateOrDateTime exposing (DateOrDateTime)
 import Dict exposing (Dict)
 import FatalError exposing (FatalError)
 import Json.Decode as Decode exposing (Decoder)
@@ -89,6 +90,20 @@ decodeStatus =
         (Decode.maybe (Decode.field "status" Decode.string))
 
 
+dateOrDateTimeDecoder : Decoder DateOrDateTime
+dateOrDateTimeDecoder =
+    Decode.string
+        |> Decode.andThen
+            (\str ->
+                case Date.fromIsoString str of
+                    Ok date ->
+                        Decode.succeed (DateOrDateTime.Date date)
+
+                    Err _ ->
+                        Decode.fail "Invalid date format"
+            )
+
+
 metadataDecoder : Dict String Author -> String -> Decoder Metadata
 metadataDecoder authorsDict slug =
     Decode.succeed Metadata
@@ -113,6 +128,8 @@ metadataDecoder authorsDict slug =
                 |> Decode.map (\authors -> List.filterMap (\authorSlug -> Dict.get authorSlug authorsDict) authors)
             )
         |> Decode.andMap decodeStatus
+        |> Decode.andMap (Decode.maybe (Decode.field "published" dateOrDateTimeDecoder))
+        |> Decode.andMap (Decode.maybe (Decode.field "updated" dateOrDateTimeDecoder))
         |> Decode.andMap (Decode.succeed 1)
 
 

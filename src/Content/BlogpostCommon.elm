@@ -2,6 +2,7 @@ module Content.BlogpostCommon exposing (Blogpost, Category(..), Metadata, Status
 
 import Content.About exposing (Author)
 import Date exposing (Date)
+import DateOrDateTime exposing (DateOrDateTime)
 
 
 type alias Blogpost =
@@ -28,6 +29,8 @@ type alias Metadata =
     , tags : List String
     , authors : List Author
     , status : Status
+    , publishedAt : Maybe DateOrDateTime
+    , updatedAt : Maybe DateOrDateTime
     , readingTimeInMin : Int
     }
 

@@ -94,7 +94,7 @@ head app =
                     ]
     in
     (Seo.summaryLarge
-        { canonicalUrlOverride = Just Settings.canonicalUrl
+        { canonicalUrlOverride = Nothing
         , siteName = Settings.title
         , image =
             { url = Pages.Url.fromPath [ imagePath ]
@@ -103,10 +103,16 @@ head app =
             , mimeType = Nothing
             }
         , description = Maybe.withDefault Settings.subtitle app.data.blogpost.metadata.description
-        , locale = Nothing
+        , locale = Settings.locale
         , title = app.data.blogpost.metadata.title
         }
-        |> Seo.website
+        |> Seo.article
+            { tags = app.data.blogpost.metadata.tags
+            , section = Nothing
+            , publishedTime = app.data.blogpost.metadata.publishedAt
+            , modifiedTime = app.data.blogpost.metadata.updatedAt
+            , expirationTime = Nothing
+            }
     )
         ++ creatorHeader
         ++ authorsHeader
