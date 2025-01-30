@@ -1,7 +1,7 @@
 module Settings exposing
     ( author
     , basePath
-    , canonicalUrl
+    , baseUrl
     , copyrightYear
     , domain
     , locale
@@ -38,8 +38,8 @@ basePath =
     "/"
 
 
-canonicalUrl : String
-canonicalUrl =
+baseUrl : String
+baseUrl =
     "https://" ++ domain ++ basePath
 
 

@@ -9,7 +9,7 @@ import SiteConfig exposing (SiteConfig)
 
 config : SiteConfig
 config =
-    { canonicalUrl = Settings.canonicalUrl
+    { canonicalUrl = Settings.baseUrl
     , head = head
     }
 
