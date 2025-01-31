@@ -1,59 +1,37 @@
-module Route.Sitemap exposing (ActionData, Data, Model, Msg, route)
+module Api.Sitemap exposing (route)
 
+import ApiRoute exposing (ApiRoute)
 import BackendTask exposing (BackendTask)
 import BackendTask.File
 import BackendTask.Glob as Glob
 import FatalError exposing (FatalError)
-import Html exposing (text)
 import Json.Decode as Decode
-import Route
-import RouteBuilder exposing (StatelessRoute)
-import View exposing (View)
+import Server.Request
+import Server.Response
 
 
-type alias Model =
-    {}
-
-
-type alias Msg =
-    ()
-
-
-type alias RouteParams =
-    {}
-
-
-type alias ActionData =
-    {}
-
-
-type alias Data =
-    { sitemapXml : String
-    }
+route : ApiRoute {}
+route =
+    ApiRoute.succeed
+        { path = "/sitemap.xml"
+        , handler =
+            \_ ->
+                generateSitemap
+                    |> BackendTask.map
+                        (\sitemapXml ->
+                            Server.Response.makeBuilder
+                                |> Server.Response.withBody sitemapXml
+                                |> Server.Response.withHeader "Content-Type" "application/xml"
+                                |> Server.Response.withStatusCode 200
+                                |> Server.Response.build
+                        )
+        }
 
 
 type alias Metadata =
     { updated : Maybe String
     , published : String
     }
-
-
-route : StatelessRoute RouteParams Data ActionData
-route =
-    RouteBuilder.single
-        { head = \_ -> []
-        , data = data
-        }
-        |> RouteBuilder.buildNoState { view = \app shared -> view app.data }
-
-
-data : BackendTask FatalError Data
-data =
-    generateSitemap
-        |> BackendTask.map
-            (\sitemapXml ->
-                { sitemapXml = sitemapXml }
-            )
 
 
 generateSitemap : BackendTask FatalError String
@@ -141,14 +119,3 @@ extractSlug path =
         |> List.drop 1
         |> List.head
         |> Maybe.withDefault ""
-
-
-view : Data -> View msg
-view static =
-    { body =
-        [ Html.node "xml"
-            []
-            [ text static.sitemapXml ]
-        ]
-    , title = ""
-    }
