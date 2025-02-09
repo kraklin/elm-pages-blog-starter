@@ -11,10 +11,6 @@ type alias Msg =
     ()
 
 
-type alias RouteParams =
-    {}
-
-
 type alias Data =
     { blogposts :
         List Metadata
@@ -23,4 +19,8 @@ type alias Data =
 
 
 type alias ActionData =
+    {}
+
+
+type alias RouteParams =
     {}

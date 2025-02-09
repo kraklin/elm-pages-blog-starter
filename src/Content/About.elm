@@ -1,4 +1,4 @@
-module Content.About exposing (Author, allAuthors, defaultAuthor)
+module Content.About exposing (Author, allAuthors, defaultAuthor, updatedAt)
 
 import BackendTask exposing (BackendTask)
 import BackendTask.File as File
@@ -6,6 +6,11 @@ import BackendTask.Glob as Glob
 import Dict exposing (Dict)
 import FatalError exposing (FatalError)
 import Json.Decode as Decode
+
+
+updatedAt : String
+updatedAt =
+    "2025-02-03T00:00:00Z"
 
 
 type alias Author =
