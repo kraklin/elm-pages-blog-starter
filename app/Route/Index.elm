@@ -6,9 +6,7 @@ import Content.BlogpostCommon exposing (Metadata)
 import FatalError exposing (FatalError)
 import Head
 import Head.Seo as Seo
-import Html
-import Html.Attributes as Attrs
-import Layout.TechBlogpost
+import Layout.Index
 import PagesMsg exposing (PagesMsg)
 import RouteBuilder exposing (App, StatelessRoute)
 import Settings
@@ -73,12 +71,5 @@ view :
     -> View (PagesMsg Msg)
 view app _ =
     { title = Settings.title
-    , body =
-        --TODO move to layout part
-        [ Html.div [ Attrs.class "space-y-2 pb-8 pt-6 md:space-y-5" ]
-            [ Html.h1 [ Attrs.class "text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14" ] [ Html.text "Latest" ]
-            , Html.p [ Attrs.class "text-lg leading-7 text-gray-500 dark:text-gray-400" ] [ Html.text Settings.subtitle ]
-            ]
-        , Html.div [] <| List.map Layout.TechBlogpost.viewListItem app.data.blogpostMetadata
-        ]
+    , body = Layout.Index.view app.data.blogpostMetadata
     }
