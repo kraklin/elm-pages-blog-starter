@@ -60,18 +60,18 @@ makeSitemapEntries getStaticRoutes =
                 routeSource lastMod =
                     BackendTask.succeed
                         { path = String.join "/" (Route.routeToPath route)
-                        , lastMod = Just lastMod
+                        , lastMod = lastMod
                         }
             in
             case route of
                 Index ->
-                    Just <| routeSource <| Iso8601.fromTime <| Pages.builtAt
+                    Just <| routeSource <| Just <| Iso8601.fromTime <| Pages.builtAt
 
                 About ->
-                    Just <| routeSource <| Content.About.updatedAt
+                    Just <| routeSource <| Just <| Content.About.updatedAt
 
                 TechBlog ->
-                    Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Iso8601.fromTime <| Pages.builtAt
+                    Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Just <| Iso8601.fromTime <| Pages.builtAt
 
                 TechBlog__Slug_ routeParams ->
                     Just <|
@@ -80,15 +80,15 @@ makeSitemapEntries getStaticRoutes =
                                 (\blogposts ->
                                     case List.filter (\post -> post.metadata.slug == routeParams.slug) blogposts of
                                         post :: _ ->
-                                            Iso8601.fromTime <| Content.BlogpostCommon.getLastModified post.metadata
+                                            Just <| Iso8601.fromTime <| Content.BlogpostCommon.getLastModified post.metadata
 
                                         [] ->
-                                            Iso8601.fromTime <| Pages.builtAt
+                                            Just <| Iso8601.fromTime <| Pages.builtAt
                                 )
                                 Content.TechBlogpost.allBlogposts
 
                 LifeBlog ->
-                    Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Iso8601.fromTime <| Pages.builtAt
+                    Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Just <| Iso8601.fromTime <| Pages.builtAt
 
                 LifeBlog__Slug_ routeParams ->
                     Just <|
@@ -97,18 +97,18 @@ makeSitemapEntries getStaticRoutes =
                                 (\blogposts ->
                                     case List.filter (\post -> post.metadata.slug == routeParams.slug) blogposts of
                                         post :: _ ->
-                                            Iso8601.fromTime <| Content.BlogpostCommon.getLastModified post.metadata
+                                            Just <| Iso8601.fromTime <| Content.BlogpostCommon.getLastModified post.metadata
 
                                         [] ->
-                                            Iso8601.fromTime <| Pages.builtAt
+                                            Just <| Iso8601.fromTime <| Pages.builtAt
                                 )
                                 Content.LifeBlogpost.allBlogposts
 
                 Tags ->
-                    Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Iso8601.fromTime <| Pages.builtAt
+                    Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Just <| Iso8601.fromTime <| Pages.builtAt
 
                 Tags__Slug_ routeParams ->
-                    Just <| routeSource <| Iso8601.fromTime <| Pages.builtAt
+                    Just <| routeSource <| Just <| Iso8601.fromTime <| Pages.builtAt
     in
     getStaticRoutes
         |> BackendTask.map (List.filterMap build)
