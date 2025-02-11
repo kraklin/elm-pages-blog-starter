@@ -8,6 +8,16 @@ This is a tempalte for building a blog as static site with elm-pages, forked fro
 
 [https://hahnah-blog-template.netlify.app/](https://hahnah-blog-template.netlify.app/)
 
+## Features
+
+- Static Site Generation
+- Blog posts with markdown
+- Tags
+- Categories (Tech and Life)
+- Mutiple authors
+- Pagination
+- Sitemap feed
+
 ## What is used?
 
 - [Elm](https://elm-lang.org/) language v0.19
