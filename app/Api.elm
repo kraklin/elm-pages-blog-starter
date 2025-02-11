@@ -105,10 +105,10 @@ makeSitemapEntries getStaticRoutes =
                                 Content.LifeBlogpost.allBlogposts
 
                 Tags ->
-                    Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Just <| Iso8601.fromTime <| Pages.builtAt
+                    Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Nothing
 
-                Tags__Slug_ routeParams ->
-                    Just <| routeSource <| Just <| Iso8601.fromTime <| Pages.builtAt
+                Tags__Slug_ _ ->
+                    Just <| routeSource <| Nothing
     in
     getStaticRoutes
         |> BackendTask.map (List.filterMap build)
