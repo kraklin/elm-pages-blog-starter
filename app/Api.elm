@@ -3,6 +3,9 @@ module Api exposing (manifest, routes)
 import ApiRoute exposing (ApiRoute)
 import BackendTask exposing (BackendTask)
 import Content.About
+import Content.BlogpostCommon exposing (Status(..))
+import Content.LifeBlogpost
+import Content.TechBlogpost
 import FatalError exposing (FatalError)
 import Html exposing (Html)
 import Iso8601
@@ -71,13 +74,35 @@ makeSitemapEntries getStaticRoutes =
                     Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Iso8601.fromTime <| Pages.builtAt
 
                 TechBlog__Slug_ routeParams ->
-                    Just <| routeSource <| Iso8601.fromTime <| Pages.builtAt
+                    Just <|
+                        BackendTask.andThen routeSource <|
+                            BackendTask.map
+                                (\blogposts ->
+                                    case List.filter (\post -> post.metadata.slug == routeParams.slug) blogposts of
+                                        post :: _ ->
+                                            Iso8601.fromTime <| Content.BlogpostCommon.getLastModified post.metadata
+
+                                        [] ->
+                                            Iso8601.fromTime <| Pages.builtAt
+                                )
+                                Content.TechBlogpost.allBlogposts
 
                 LifeBlog ->
                     Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Iso8601.fromTime <| Pages.builtAt
 
                 LifeBlog__Slug_ routeParams ->
-                    Just <| routeSource <| Iso8601.fromTime <| Pages.builtAt
+                    Just <|
+                        BackendTask.andThen routeSource <|
+                            BackendTask.map
+                                (\blogposts ->
+                                    case List.filter (\post -> post.metadata.slug == routeParams.slug) blogposts of
+                                        post :: _ ->
+                                            Iso8601.fromTime <| Content.BlogpostCommon.getLastModified post.metadata
+
+                                        [] ->
+                                            Iso8601.fromTime <| Pages.builtAt
+                                )
+                                Content.LifeBlogpost.allBlogposts
 
                 Tags ->
                     Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Iso8601.fromTime <| Pages.builtAt

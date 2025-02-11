@@ -1,12 +1,24 @@
-module Content.BlogpostCommon exposing (Blogpost, Category(..), Metadata, Status(..), TagWithCount, getPublishedDate, metadataDecoder)
+module Content.BlogpostCommon exposing
+    ( Blogpost
+    , Category(..)
+    , Metadata
+    , Status(..)
+    , TagWithCount
+    , decodeStatus
+    , getLastModified
+    , getPublishedDate
+    , metadataDecoder
+    )
 
 import Content.About exposing (Author)
 import Date exposing (Date)
 import DateOrDateTime exposing (DateOrDateTime)
 import Dict exposing (Dict)
+import Iso8601
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Extra as Decode
 import String.Normalize
+import Time
 
 
 type alias Blogpost =
@@ -139,3 +151,28 @@ getPublishedDate { status } =
 
         _ ->
             Date.fromRataDie 1
+
+
+getLastModified : Metadata -> Time.Posix
+getLastModified metadata =
+    case metadata.updatedAt of
+        Just updatedAt ->
+            Iso8601.toTime (DateOrDateTime.toIso8601 updatedAt)
+                |> Result.withDefault
+                    (case metadata.publishedAt of
+                        Just publishedAt ->
+                            Iso8601.toTime (DateOrDateTime.toIso8601 publishedAt)
+                                |> Result.withDefault (Time.millisToPosix 0)
+
+                        Nothing ->
+                            Time.millisToPosix 0
+                    )
+
+        Nothing ->
+            case metadata.publishedAt of
+                Just publishedAt ->
+                    Iso8601.toTime (DateOrDateTime.toIso8601 publishedAt)
+                        |> Result.withDefault (Time.millisToPosix 0)
+
+                Nothing ->
+                    Time.millisToPosix 0
