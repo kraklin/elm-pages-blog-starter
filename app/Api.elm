@@ -84,7 +84,9 @@ makeSitemapEntries getStaticRoutes =
                         BackendTask.andThen routeSource <|
                             BackendTask.map
                                 (\blogposts ->
-                                    blogposts |> List.map (\post -> Iso8601.fromTime <| Content.BlogpostCommon.getLastModified post.metadata) |> List.maximum
+                                    blogposts
+                                        |> List.map (\post -> Iso8601.fromTime <| Content.BlogpostCommon.getLastModified post.metadata)
+                                        |> List.maximum
                                 )
                                 Content.TechBlogpost.allBlogposts
 
@@ -107,7 +109,9 @@ makeSitemapEntries getStaticRoutes =
                         BackendTask.andThen routeSource <|
                             BackendTask.map
                                 (\blogposts ->
-                                    blogposts |> List.map (\post -> Iso8601.fromTime <| Content.BlogpostCommon.getLastModified post.metadata) |> List.maximum
+                                    blogposts
+                                        |> List.map (\post -> Iso8601.fromTime <| Content.BlogpostCommon.getLastModified post.metadata)
+                                        |> List.maximum
                                 )
                                 Content.LifeBlogpost.allBlogposts
 
