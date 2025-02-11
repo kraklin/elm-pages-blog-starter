@@ -3,6 +3,7 @@ module Api exposing (manifest, routes)
 import ApiRoute exposing (ApiRoute)
 import BackendTask exposing (BackendTask)
 import Content.About
+import Content.AllBlogpost
 import Content.BlogpostCommon exposing (Status(..))
 import Content.LifeBlogpost
 import Content.TechBlogpost
@@ -65,7 +66,15 @@ makeSitemapEntries getStaticRoutes =
             in
             case route of
                 Index ->
-                    Just <| routeSource <| Just <| Iso8601.fromTime <| Pages.builtAt
+                    Just <|
+                        BackendTask.andThen routeSource <|
+                            BackendTask.map
+                                (\blogposts ->
+                                    blogposts
+                                        |> List.map (\post -> Iso8601.fromTime <| Content.BlogpostCommon.getLastModified post.metadata)
+                                        |> List.maximum
+                                )
+                                Content.AllBlogpost.allBlogposts
 
                 About ->
                     Just <| routeSource <| Just <| Content.About.updatedAt
