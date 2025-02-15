@@ -32,8 +32,8 @@ See package.json for more details.
    - _OPTION_: You can replace Volta with any other manager what you like, or can just install Node.js directory.
 2. Install and set Node.js and npm with Volta like below.
    ```bash
-   volta install node@22 # See accurate version in package.json. Or you can use newer version by own.
-   volta install npm@11 # See accurate version in package.json. Or you can use newer version by own.
+   volta install node@22 # See accurate version in package.json. Or you can use newer version by your own.
+   volta install npm@11 # See accurate version in package.json. Or you can use newer version by your own.
    ```
 3. Install Node modules
    ```bash
