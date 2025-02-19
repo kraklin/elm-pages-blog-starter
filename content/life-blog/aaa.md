@@ -13,6 +13,6 @@ I am Hahnah.
 
 Fullstack Web developer. I love Elm.
 
-![nuts](/content/life-blog/aaa/assets/nuts.png)
+![nuts](/images/life-blog/aaa/nuts.png)
 
 No Code, No Life.

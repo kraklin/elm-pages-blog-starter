@@ -12,7 +12,7 @@ This is Post A.
 
 Can show image like this:
 
-![Amonng Us](/content/tech-blog/post-a/assets/among-us.jpg)
+![Amonng Us](/images/tech-blog/post-a/among-us.jpg)
 
 ## Butonn sample in Elm
 
