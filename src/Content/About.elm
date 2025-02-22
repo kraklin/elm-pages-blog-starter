@@ -8,9 +8,17 @@ import FatalError exposing (FatalError)
 import Json.Decode as Decode
 
 
-updatedAt : String
+updatedAt : BackendTask FatalError String
 updatedAt =
-    "2025-02-03T00:00:00Z"
+    defaultAuthor
+        |> BackendTask.map .updated
+        |> BackendTask.mapError
+            (\err ->
+                { fatal = FatalError.fromString "Failed to get updated date"
+                , recoverable = err.recoverable
+                }
+            )
+        |> BackendTask.allowFatal
 
 
 type alias Author =
@@ -21,6 +29,7 @@ type alias Author =
     , occupation : Maybe String
     , company : Maybe String
     , slug : String
+    , updated : String
     }
 
 
@@ -57,13 +66,14 @@ allAuthors =
 
 authorDecoder : String -> String -> Decode.Decoder Author
 authorDecoder slug body =
-    Decode.map6 (Author body)
+    Decode.map7 (Author body)
         (Decode.field "name" Decode.string)
         (Decode.maybe <| Decode.field "avatar" Decode.string)
         (Decode.map (Maybe.withDefault []) <| Decode.maybe <| Decode.field "socials" <| Decode.keyValuePairs Decode.string)
         (Decode.maybe <| Decode.field "occupation" Decode.string)
         (Decode.maybe <| Decode.field "company" Decode.string)
         (Decode.succeed slug)
+        (Decode.field "updated" Decode.string)
 
 
 defaultAuthor : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } Author

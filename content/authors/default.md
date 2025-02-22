@@ -10,6 +10,7 @@ socials:
   linkedin: https://www.linkedin.com
   youtube: https://youtube.com
   github: https://github.com
+updated: "2025-02-03T00:00:00Z"
 ---
 
 # Hi there!
