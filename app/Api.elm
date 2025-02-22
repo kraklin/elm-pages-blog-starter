@@ -79,7 +79,7 @@ makeSitemapEntries getStaticRoutes =
                 About ->
                     Just <|
                         BackendTask.andThen routeSource <|
-                            BackendTask.map Just Content.About.updatedAt
+                            BackendTask.map identity Content.About.updatedAt
 
                 TechBlog ->
                     Just <|

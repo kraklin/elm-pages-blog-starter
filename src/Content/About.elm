@@ -8,7 +8,7 @@ import FatalError exposing (FatalError)
 import Json.Decode as Decode
 
 
-updatedAt : BackendTask FatalError String
+updatedAt : BackendTask FatalError (Maybe String)
 updatedAt =
     defaultAuthor
         |> BackendTask.map .updated
@@ -29,7 +29,7 @@ type alias Author =
     , occupation : Maybe String
     , company : Maybe String
     , slug : String
-    , updated : String
+    , updated : Maybe String
     }
 
 
@@ -73,7 +73,7 @@ authorDecoder slug body =
         (Decode.maybe <| Decode.field "occupation" Decode.string)
         (Decode.maybe <| Decode.field "company" Decode.string)
         (Decode.succeed slug)
-        (Decode.field "updated" Decode.string)
+        (Decode.maybe <| Decode.field "updated" Decode.string)
 
 
 defaultAuthor : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } Author
