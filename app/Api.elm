@@ -77,7 +77,9 @@ makeSitemapEntries getStaticRoutes =
                                 Content.AllBlogpost.allBlogposts
 
                 About ->
-                    Just <| routeSource <| Just <| Content.About.updatedAt
+                    Just <|
+                        BackendTask.andThen routeSource <|
+                            BackendTask.map Just Content.About.updatedAt
 
                 TechBlog ->
                     Just <|
