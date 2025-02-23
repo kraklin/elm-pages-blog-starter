@@ -146,11 +146,17 @@ metadataDecoder authorsDict slug =
 getPublishedDate : Metadata -> Date
 getPublishedDate { status } =
     case status of
+        Draft ->
+            Date.fromRataDie 999999
+
+        Published ->
+            Date.fromRataDie 999999
+
         PublishedWithDate date ->
             date
 
-        _ ->
-            Date.fromRataDie 1
+        PublishedAndUpdatedWithDate publishedDate _ ->
+            publishedDate
 
 
 getLastModified : Metadata -> Time.Posix

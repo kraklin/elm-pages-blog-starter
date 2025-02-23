@@ -11,7 +11,7 @@ import BackendTask.File as File
 import BackendTask.Glob as Glob
 import Content.About exposing (Author)
 import Content.BlogpostCommon exposing (Blogpost, Category(..), Metadata, Status(..), TagWithCount)
-import Date exposing (Date)
+import Date
 import DateOrDateTime exposing (DateOrDateTime)
 import Dict exposing (Dict)
 import FatalError exposing (FatalError)
@@ -133,16 +133,6 @@ metadataDecoder authorsDict slug =
         |> Decode.andMap (Decode.succeed 1)
 
 
-getPublishedDate : Metadata -> Date
-getPublishedDate { status } =
-    case status of
-        PublishedWithDate date ->
-            date
-
-        _ ->
-            Date.fromRataDie 1
-
-
 allBlogposts : BackendTask FatalError (List Blogpost)
 allBlogposts =
     let
@@ -211,7 +201,7 @@ allBlogposts =
                         )
             )
         |> BackendTask.map
-            (List.sortBy (.metadata >> getPublishedDate >> Date.toRataDie) >> List.reverse)
+            (List.sortBy (.metadata >> Content.BlogpostCommon.getPublishedDate >> Date.toRataDie) >> List.reverse)
         |> addPreviousNextPosts
         |> updateReadingTime
 
