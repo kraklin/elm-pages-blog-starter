@@ -22,7 +22,7 @@ This is a tempalte for building a blog as static site with elm-pages, forked fro
 
 - [Elm](https://elm-lang.org/) language v0.19
 - [Elm Pages](https://elm-pages.com/) v3
-- [Tailwind CSS](https://tailwindcss.com/) v3
+- [Tailwind CSS](https://tailwindcss.com/) v4
 
 See package.json for more details.
 
