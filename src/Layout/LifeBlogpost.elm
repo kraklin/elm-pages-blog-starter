@@ -121,7 +121,7 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
                                 [ Attrs.class "relative mt-6 -mx-6 md:-mx-8 2xl:-mx-24"
                                 ]
                                 [ Html.div
-                                    [ Attrs.class "aspect-[2/1] w-full relative"
+                                    [ Attrs.class "aspect-2/1 w-full relative"
                                     ]
                                     [ Html.img
                                         [ Attrs.alt metadata.title
@@ -299,7 +299,7 @@ viewPostList tags metadata selectedTag =
     in
     [ Html.div [ Attrs.class "pb-6 pt-6" ] [ header ]
     , Html.div [ Attrs.class "flex sm:space-x-2 md:space-x-12" ]
-        [ Html.div [ Attrs.class "hidden max-h-screen h-full sm:flex flex-wrap bg-gray-50 dark:bg-gray-900/70 shadow-md pt-5 dark:shadow-gray-800/40 rounded min-w-[280px] max-w-[280px] overflow-auto" ]
+        [ Html.div [ Attrs.class "hidden max-h-screen h-full sm:flex flex-wrap bg-gray-50 dark:bg-gray-900/70 shadow-md pt-5 dark:shadow-gray-800/40 rounded-sm min-w-[280px] max-w-[280px] overflow-auto" ]
             [ Html.div
                 [ Attrs.class "py-4 px-6"
                 ]
