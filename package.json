@@ -10,6 +10,7 @@
     "@tailwindcss/postcss": "^4.0.15",
     "@tailwindcss/typography": "^0.5.10",
     "elm-codegen": "^0.3.0",
+    "elm-json": "^0.2.13",
     "elm-optimize-level-2": "^0.3.5",
     "elm-pages": "^3.0.20",
     "elm-review": "^2.10.2",
