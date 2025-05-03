@@ -58,16 +58,24 @@ makeSitemapEntries getStaticRoutes =
     let
         build route =
             let
-                routeSource lastMod =
+                routeSource lastMod needsTrailingSlash =
+                    let
+                        trailingString =
+                            if needsTrailingSlash then
+                                "/"
+
+                            else
+                                ""
+                    in
                     BackendTask.succeed
-                        { path = String.join "/" (Route.routeToPath route)
+                        { path = String.join "/" (Route.routeToPath route) ++ trailingString
                         , lastMod = lastMod
                         }
             in
             case route of
                 Index ->
                     Just <|
-                        BackendTask.andThen routeSource <|
+                        BackendTask.andThen (\lastMod -> routeSource lastMod False) <|
                             BackendTask.map
                                 (\blogposts ->
                                     blogposts
@@ -78,12 +86,12 @@ makeSitemapEntries getStaticRoutes =
 
                 About ->
                     Just <|
-                        BackendTask.andThen routeSource <|
-                            BackendTask.map identity Content.About.updatedAt
+                        BackendTask.andThen (\lastMod -> routeSource lastMod True) <|
+                            Content.About.updatedAt
 
                 TechBlog ->
                     Just <|
-                        BackendTask.andThen routeSource <|
+                        BackendTask.andThen (\lastMod -> routeSource lastMod True) <|
                             BackendTask.map
                                 (\blogposts ->
                                     blogposts
@@ -94,7 +102,7 @@ makeSitemapEntries getStaticRoutes =
 
                 TechBlog__Slug_ routeParams ->
                     Just <|
-                        BackendTask.andThen routeSource <|
+                        BackendTask.andThen (\lastMod -> routeSource lastMod True) <|
                             BackendTask.map
                                 (\blogposts ->
                                     case List.filter (\post -> post.metadata.slug == routeParams.slug) blogposts of
@@ -108,7 +116,7 @@ makeSitemapEntries getStaticRoutes =
 
                 LifeBlog ->
                     Just <|
-                        BackendTask.andThen routeSource <|
+                        BackendTask.andThen (\lastMod -> routeSource lastMod True) <|
                             BackendTask.map
                                 (\blogposts ->
                                     blogposts
@@ -119,7 +127,7 @@ makeSitemapEntries getStaticRoutes =
 
                 LifeBlog__Slug_ routeParams ->
                     Just <|
-                        BackendTask.andThen routeSource <|
+                        BackendTask.andThen (\lastMod -> routeSource lastMod True) <|
                             BackendTask.map
                                 (\blogposts ->
                                     case List.filter (\post -> post.metadata.slug == routeParams.slug) blogposts of
@@ -132,10 +140,10 @@ makeSitemapEntries getStaticRoutes =
                                 Content.LifeBlogpost.allBlogposts
 
                 Tags ->
-                    Just <| BackendTask.andThen routeSource <| BackendTask.succeed <| Nothing
+                    Just <| routeSource Nothing True
 
                 Tags__Slug_ _ ->
-                    Just <| routeSource <| Nothing
+                    Just <| routeSource Nothing True
     in
     getStaticRoutes
         |> BackendTask.map (List.filterMap build)

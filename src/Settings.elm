@@ -40,7 +40,7 @@ basePath =
 
 baseUrl : String
 baseUrl =
-    "https://" ++ domain ++ basePath
+    "https://" ++ domain
 
 
 logoUrl : Url
