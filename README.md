@@ -1,4 +1,4 @@
-# Hahnah's Blog Template with Elm Pages
+# elm-pages-blog-template
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/25a90b8a-f6ca-4823-a957-eb7f6e653b2f/deploy-status)](https://app.netlify.com/sites/taupe-mousse-68837d/deploys)
 
