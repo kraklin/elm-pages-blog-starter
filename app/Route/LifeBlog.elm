@@ -7,10 +7,12 @@ import Head
 import Head.Seo as Seo
 import Layout.LifeBlogpost
 import PagesMsg exposing (PagesMsg)
+import Route
 import Route.BlogCommon
 import RouteBuilder exposing (App, StatelessRoute)
 import Settings
 import Shared
+import UrlPath
 import View exposing (View)
 
 
@@ -57,7 +59,7 @@ head :
     -> List Head.Tag
 head _ =
     Seo.summaryLarge
-        { canonicalUrlOverride = Nothing
+        { canonicalUrlOverride = Route.LifeBlog |> Route.toPath |> UrlPath.toRelative |> (\path -> Settings.baseUrl ++ path ++ "/") |> Just
         , siteName = Settings.title
         , image = Settings.logoImageForSeo
         , description = "Life Blog posts."

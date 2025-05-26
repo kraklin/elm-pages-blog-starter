@@ -9,9 +9,11 @@ import Head.Seo as Seo
 import Layout.LifeBlogpost
 import Pages.Url
 import PagesMsg exposing (PagesMsg)
+import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Settings
 import Shared
+import UrlPath
 import View exposing (View)
 
 
@@ -94,7 +96,7 @@ head app =
                     ]
     in
     (Seo.summaryLarge
-        { canonicalUrlOverride = Nothing
+        { canonicalUrlOverride = Route.LifeBlog__Slug_ { slug = app.data.blogpost.metadata.slug } |> Route.toPath |> UrlPath.toRelative |> (\path -> Settings.baseUrl ++ path ++ "/") |> Just
         , siteName = Settings.title
         , image =
             { url = Pages.Url.fromPath [ imagePath ]

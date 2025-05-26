@@ -9,9 +9,11 @@ import Head
 import Head.Seo as Seo
 import Layout.Tags
 import PagesMsg exposing (PagesMsg)
+import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Settings
 import Shared
+import UrlPath
 import View exposing (View)
 
 
@@ -54,7 +56,7 @@ head :
     -> List Head.Tag
 head _ =
     Seo.summaryLarge
-        { canonicalUrlOverride = Nothing
+        { canonicalUrlOverride = Route.Tags |> Route.toPath |> UrlPath.toRelative |> (\path -> Settings.baseUrl ++ path ++ "/") |> Just
         , siteName = Settings.title
         , image = Settings.logoImageForSeo
         , description = "List of Tags."

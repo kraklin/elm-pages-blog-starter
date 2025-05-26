@@ -8,11 +8,13 @@ import Head
 import Head.Seo as Seo
 import Layout.Blogpost
 import PagesMsg exposing (PagesMsg)
+import Route
 import RouteBuilder exposing (App, StatelessRoute)
 import Settings
 import Shared
 import String.Normalize
 import Url
+import UrlPath
 import View exposing (View)
 
 
@@ -96,7 +98,7 @@ head :
     -> List Head.Tag
 head app =
     Seo.summary
-        { canonicalUrlOverride = Nothing
+        { canonicalUrlOverride = Route.Tags__Slug_ { slug = app.data.selectedTag |> Maybe.map .slug |> Maybe.withDefault "" } |> Route.toPath |> UrlPath.toRelative |> (\path -> Settings.baseUrl ++ path ++ "/") |> Just
         , siteName = Settings.title
         , image = Settings.logoImageForSeo
         , description =
