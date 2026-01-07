@@ -1,4 +1,4 @@
-module Layout.Markdown exposing (blogpostToHtml, toHtml)
+module Layout.Markdown exposing (blocksToHtml, toHtml)
 
 import Html exposing (Html)
 import Html.Attributes as Attrs
@@ -115,18 +115,10 @@ blogpostRenderer =
     }
 
 
-blogpostToHtml : String -> List (Html msg)
-blogpostToHtml markdownString =
-    markdownString
-        |> Markdown.Parser.parse
-        |> Result.mapError (\_ -> "Markdown error.")
-        |> Result.andThen
-            (\blocks ->
-                Markdown.Renderer.render
-                    blogpostRenderer
-                    blocks
-            )
-        |> Result.withDefault [ Html.text "failed to read markdown" ]
+blocksToHtml : List Block.Block -> List (Html msg)
+blocksToHtml blocks =
+    Markdown.Renderer.render blogpostRenderer blocks
+        |> Result.withDefault [ Html.text "failed to render markdown" ]
 
 
 toHtml : String -> List (Html msg)
