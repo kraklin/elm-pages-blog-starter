@@ -1,9 +1,8 @@
-module Layout.Markdown exposing (blocksToHtml, toHtml)
+module Layout.Markdown exposing (blocksToHtml, toHtmlBlocks)
 
 import Html exposing (Html)
 import Html.Attributes as Attrs
 import Markdown.Block as Block
-import Markdown.Parser
 import Markdown.Renderer exposing (defaultHtmlRenderer)
 import Parser exposing (DeadEnd)
 import Phosphor
@@ -121,15 +120,7 @@ blocksToHtml blocks =
         |> Result.withDefault [ Html.text "failed to render markdown" ]
 
 
-toHtml : String -> List (Html msg)
-toHtml markdownString =
-    markdownString
-        |> Markdown.Parser.parse
-        |> Result.mapError (\_ -> "Markdown error.")
-        |> Result.andThen
-            (\blocks ->
-                Markdown.Renderer.render
-                    renderer
-                    blocks
-            )
-        |> Result.withDefault [ Html.text "failed to read markdown" ]
+toHtmlBlocks : List Block.Block -> List (Html msg)
+toHtmlBlocks blocks =
+    Markdown.Renderer.render renderer blocks
+        |> Result.withDefault [ Html.text "failed to render markdown" ]
