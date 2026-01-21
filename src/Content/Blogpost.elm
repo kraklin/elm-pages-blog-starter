@@ -20,12 +20,14 @@ import FatalError exposing (FatalError)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Extra as Decode
 import List.Extra
+import Markdown.Block exposing (Block)
+import Markdown.Parser
 import String.Normalize
 
 
 type alias Blogpost =
     { metadata : Metadata
-    , body : String
+    , body : List Block
     , previousPost : Maybe Metadata
     , nextPost : Maybe Metadata
     }
@@ -156,14 +158,6 @@ allBlogposts =
                     )
                 |> BackendTask.map Array.toList
 
-        updateReadingTime blogposts =
-            let
-                updatedMetadata blogpost metadata =
-                    { metadata | readingTimeInMin = String.split " " blogpost |> List.length |> (\words -> words // 200) }
-            in
-            blogposts
-                |> BackendTask.map (List.map (\blogpost -> { blogpost | metadata = updatedMetadata blogpost.body blogpost.metadata }))
-
         addDraftTag metadata =
             case metadata.status of
                 Draft ->
@@ -179,9 +173,29 @@ allBlogposts =
                     file.filePath
                         |> File.bodyWithFrontmatter
                             (\markdownString ->
-                                Decode.map2 (\metadata body -> Blogpost metadata body Nothing Nothing)
+                                let
+                                    parsedBody : Result String (List Block)
+                                    parsedBody =
+                                        markdownString
+                                            |> Markdown.Parser.parse
+                                            |> Result.mapError (\_ -> "Failed to parse markdown")
+                                in
+                                Decode.map2
+                                    (\metadata body ->
+                                        Blogpost
+                                            { metadata | readingTimeInMin = calculateReadingTime markdownString }
+                                            body
+                                            Nothing
+                                            Nothing
+                                    )
                                     (metadataDecoder authorsDict file.slug)
-                                    (Decode.succeed markdownString)
+                                    (case parsedBody of
+                                        Ok blocks ->
+                                            Decode.succeed blocks
+
+                                        Err err ->
+                                            Decode.fail err
+                                    )
                             )
                         |> BackendTask.map (\blogpost -> { blogpost | metadata = addDraftTag blogpost.metadata })
                         |> BackendTask.allowFatal
@@ -207,7 +221,11 @@ allBlogposts =
         |> BackendTask.map
             (List.sortBy (.metadata >> getPublishedDate >> Date.toRataDie) >> List.reverse)
         |> addPreviousNextPosts
-        |> updateReadingTime
+
+
+calculateReadingTime : String -> Int
+calculateReadingTime markdownString =
+    String.split " " markdownString |> List.length |> (\words -> words // 200)
 
 
 allBlogpostsDict : BackendTask FatalError (Dict String Blogpost)

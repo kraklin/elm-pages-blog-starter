@@ -6,10 +6,12 @@ import BackendTask.Glob as Glob
 import Dict exposing (Dict)
 import FatalError exposing (FatalError)
 import Json.Decode as Decode
+import Markdown.Block
+import Markdown.Parser
 
 
 type alias Author =
-    { body : String
+    { body : List Markdown.Block.Block
     , name : String
     , avatar : Maybe String
     , socials : List ( String, String )
@@ -51,14 +53,25 @@ allAuthors =
 
 
 authorDecoder : String -> String -> Decode.Decoder Author
-authorDecoder slug body =
-    Decode.map6 (Author body)
-        (Decode.field "name" Decode.string)
-        (Decode.maybe <| Decode.field "avatar" Decode.string)
-        (Decode.map (Maybe.withDefault []) <| Decode.maybe <| Decode.field "socials" <| Decode.keyValuePairs Decode.string)
-        (Decode.maybe <| Decode.field "occupation" Decode.string)
-        (Decode.maybe <| Decode.field "company" Decode.string)
-        (Decode.succeed slug)
+authorDecoder slug markdownBody =
+    let
+        parsedBody =
+            markdownBody
+                |> Markdown.Parser.parse
+                |> Result.mapError (\_ -> "Failed to parse markdown")
+    in
+    case parsedBody of
+        Ok blocks ->
+            Decode.map6 (Author blocks)
+                (Decode.field "name" Decode.string)
+                (Decode.maybe <| Decode.field "avatar" Decode.string)
+                (Decode.map (Maybe.withDefault []) <| Decode.maybe <| Decode.field "socials" <| Decode.keyValuePairs Decode.string)
+                (Decode.maybe <| Decode.field "occupation" Decode.string)
+                (Decode.maybe <| Decode.field "company" Decode.string)
+                (Decode.succeed slug)
+
+        Err err ->
+            Decode.fail err
 
 
 defaultAuthor : BackendTask { fatal : FatalError, recoverable : File.FileReadError Decode.Error } Author

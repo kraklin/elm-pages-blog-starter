@@ -155,7 +155,7 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
             metadata.description
         , Html.article
             [ Attrs.class "mx-auto prose lg:prose-xl dark:prose-invert" ]
-            (Markdown.blogpostToHtml body)
+            (Markdown.blocksToHtml body)
         , Html.div
             [ Attrs.class "mt-8 border-t grid grid-cols-1 text-sm font-medium sm:grid-cols-2 sm:text-base" ]
             [ previous, next ]
