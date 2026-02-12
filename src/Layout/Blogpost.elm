@@ -12,6 +12,7 @@ import Html.Extra
 import Layout.Markdown as Markdown
 import Layout.Tags
 import Route
+import SyntaxHighlight
 
 
 
@@ -104,7 +105,8 @@ viewBlogpost { metadata, body, previousPost, nextPost } =
             Html.div
                 [ Attrs.class "max-w-[65ch] m-auto space-y-1 xl:text-xl dark:border-gray-700"
                 ]
-                [ Html.div
+                [ SyntaxHighlight.useTheme SyntaxHighlight.oneDark
+                , Html.div
                     []
                     [ Html.h1 [ Attrs.class "mt-8 pb-4 font-bold text-3xl md:text-5xl text-gray-900 dark:text-gray-100" ]
                         [ Html.text metadata.title
