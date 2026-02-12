@@ -186,7 +186,7 @@ viewPublishedDate status =
                     [ Html.time
                         [ Attrs.datetime <| Date.toIsoString date
                         ]
-                        [ Html.text <| Date.format "d. MMM YYYY" date ]
+                        [ Html.text <| Date.format "d. MMM yyyy" date ]
                     ]
                 ]
 
