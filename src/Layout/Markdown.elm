@@ -108,6 +108,9 @@ blogpostRenderer =
                             |> Phosphor.toHtml [ SvgAttrs.class "text-primary-300 inline-block text-xl ml-2" ]
                         ]
                     ]
+        , codeSpan =
+            \context ->
+                Html.code [ Attrs.class "not-prose" ] [ Html.text context ]
         , codeBlock =
             \block ->
                 syntaxHighlight block
