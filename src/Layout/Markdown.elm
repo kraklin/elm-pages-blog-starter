@@ -52,9 +52,8 @@ syntaxHighlight codeBlock =
             else
                 codeBlock.body
     in
-    Html.div [ Attrs.class "no-prose" ]
-        [ SyntaxHighlight.useTheme SyntaxHighlight.oneDark
-        , language codeBlock.language sanitiseCodeBlock
+    Html.div [ Attrs.class "no-prose mt-4" ]
+        [ language codeBlock.language sanitiseCodeBlock
             |> Result.map (SyntaxHighlight.toBlockHtml (Just 1))
             |> Result.withDefault
                 (Html.pre [] [ Html.code [] [ Html.text sanitiseCodeBlock ] ])
