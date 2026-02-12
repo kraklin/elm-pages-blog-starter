@@ -50,6 +50,12 @@ code.elmsh {
   padding: 0;
 }
 
+code.not-prose {
+  border-radius: .3em;
+  background: rgba(255,229,100,.2);
+  padding: .15em .2em .05em;
+}
+
 .elmsh-line:before {
   content: attr(data-elmsh-lc);
   display: inline-block;
