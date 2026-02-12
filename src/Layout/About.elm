@@ -152,6 +152,6 @@ view author =
                 [ Attrs.class "prose max-w-none pb-8 pt-8 dark:prose-invert xl:col-span-2"
                 ]
               <|
-                Markdown.toHtml author.body
+                Markdown.toHtmlBlocks author.body
             ]
         ]
