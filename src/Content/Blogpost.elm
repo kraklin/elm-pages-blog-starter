@@ -6,6 +6,7 @@ module Content.Blogpost exposing
     , allBlogposts
     , allTags
     , blogpostFromSlug
+    , getPublishedDate
     )
 
 import Array
