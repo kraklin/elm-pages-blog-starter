@@ -28,6 +28,7 @@
             "justinmimbs/date": "4.1.0",
             "kuon/elm-string-normalize": "1.0.6",
             "pablohirafuji/elm-syntax-highlight": "3.7.1",
+            "dillonkearns/elm-rss": "2.0.5",
             "phosphor-icons/phosphor-elm": "2.1.0"
         },
         "indirect": {
@@ -58,6 +59,11 @@
             "stil4m/structured-writer": "1.0.3",
             "the-sett/elm-pretty-printer": "3.3.0",
             "the-sett/elm-syntax-dsl": "6.0.3",
+            "dillonkearns/elm-xml-encode": "1.0.1",
+            "dmy/elm-imf-date-time": "1.0.2",
+            "justinmimbs/time-extra": "1.2.0",
+            "lazamar/dict-parser": "1.0.2",
+            "ryan-haskell/date-format": "1.0.0",
             "wolfadex/elm-ansi": "3.0.1"
         }
     },

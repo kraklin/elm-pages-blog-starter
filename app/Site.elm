@@ -18,5 +18,6 @@ head : BackendTask FatalError (List Head.Tag)
 head =
     [ Head.metaName "viewport" (Head.raw "width=device-width,initial-scale=1")
     , Head.sitemapLink "/sitemap.xml"
+    , Head.rssLink "/blog/feed.xml"
     ]
         |> BackendTask.succeed
