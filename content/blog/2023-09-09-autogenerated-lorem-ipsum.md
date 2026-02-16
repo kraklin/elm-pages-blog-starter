@@ -44,6 +44,6 @@ Here's a step-by-step guide on how to use ChatGPT to auto-generate your blog pos
 
 Automation is transforming content creation, and ChatGPT is at the forefront of this revolution. By harnessing the power of AI, you can streamline your blogging process, save time, and consistently produce high-quality content. So, why not give it a try and experience the future of automated blog post generation for yourself?
 
-To explore more about ChatGPT and its capabilities, check out the [OpenAI website](https://www.openai.com/gpt-3/).
+To explore more about ChatGPT and its capabilities, check out the [OpenAI website](https://openai.com/index/language-models-are-few-shot-learners/).
 
 Remember, while ChatGPT can be an invaluable writing assistant, it's essential to maintain your creative input and authenticity in your blog posts. AI is a tool to enhance your writing, not replace it entirely. Happy blogging!
