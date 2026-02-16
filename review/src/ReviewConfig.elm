@@ -55,4 +55,3 @@ config =
     , Simplify.rule Simplify.defaults
     ]
         |> List.map (Rule.ignoreErrorsForDirectories [ ".elm-pages/", "app/" ])
-

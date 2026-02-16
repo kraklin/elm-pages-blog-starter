@@ -1,6 +1,6 @@
 module View exposing (View, map, freeze, freezableToHtml, htmlToFreezable)
 
-{-|
+{-| View module for elm-pages with frozen view support.
 
 @docs View, map, freeze, freezableToHtml, htmlToFreezable
 
