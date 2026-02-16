@@ -4,6 +4,7 @@ import BackendTask exposing (BackendTask)
 import Content.Blogpost exposing (Blogpost)
 import FatalError exposing (FatalError)
 import Head
+import Html
 import Head.Seo as Seo
 import Layout.Blogpost
 import Pages.Url
@@ -111,5 +112,5 @@ view :
     -> View (PagesMsg Msg)
 view app _ =
     { title = app.data.blogpost.metadata.title
-    , body = [ Layout.Blogpost.viewBlogpost app.data.blogpost ]
+    , body = [ View.freeze (Layout.Blogpost.viewBlogpost app.data.blogpost) ]
     }
