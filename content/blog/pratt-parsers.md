@@ -15,7 +15,7 @@ Here's the algorithm for `pratt(precLimit)`:
 ## Table of contents
 
 - [Introduction](#introduction)
-- [Bob Nystrom's article](#bob-nystroms-article)
+- [Bob Nystrom's article](#bob-nystrom's-article)
 - [Overview](#overview)
 - [Visual intuition](#visual-intuition)
 - [Walk-through example](#walk-through-example)
