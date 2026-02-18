@@ -1,8 +1,8 @@
-module View exposing (View, map)
+module View exposing (View, map, freeze, freezableToHtml, htmlToFreezable)
 
 {-|
 
-@docs View, map
+@docs View, map, freeze, freezableToHtml, htmlToFreezable
 
 -}
 
@@ -14,6 +14,32 @@ type alias View msg =
     { title : String
     , body : List (Html msg)
     }
+
+
+{-| -}
+type alias Freezable =
+    Html Never
+
+
+{-| -}
+freezableToHtml : Freezable -> Html Never
+freezableToHtml =
+    identity
+
+
+{-| -}
+htmlToFreezable : Html Never -> Freezable
+htmlToFreezable =
+    identity
+
+
+{-| -}
+freeze : Freezable -> Html msg
+freeze content =
+    content
+        |> freezableToHtml
+        |> htmlToFreezable
+        |> Html.map never
 
 
 {-| -}

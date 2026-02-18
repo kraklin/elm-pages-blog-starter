@@ -1,6 +1,7 @@
-module ErrorPage exposing (ErrorPage(..), Model, Msg, init, internalError, notFound, statusCode, update, view)
+module ErrorPage exposing (ErrorPage(..), Model, Msg, head, init, internalError, notFound, statusCode, update, view)
 
 import Effect exposing (Effect)
+import Head
 import Html
 import View exposing (View)
 
@@ -36,6 +37,11 @@ notFound =
 internalError : String -> ErrorPage
 internalError =
     InternalError
+
+
+head : ErrorPage -> List Head.Tag
+head _ =
+    []
 
 
 view : ErrorPage -> Model -> View Msg

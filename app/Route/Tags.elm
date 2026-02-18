@@ -4,6 +4,7 @@ import BackendTask exposing (BackendTask)
 import Content.Blogpost exposing (TagWithCount)
 import FatalError exposing (FatalError)
 import Head
+import Html
 import Head.Seo as Seo
 import Layout
 import Layout.Tags
@@ -63,5 +64,5 @@ view :
 view app _ =
     { title = "Tags"
     , body =
-        [ Layout.Tags.view app.data ]
+        [ View.freeze (Layout.Tags.view app.data) ]
     }
