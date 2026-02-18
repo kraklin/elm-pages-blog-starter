@@ -1,7 +1,7 @@
 [build]
   functions = "functions/"
   publish = "dist/"
-  command = "rm -rf \"$NETLIFY_BUILD_BASE/cache/elm\" && export ELM_HOME=\"$NETLIFY_BUILD_BASE/cache/elm\" && npm install && npm run build"
+  command = "export ELM_HOME=\"$NETLIFY_BUILD_BASE/cache/elm\" && npm install && npm run build"
 
 [dev]
   command = "npm start"
